@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAA Real Estate — Find Your Place. Define Your Future.</title>
+  <meta name="description" content="Buy, rent or invest in property across Mumbai, Thane, Navi Mumbai and Pune. Search, compare, calculate EMI and book site visits with AAA Real Estate.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta property="og:title" content="AAA Real Estate">
+  <meta property="og:description" content="Find Your Place. Define Your Future.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="features.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar" id="navbar">
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+    <div class="nav-container">
+      <a href="#" class="logo-link" aria-label="AAA Real Estate Home">
+        <div class="logo-wrapper">
+          <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g stroke="#E5A835" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Key 1 -->
+              <path d="M12 28L26 14M26 14L23 11M26 14L29 17M23 17L21 15" />
+              <rect x="7" y="27" width="7" height="7" rx="1.5" stroke="#E5A835" fill="none" transform="rotate(-45 10.5 30.5)" />
+              <circle cx="10.5" cy="30.5" r="1.5" fill="#E5A835" />
+              <!-- Key 2 -->
+              <path d="M20 36L34 22M34 22L31 19M34 22L37 25M31 25L29 23" />
+              <rect x="15" y="35" width="7" height="7" rx="1.5" stroke="#E5A835" fill="none" transform="rotate(-45 18.5 38.5)" />
+              <circle cx="18.5" cy="38.5" r="1.5" fill="#E5A835" />
+            </g>
+          </svg>
+          <span class="logo-text">AAA Real Estate</span>
+        </div>
+      </a>
+
+      <nav class="nav-menu" id="navMenu">
+        <a href="#" class="nav-link" data-nav="home">Home</a>
+        <a href="#recommendations" class="nav-link" data-nav="buy">Buy</a>
+        <a href="#recommendations" class="nav-link" data-nav="rent">Rent</a>
+        <a href="#contact" class="nav-link" data-nav="sell">Sell</a>
+        <a href="#mission" class="nav-link" data-nav="about">About</a>
+        <a href="#footer" class="nav-link" data-nav="contact">Contact</a>
+        <button type="button" class="nav-link mobile-only-auth" id="mobAuthBtn" onclick="openAuthModal('signin')">Login / Register</button>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn-signin" id="authSignIn" onclick="openAuthModal('signin')">Login</button>
+        <button class="btn-getstarted" onclick="openAuthModal('signup')">Register</button>
+      </div>
+
+      <!-- Mobile Hamburger -->
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="hero">
+      <div class="hero-container">
+        <div class="hero-content">
+          <h1 class="hero-headline">
+            <span class="highlight-gold">Find</span> Your<br>
+            Place.<br>
+            Define Your<br>
+            <span class="highlight-gold">Future.</span>
+          </h1>
+          <p class="hero-subtitle">Buy, rent or invest across Mumbai, Thane, Navi Mumbai and Pune.</p>
+          <div class="hero-ctas"><a href="#recommendations" class="btn-coral-lg">Search Properties</a><a href="#cities" class="btn-ghost-lg">Explore Cities</a></div>
+
+          <!-- Decorative Geometric Accents at bottom-left of hero -->
+          <div class="hero-decorations" aria-hidden="true">
+            <div class="deco-star"></div>
+            <div class="deco-square-coral"></div>
+            <div class="deco-arc-coral"></div>
+            <div class="deco-semicircle-blue"></div>
+            <div class="deco-diamond-slate"></div>
+          </div>
+        </div>
+
+        <div class="hero-visual-wrapper" id="heroVisualWrapper">
+          <!-- View switcher pill (3D vs Photo) -->
+          <div class="hero-view-switcher">
+            <button type="button" class="view-switch-btn active" id="viewToggle3d">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              3D Villa View
+            </button>
+            <button type="button" class="view-switch-btn" id="viewTogglePhoto">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+              Photo View
+            </button>
+          </div>
+
+          <!-- 3D Interactive Container -->
+          <div class="hero-3d-container" id="hero3dContainer">
+            <canvas id="hero3dCanvas" class="hero-3d-canvas" aria-label="Interactive 3D Villa Model"></canvas>
+            
+            <!-- Controls bar on top of 3D canvas -->
+            <div class="hero-3d-controls">
+              <button type="button" class="ctrl-btn" id="hero3dReset" title="Reset Camera">↺ Reset view</button>
+            </div>
+
+            <!-- Hint pill -->
+            <div class="hero-3d-hint" id="hero3dHint">
+              <span class="hint-icon">🔄</span>
+              <span>Drag / swipe to rotate 3D villa · Pinch/scroll to zoom</span>
+            </div>
+
+            <!-- Fallback Photo (toggled via button) -->
+            <img src="assets/hero-visual.png" alt="Luxury modern home" class="hero-photo-img" id="heroPhotoImg" width="620" height="480" style="display:none;" />
+
+            <!-- 2D Floating Animated Badges inside 3D card -->
+            <div class="floating-badge badge-top-left">
+              <div class="badge-icon-wrap gold">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+              </div>
+              <div class="badge-text-wrap">
+                <strong>4.9 / 5 Rating</strong>
+                <span>12,000+ Happy Clients</span>
+              </div>
+            </div>
+
+            <div class="floating-badge badge-bottom-right">
+              <div class="badge-icon-wrap blue">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+              </div>
+              <div class="badge-text-wrap">
+                <strong>RERA Verified</strong>
+                <span>100% Legal &amp; Clear Titles</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADVANCED SEARCH -->
+      <div class="search-overlay-container">
+        <form class="search-card adv-search" id="heroSearch" autocomplete="off">
+          <div class="mode-tabs" role="tablist" aria-label="Property category">
+            <button type="button" class="mode-tab active" data-mode="buy" role="tab" aria-selected="true">Buy</button>
+            <button type="button" class="mode-tab" data-mode="rent" role="tab" aria-selected="false">Rent</button>
+            <button type="button" class="mode-tab" data-mode="commercial" role="tab" aria-selected="false">Commercial</button>
+          </div>
+          <div class="adv-grid">
+            <label>Location<input type="text" id="hsQ" placeholder="City, locality or pincode" list="cityList"><datalist id="cityList"></datalist></label>
+            <label>Property type<select id="hsType"></select></label>
+            <label>Bedrooms<select id="hsBhk"><option value="">Any</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+            <label>Max budget<select id="hsPrice"></select></label>
+            <button class="btn-search" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- LISTINGS -->
+    <section class="recommendations-section listings" id="recommendations">
+      <div class="section-container">
+        <div class="section-header-row"><h2 class="section-title">Featured Properties</h2>
+          <p class="sample-note">Sample listings for demonstration — not real properties.</p></div>
+        <div class="filter-bar" id="filterBar">
+          <div class="mode-tabs small" id="lsMode" role="tablist" aria-label="Filter mode"><button type="button" data-mode="buy" role="tab" aria-selected="true">Buy</button><button type="button" data-mode="rent" role="tab" aria-selected="false">Rent</button><button type="button" data-mode="commercial" role="tab" aria-selected="false">Commercial</button></div>
+          <input type="search" id="lsQ" placeholder="Search city, locality, pincode" aria-label="Search">
+          <select id="lsType" aria-label="Property type"></select>
+          <select id="lsBhk" aria-label="Bedrooms"><option value="">BHK</option><option>1</option><option>2</option><option>3</option><option>4</option></select>
+          <select id="lsFurn" aria-label="Furnishing"><option value="">Furnishing</option><option>Furnished</option><option>Semi-furnished</option><option>Unfurnished</option></select>
+          <select id="lsSort" aria-label="Sort"><option value="relevant">Most relevant</option><option value="new">Recently added</option><option value="plh">Price: low to high</option><option value="phl">Price: high to low</option></select>
+          <label class="chk"><input type="checkbox" id="lsSaved"> Saved only</label>
+          <div class="view-toggle"><button type="button" data-view="grid" class="active" aria-label="Grid view">▦</button><button type="button" data-view="list" aria-label="List view">☰</button></div>
+        </div>
+        <div class="chips" id="chips"></div>
+        <p class="result-count" id="resultCount" aria-live="polite"></p>
+        <div class="rec-grid" id="recGrid"></div>
+        <nav class="pager" id="pager" aria-label="Pagination"></nav>
+      </div>
+    </section>
+
+    <section class="stats-band" id="stats"><div class="section-container stats-grid">
+      <div><strong data-count="10" data-suffix="+">0</strong><span>Years of experience</span></div>
+      <div><strong data-count="9" id="statProps">0</strong><span>Properties listed (sample)</span></div>
+      <div><strong data-count="500" data-suffix="+">0</strong><span>Happy clients</span></div>
+      <div><strong data-count="4">0</strong><span>Cities covered</span></div>
+      <p class="sample-note">Sample figures — replace with real numbers in features.js before launch.</p>
+    </div></section>
+
+    <!-- NICE HOUSE. FRESH START. NEW YOU. SECTION -->
+    <section class="benefits-section" id="benefits">
+      <div class="section-container">
+        <div class="benefits-header">
+          <h2 class="benefits-title">Why choose AAA Real Estate</h2>
+          <p class="benefits-subtitle">Everything you need to buy, rent or sell with confidence.</p>
+          <p class="benefits-subtitle">With AAA Real Estate you can:</p>
+        </div>
+
+        <div class="benefits-grid">
+          <!-- Item 1 -->
+          <div class="benefit-cell">
+            <div class="benefit-icon-box">
+              <img src="assets/icon-room.png" alt="Furnished room icon" class="benefit-icon-img" width="64" height="64" loading="lazy" />
+            </div>
+            <h3 class="benefit-cell-title">Transparent listings</h3>
+            <p class="benefit-cell-desc">Clear price, area and amenity details on every property.</p>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="benefit-cell">
+            <div class="benefit-icon-box">
+              <img src="assets/icon-support.png" alt="Support icon" class="benefit-icon-img" width="64" height="64" loading="lazy" />
+            </div>
+            <h3 class="benefit-cell-title">Dedicated support</h3>
+            <p class="benefit-cell-desc">Our team answers questions and guides you from search to site visit.</p>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="benefit-cell">
+            <div class="benefit-icon-box">
+              <img src="assets/icon-trust.png" alt="Screened members icon" class="benefit-icon-img" width="64" height="64" loading="lazy" />
+            </div>
+            <h3 class="benefit-cell-title">Professional agents</h3>
+            <p class="benefit-cell-desc">Talk to an agent who helps shortlist and negotiate.</p>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="benefit-cell">
+            <div class="benefit-icon-box">
+              <img src="assets/icon-transit.png" alt="Transit icon" class="benefit-icon-img" width="64" height="64" loading="lazy" />
+            </div>
+            <h3 class="benefit-cell-title">Great locations</h3>
+            <p class="benefit-cell-desc">Homes across Mumbai, Thane, Navi Mumbai and Pune.</p>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="benefit-cell">
+            <div class="benefit-icon-box">
+              <img src="assets/icon-bill.png" alt="All inclusive bill icon" class="benefit-icon-img" width="64" height="64" loading="lazy" />
+            </div>
+            <h3 class="benefit-cell-title">Plan your budget</h3>
+            <p class="benefit-cell-desc">Use the built-in EMI calculator and compare up to four homes.</p>
+          </div>
+
+          <!-- Item 6 -->
+          <div class="benefit-cell">
+            <div class="benefit-icon-box">
+              <img src="assets/icon-calendar.png" alt="Flexible stay icon" class="benefit-icon-img" width="64" height="64" loading="lazy" />
+            </div>
+            <h3 class="benefit-cell-title">Flexible site visits</h3>
+            <p class="benefit-cell-desc">Pick a date and time slot that suits you.</p>
+          </div>
+        </div>
+
+        <div class="benefits-cta">
+          <button class="btn-coral-lg" onclick="bookSiteVisit()">Book a site visit</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonial-banner" id="testimonials">
+      <div class="testimonial-container">
+        <button class="testi-arrow" id="testiPrev" aria-label="Previous testimonial">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="testimonial-slider" id="testimonialSlider">
+          <div class="testimonial-slide active">
+            <blockquote class="testi-quote">“The site visit booking was seamless and our agent found an amazing 3 BHK in Thane within our budget.”</blockquote>
+            <p class="testi-author">Rohit &amp; Priya Sharma — Thane</p>
+          </div>
+          <div class="testimonial-slide">
+            <blockquote class="testi-quote">“Comparing four properties side-by-side and checking EMI upfront saved us weeks of confusion.”</blockquote>
+            <p class="testi-author">Ananya Deshmukh — Powai, Mumbai</p>
+          </div>
+          <div class="testimonial-slide">
+            <blockquote class="testi-quote">“Transparent listings with actual carpet area and verified locations. Highly recommend AAA Real Estate.”</blockquote>
+            <p class="testi-author">Vikram Mehta — Baner, Pune</p>
+          </div>
+          <div class="testi-dots" id="testiDots">
+            <button class="dot active" aria-label="Testimonial 1"></button>
+            <button class="dot" aria-label="Testimonial 2"></button>
+            <button class="dot" aria-label="Testimonial 3"></button>
+          </div>
+        </div>
+        <button class="testi-arrow" id="testiNext" aria-label="Next testimonial">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- MISSION & PHILOSOPHY SECTION -->
+    <section class="mission-section" id="mission">
+      <div class="section-container mission-grid">
+        <div class="mission-text-col">
+          <h2 class="mission-statement"><span class="highlight-gold">AAA Real Estate</span> helps you find a place that fits your <span class="highlight-gold">life</span> and your <span class="highlight-gold">budget</span>.</h2>
+          <p class="mission-desc">
+            We bring search, comparison, EMI planning and site visits together in one place.
+          </p>
+        </div>
+        <div class="mission-graphic-col">
+          <img src="assets/house-illustration.png" alt="Line art illustration of a home" class="mission-house-img" width="540" height="420" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- OPPORTUNITY IS KNOCKING AT YOUR NEW FRONT DOOR (HOW IT WORKS) -->
+    <section class="how-it-works-section" id="how-it-works"><div class="section-container">
+      <div class="steps-section-header"><h2 class="steps-main-title">How it works</h2><p class="steps-main-subtitle">From first search to site visit in four steps.</p></div>
+      <div class="how-grid">
+        <div onclick="document.getElementById('recommendations').scrollIntoView({behavior:'smooth'})" role="button" tabindex="0" aria-label="Step 1: Search properties by city, budget, and BHK" style="cursor:pointer"><b>1</b><h3>Search</h3><p>Filter by city, budget, BHK and more.</p></div>
+        <div onclick="document.getElementById('recommendations').scrollIntoView({behavior:'smooth'})" role="button" tabindex="0" aria-label="Step 2: Compare shortlisted properties" style="cursor:pointer"><b>2</b><h3>Compare</h3><p>Save favourites and compare up to four homes.</p></div>
+        <div onclick="document.getElementById('emi').scrollIntoView({behavior:'smooth'})" role="button" tabindex="0" aria-label="Step 3: Calculate monthly home loan EMI" style="cursor:pointer"><b>3</b><h3>Plan</h3><p>Estimate your monthly EMI before you decide.</p></div>
+        <div onclick="bookSiteVisit()" role="button" tabindex="0" aria-label="Step 4: Book a site visit or enquire on WhatsApp" style="cursor:pointer"><b>4</b><h3>Visit</h3><p>Book a site visit or enquire on WhatsApp.</p></div>
+      </div></div></section>
+
+    <section class="emi-section" id="emi"><div class="section-container">
+      <h2 class="section-title">Home loan EMI calculator</h2>
+      <div class="emi-grid">
+        <div class="emi-inputs">
+          <label>Loan amount (₹)<input type="number" id="emiAmt" value="5000000" min="100000" step="100000"><input type="range" id="emiAmtR" min="100000" max="100000000" step="100000" value="5000000"></label>
+          <label>Interest rate (% p.a.)<input type="number" id="emiRate" value="8.5" min="1" max="20" step="0.05"><input type="range" id="emiRateR" min="1" max="20" step="0.05" value="8.5"></label>
+          <label>Tenure (years)<input type="number" id="emiYrs" value="20" min="1" max="30"><input type="range" id="emiYrsR" min="1" max="30" step="1" value="20"></label>
+        </div>
+        <div class="emi-out" aria-live="polite">
+          <p>Monthly EMI</p><strong id="emiMonthly">—</strong>
+          <div class="emi-bar"><span id="emiBarP"></span></div>
+          <dl><dt>Principal</dt><dd id="emiP">—</dd><dt>Total interest</dt><dd id="emiI">—</dd><dt>Total repayment</dt><dd id="emiT">—</dd></dl>
+          <small>Estimate only. Actual EMI depends on your lender.</small>
+        </div>
+      </div></div></section>
+
+
+
+    <section class="cities-section" id="cities"><div class="section-container">
+      <h2 class="section-title">Featured locations</h2><div class="city-grid" id="cityGrid"></div></div></section>
+
+    <section class="contact-section" id="contact"><div class="section-container contact-grid">
+      <div class="contact-info-col">
+        <h2 class="section-title">Contact &amp; Enquiry</h2>
+        <p class="sample-note">Reach us directly via WhatsApp/Call or submit the enquiry form below.</p>
+
+        <!-- Direct WhatsApp & Phone Contact Card -->
+        <div class="direct-contact-card">
+          <h3 class="contact-card-title">Direct WhatsApp &amp; Call Support</h3>
+          <p class="contact-card-sub">Our verified property advisors are available 7 days a week (9 AM – 8 PM).</p>
+          <div class="direct-phone-list">
+            <div class="direct-phone-item">
+              <div class="phone-meta">
+                <span class="phone-label">Primary Support &amp; Enquiries</span>
+                <a href="tel:+919967981427" class="phone-number">+91 99679 81427</a>
+              </div>
+              <div class="phone-actions">
+                <a href="https://wa.me/919967981427?text=Hi%20AAA%20Real%20Estate%2C%20I%20have%20an%20enquiry" target="_blank" rel="noopener" class="btn-wa-pill" title="Chat on WhatsApp">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
+                  WhatsApp
+                </a>
+                <a href="tel:+919967981427" class="btn-call-pill" title="Call">Call</a>
+              </div>
+            </div>
+
+            <div class="direct-phone-item">
+              <div class="phone-meta">
+                <span class="phone-label">Alternate Advisor &amp; Site Visits</span>
+                <a href="tel:+917021650366" class="phone-number">+91 70216 50366</a>
+              </div>
+              <div class="phone-actions">
+                <a href="https://wa.me/917021650366?text=Hi%20AAA%20Real%20Estate%2C%20I%20have%20an%20enquiry" target="_blank" rel="noopener" class="btn-wa-pill" title="Chat on WhatsApp">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
+                  WhatsApp
+                </a>
+                <a href="tel:+917021650366" class="btn-call-pill" title="Call">Call</a>
+              </div>
+            </div>
+          </div>
+          <div class="direct-contact-footer">
+            <span>📍 Mumbai, Maharashtra, India</span>
+            <span>✉️ <a href="mailto:contact@aaarealestate.com">contact@aaarealestate.com</a></span>
+          </div>
+        </div>
+
+        <div id="myEnquiries" class="my-enq"></div>
+        <div class="contact-visual-card">
+          <img src="assets/site-visit.jpg" alt="Agent guiding clients on a property site visit" class="contact-site-img" width="480" height="240" loading="lazy">
+          <div class="contact-visual-info">
+            <span class="contact-visual-tag">Private Site Visits</span>
+            <h3 class="contact-visual-heading">Tour your shortlisted home in person</h3>
+            <p class="contact-visual-desc">Meet our verified local property specialists at your preferred date and time slot. Free guided tours with no obligation.</p>
+          </div>
+        </div>
+      </div>
+      <form id="enqForm" class="enq-form" novalidate>
+        <div class="form-row"><div class="form-group"><label for="eName">Name</label><input id="eName" required minlength="2" maxlength="80"></div>
+        <div class="form-group"><label for="ePhone">Phone</label><input id="ePhone" type="tel" required inputmode="tel" placeholder="10-digit mobile"></div></div>
+        <div class="form-row"><div class="form-group"><label for="eEmail">Email</label><input id="eEmail" type="email" required></div>
+        <div class="form-group"><label for="eType">I want to</label><select id="eType"><option>Schedule a site visit</option><option>Request a callback</option><option>Buy a property</option><option>Rent a property</option><option>Sell my property</option></select></div></div>
+        <div class="form-group"><label for="eProp">Property</label><select id="eProp"></select></div>
+        <div class="form-row"><div class="form-group"><label for="eDate">Preferred date</label><input id="eDate" type="date"></div>
+        <div class="form-group"><label for="eSlot">Time slot</label><select id="eSlot"><option>10:00 – 12:00</option><option>12:00 – 14:00</option><option>14:00 – 16:00</option><option>16:00 – 18:00</option></select></div></div>
+        <div class="form-group"><label for="eMsg">Message</label><textarea id="eMsg" rows="3" maxlength="500"></textarea></div>
+        <input type="text" id="eHp" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp" style="display:none;">
+        <div class="enq-actions"><button type="submit" class="btn-coral-full">Submit request</button><button type="button" class="btn-wa" id="eWa">WhatsApp enquiry</button></div>
+        <p class="form-error" id="eErr" role="alert"></p>
+      </form></div></section>
+
+    <!-- NEWSLETTER SUBSCRIPTION SECTION -->
+    <section class="newsletter-section">
+      <div class="newsletter-decorations" aria-hidden="true">
+        <div class="news-deco-star"></div>
+        <div class="news-deco-square"></div>
+        <div class="news-deco-arc-top"></div>
+        <div class="news-deco-arc-right"></div>
+      </div>
+
+      <div class="newsletter-container">
+        <h2 class="newsletter-title">Get new property updates</h2>
+        <form class="newsletter-form" id="newsletterForm" onsubmit="handleSubscribe(event)">
+          <div class="input-line-wrap">
+            <input type="email" id="newsletterEmail" placeholder="Your email" required />
+          </div>
+          <button type="submit" class="btn-subscribe">Subscribe</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="footer">
+    <h2 class="sr-only">Footer directory and company information</h2>
+    <div class="footer-container">
+      <!-- Col 1: Brand & Contact Info -->
+      <div class="footer-col brand-col">
+        <div class="footer-logo">
+          <svg class="logo-icon footer-logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g stroke="#E5A835" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 28L26 14M26 14L23 11M26 14L29 17M23 17L21 15" />
+              <rect x="7" y="27" width="7" height="7" rx="1.5" stroke="#E5A835" fill="none" transform="rotate(-45 10.5 30.5)" />
+              <circle cx="10.5" cy="30.5" r="1.5" fill="#E5A835" />
+              <path d="M20 36L34 22M34 22L31 19M34 22L37 25M31 25L29 23" />
+              <rect x="15" y="35" width="7" height="7" rx="1.5" stroke="#E5A835" fill="none" transform="rotate(-45 18.5 38.5)" />
+              <circle cx="18.5" cy="38.5" r="1.5" fill="#E5A835" />
+            </g>
+          </svg>
+          <span class="footer-logo-text">AAA Real Estate</span>
+        </div>
+
+        <ul class="contact-list">
+          <li class="contact-item">
+            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span>Mumbai, Maharashtra, India</span>
+          </li>
+          <li class="contact-item" style="align-items:flex-start;">
+            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-top:3px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div>
+                <a href="tel:+919967981427" style="font-weight:700;color:var(--color-navy-dark);">+91 99679 81427</a>
+                <a href="https://wa.me/919967981427?text=Hi%20AAA%20Real%20Estate%2C%20I%20have%20an%20enquiry" target="_blank" rel="noopener" class="footer-wa-badge" title="Chat on WhatsApp">💬 WhatsApp</a>
+              </div>
+              <div>
+                <a href="tel:+917021650366" style="font-weight:700;color:var(--color-navy-dark);">+91 70216 50366</a>
+                <a href="https://wa.me/917021650366?text=Hi%20AAA%20Real%20Estate%2C%20I%20have%20an%20enquiry" target="_blank" rel="noopener" class="footer-wa-badge" title="Chat on WhatsApp">💬 WhatsApp</a>
+              </div>
+            </div>
+          </li>
+          <li class="contact-item">
+            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path></svg>
+            <a href="mailto:contact@aaarealestate.com">contact@aaarealestate.com</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Col 2: Company -->
+      <div class="footer-col">
+        <h3 class="footer-title">Company</h3>
+        <ul class="footer-links">
+          <li><a href="#mission">About</a></li>
+          <li><a href="#footer">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Community -->
+      <div class="footer-col">
+        <h3 class="footer-title">Community</h3>
+        <ul class="footer-links">
+          <li><a href="#recommendations">Properties</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#cities">Locations</a></li>
+          <li><a href="#contact" data-nav="sell">Sell / List Property</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Resources -->
+      <div class="footer-col">
+        <h3 class="footer-title">Resources</h3>
+        <ul class="footer-links">
+          <li><a href="#emi">EMI Calculator</a></li>
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#contact">Site visits</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-container">
+        <p class="copyright">© 2026 AAA Real Estate. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- AUTH MODAL (SIGN IN & REGISTER) -->
+  <div class="modal-backdrop" id="authModal" onclick="closeAuthModal(event)">
+    <div class="modal-dialog auth-dialog" onclick="event.stopPropagation()">
+      <button class="modal-close-btn" onclick="closeAuthModal()" aria-label="Close dialog">&times;</button>
+      
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabSignIn" onclick="switchAuthTab('signin')">Sign In</button>
+        <button class="auth-tab" id="tabSignUp" onclick="switchAuthTab('signup')">Create Account</button>
+      </div>
+
+      <div class="auth-content">
+        <!-- Sign In Form -->
+        <form class="auth-form" id="signInForm" onsubmit="handleAuthSubmit(event, 'signin')">
+          <h3 class="auth-title">Welcome Back</h3>
+          <p class="auth-subtitle">Sign in to save properties and track enquiries (demo: demo@example.com or create account).</p>
+          
+          <div class="form-group">
+            <label for="signinEmail">Email Address</label>
+            <input type="email" id="signinEmail" placeholder="demo@example.com" value="demo@example.com" required />
+          </div>
+          
+          <div class="form-group">
+            <label for="signinPass">Password</label>
+            <input type="password" id="signinPass" placeholder="••••••••" value="demo1234" required />
+          </div>
+
+          <div class="form-actions-row">
+            <label class="remember-me">
+              <input type="checkbox" checked /> Remember me
+            </label>
+            <a href="#" class="forgot-link" onclick="event.preventDefault(); showToast('Demo Mode: Use demo@example.com or register a new account.')">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn-coral-full">Sign In</button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form class="auth-form hidden" id="signUpForm" onsubmit="handleAuthSubmit(event, 'signup')">
+          <h3 class="auth-title">Create your account</h3>
+          <p class="auth-subtitle">Save properties, searches and enquiries.</p>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="signupFirst">First Name</label>
+              <input type="text" id="signupFirst" placeholder="Jane" required />
+            </div>
+            <div class="form-group">
+              <label for="signupLast">Last Name</label>
+              <input type="text" id="signupLast" placeholder="Doe" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="signupEmail">Email Address</label>
+            <input type="email" id="signupEmail" placeholder="jane@example.com" required />
+          </div>
+
+          <div class="form-group">
+            <label for="signupPass">Create Password</label>
+            <input type="password" id="signupPass" placeholder="At least 8 characters" required />
+          </div>
+
+          <button type="submit" class="btn-coral-full">Get Started</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROOM DETAIL MODAL -->
+  <div class="modal-backdrop" id="roomModal" onclick="closeRoomModal(event)">
+    <div class="modal-dialog room-dialog" onclick="event.stopPropagation()">
+      <button class="modal-close-btn" onclick="closeRoomModal()" aria-label="Close dialog">&times;</button>
+      <div class="room-modal-body" id="roomModalBody">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast"></div>
+
+  <!-- SCRIPTS & LIBRARIES -->
+  <script src="lenis.min.js"></script>
+  <script src="three.min.js"></script>
+  <script src="OrbitControls.js"></script>
+  <script src="three-villa.js"></script>
+  <script src="smooth-scroll.js"></script>
+  <script src="script.js"></script>
+  <script src="features.js"></script>
+</body>
+</html>
