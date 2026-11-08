@@ -2,8 +2,6 @@
 
 > Modern, high-performance real estate web portal featuring an interactive 3D architectural villa, buttery-smooth Lenis scrolling, advanced property search, and instant WhatsApp enquiry integration.
 
-![AAA Real Estate Preview]([assets/hero.jpg])
-
 ---
 
 ## 🌟 Key Features
