@@ -125,7 +125,8 @@
             <button type="button" class="mode-tab" data-mode="commercial" role="tab" aria-selected="false">Commercial</button>
           </div>
           <div class="adv-grid">
-            <label class="loc-field-label">Location
+            <div class="loc-field-label">
+              <span class="loc-title-text">Location</span>
               <div class="loc-dropdown-wrapper">
                 <input type="text" id="hsQ" placeholder="City, locality or developer" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="locDropdownMenu" />
                 <button type="button" class="loc-dropdown-arrow-btn" id="locDropdownBtn" aria-label="Show all locations" tabindex="-1">
@@ -136,7 +137,7 @@
                 <div class="loc-dropdown-menu" id="locDropdownMenu" role="listbox" data-lenis-prevent></div>
                 <datalist id="cityList"></datalist>
               </div>
-            </label>
+            </div>
             <label>Property type<select id="hsType"></select></label>
             <label>Bedrooms<select id="hsBhk"><option value="">Any</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
             <label>Max budget<select id="hsPrice"></select></label>

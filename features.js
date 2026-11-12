@@ -191,17 +191,19 @@
   }
 
   if (locBtn && hsQ && locMenu) {
-    // Click arrow button: ALWAYS show ALL available locations
+    let justSelected = false;
+
+    // Click arrow button: ALWAYS toggle dropdown open/closed
     locBtn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       toggleLocDropdown();
-      hsQ.focus();
     });
 
     // Clicking into the input box: open dropdown and show all locations
     hsQ.addEventListener('click', (e) => {
       e.stopPropagation();
+      if (justSelected) return;
       if (!locWrap.classList.contains('open')) {
         toggleLocDropdown(true);
       }
@@ -216,13 +218,17 @@
       }
     });
 
-    // Selecting an item in dropdown
+    // Selecting an item in dropdown: CLOSE IMMEDIATELY!
     locMenu.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const item = e.target.closest('.loc-dropdown-item');
       if (!item) return;
       const val = item.dataset.val || '';
       hsQ.value = val;
+      justSelected = true;
       toggleLocDropdown(false);
+      setTimeout(() => { justSelected = false; }, 250);
     });
 
     // Click outside: close dropdown
