@@ -457,7 +457,7 @@
         <ul class="footer-links">
           <li><a href="#mission">About</a></li>
           <li><a href="#footer">Contact</a></li>
-          <li><a href="javascript:void(0)" onclick="openAdminModal()">Admin Portal</a></li>
+          <li><a href="#testimonials">Reviews</a></li>
         </ul>
       </div>
 
@@ -498,30 +498,29 @@
       <div class="auth-tabs">
         <button class="auth-tab active" id="tabSignIn" onclick="switchAuthTab('signin')">Sign In</button>
         <button class="auth-tab" id="tabSignUp" onclick="switchAuthTab('signup')">Create Account</button>
-        <button class="auth-tab" id="tabAdmin" onclick="switchAuthTab('admin')">🔐 Admin Portal</button>
       </div>
 
       <div class="auth-content">
-        <!-- Sign In Form -->
+        <!-- Sign In Form (Used by clients and administrators alike) -->
         <form class="auth-form" id="signInForm" onsubmit="handleAuthSubmit(event, 'signin')">
           <h3 class="auth-title">Welcome Back</h3>
-          <p class="auth-subtitle">Sign in to save properties and track enquiries (demo: demo@example.com or create account).</p>
+          <p class="auth-subtitle">Sign in to your account to save luxury properties, track tours &amp; manage enquiries.</p>
           
           <div class="form-group">
             <label for="signinEmail">Email Address</label>
-            <input type="email" id="signinEmail" placeholder="demo@example.com" value="demo@example.com" required />
+            <input type="email" id="signinEmail" placeholder="Enter your email address" required autocomplete="email" />
           </div>
           
           <div class="form-group">
             <label for="signinPass">Password</label>
-            <input type="password" id="signinPass" placeholder="••••••••" value="demo1234" required />
+            <input type="password" id="signinPass" placeholder="Enter your password" required autocomplete="current-password" />
           </div>
 
           <div class="form-actions-row">
             <label class="remember-me">
-              <input type="checkbox" checked /> Remember me
+              <input type="checkbox" id="signinRemember" checked /> Remember me
             </label>
-            <a href="#" class="forgot-link" onclick="event.preventDefault(); showToast('Demo Mode: Use demo@example.com or register a new account.')">Forgot password?</a>
+            <a href="#" class="forgot-link" onclick="event.preventDefault(); showToast('Please contact support or register a new account.')">Forgot password?</a>
           </div>
 
           <button type="submit" class="btn-coral-full">Sign In</button>
@@ -545,38 +544,15 @@
 
           <div class="form-group">
             <label for="signupEmail">Email Address</label>
-            <input type="email" id="signupEmail" placeholder="jane@example.com" required />
+            <input type="email" id="signupEmail" placeholder="jane@example.com" required autocomplete="email" />
           </div>
 
           <div class="form-group">
             <label for="signupPass">Create Password</label>
-            <input type="password" id="signupPass" placeholder="At least 8 characters" required />
+            <input type="password" id="signupPass" placeholder="At least 8 characters" required autocomplete="new-password" />
           </div>
 
           <button type="submit" class="btn-coral-full">Get Started</button>
-        </form>
-
-        <!-- Admin Login Form -->
-        <form class="auth-form hidden" id="adminLoginForm" onsubmit="handleAdminAuth(event)">
-          <h3 class="auth-title">Administrator Portal</h3>
-          <p class="auth-subtitle">Manage apartment listings, update pricing, add new properties &amp; view customer leads.</p>
-          
-          <div class="form-group">
-            <label for="adminEmail">Admin Email</label>
-            <input type="text" id="adminEmail" placeholder="admin@aaarealestate.com" value="admin@aaarealestate.com" required />
-          </div>
-          
-          <div class="form-group">
-            <label for="adminPass">Admin Password</label>
-            <input type="password" id="adminPass" placeholder="••••••••" value="admin123" required />
-          </div>
-
-          <div class="form-actions-row">
-            <span style="font-size:0.8rem;color:var(--color-text-muted);">Default: <code>admin@aaarealestate.com</code> / <code>admin123</code></span>
-            <button type="button" style="font-size:0.75rem;padding:4px 10px;border:1px solid var(--color-border);background:#fff;border-radius:4px;cursor:pointer;font-weight:600;" onclick="document.getElementById('adminEmail').value='admin@aaarealestate.com';document.getElementById('adminPass').value='admin123';">Auto-fill</button>
-          </div>
-
-          <button type="submit" class="btn-coral-full" style="background:var(--color-navy-dark);color:#fff;margin-top:8px;">Log In to Dashboard</button>
         </form>
       </div>
     </div>

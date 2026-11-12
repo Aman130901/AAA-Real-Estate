@@ -433,42 +433,10 @@
     waLink(p ? propMsg(p) : `Hi AAA Real Estate, I'm ${n || 'interested in a property'} and would like to talk about ${($('#eType').value || 'property consultation').toLowerCase()}.`);
   });
 
-  /* ===== AUTH (USER) ===== */
-  let user = ls('aaa_user', null);
-  function fillUser() {
-    if (user) {
-      const en = $('#eName'), ee = $('#eEmail');
-      if (en) en.value = user.name;
-      if (ee) ee.value = user.email;
-    }
-    const b = $('#authSignIn');
-    if (b) {
-      b.textContent = user ? 'Hi, ' + user.name.split(' ')[0] + ' · Logout' : 'Login';
-      b.onclick = user ? () => { user = null; try { localStorage.removeItem('aaa_user'); } catch (e) { /* */ } fillUser(); toast('Logged out'); } : () => window.openAuthModal('signin');
-    }
-    const regBtn = $('.btn-getstarted');
-    if (regBtn) regBtn.style.display = user ? 'none' : '';
-    const mobAuth = $('#mobAuthBtn');
-    if (mobAuth) {
-      mobAuth.textContent = user ? 'Logout (' + user.name.split(' ')[0] + ')' : 'Login / Register';
-      mobAuth.onclick = user ? () => { user = null; try { localStorage.removeItem('aaa_user'); } catch (e) { /* */ } fillUser(); toast('Logged out'); } : () => window.openAuthModal('signin');
-    }
-  }
-  window.handleAuthSubmit = (e, type) => {
-    e.preventDefault();
-    const em = $(type === 'signin' ? '#signinEmail' : '#signupEmail').value.trim().toLowerCase();
-    if (type === 'signup') {
-      if ($('#signupPass').value.length < 8) return toast('Password must be at least 8 characters');
-      user = { name: ($('#signupFirst').value + ' ' + $('#signupLast').value).trim().slice(0, 80), email: em };
-    } else {
-      user = { name: em.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()), email: em };
-    }
-    sv('aaa_user', user); fillUser(); window.closeAuthModal(); toast('Welcome, ' + user.name + '!');
-  };
-
-  /* ===== ADMIN ENGINE & DASHBOARD ===== */
+  /* ===== AUTH (USER & ADMIN) ===== */
   const ADMIN_CRED = { email: 'admin@aaarealestate.com', pass: 'admin123' };
   let isAdmin = ls('aaa_admin_auth', false);
+  let user = ls('aaa_user', null);
 
   function checkAdminUI() {
     isAdmin = ls('aaa_admin_auth', false);
@@ -478,33 +446,125 @@
     if (mobAdmin) mobAdmin.style.display = isAdmin ? 'block' : 'none';
   }
 
-  window.handleAdminAuth = (e) => {
+  function fillUser() {
+    if (user) {
+      const en = $('#eName'), ee = $('#eEmail');
+      if (en && !en.value) en.value = user.name;
+      if (ee && !ee.value) ee.value = user.email;
+    }
+    const b = $('#authSignIn');
+    if (b) {
+      if (user) {
+        b.textContent = user.role === 'admin' ? '⚡ Admin · Logout' : 'Hi, ' + user.name.split(' ')[0] + ' · Logout';
+        b.onclick = () => {
+          user = null;
+          isAdmin = false;
+          try {
+            localStorage.removeItem('aaa_user');
+            localStorage.removeItem('aaa_admin_auth');
+          } catch (e) {}
+          fillUser();
+          checkAdminUI();
+          toast('Logged out successfully');
+        };
+      } else {
+        b.textContent = 'Login';
+        b.onclick = () => window.openAuthModal('signin');
+      }
+    }
+    const regBtn = $('.btn-getstarted');
+    if (regBtn) regBtn.style.display = user ? 'none' : '';
+    const mobAuth = $('#mobAuthBtn');
+    if (mobAuth) {
+      if (user) {
+        mobAuth.textContent = user.role === 'admin' ? 'Logout (Admin)' : 'Logout (' + user.name.split(' ')[0] + ')';
+        mobAuth.onclick = () => {
+          user = null;
+          isAdmin = false;
+          try {
+            localStorage.removeItem('aaa_user');
+            localStorage.removeItem('aaa_admin_auth');
+          } catch (e) {}
+          fillUser();
+          checkAdminUI();
+          toast('Logged out successfully');
+        };
+      } else {
+        mobAuth.textContent = 'Login / Register';
+        mobAuth.onclick = () => window.openAuthModal('signin');
+      }
+    }
+  }
+
+  window.handleAuthSubmit = (e, type) => {
     e.preventDefault();
-    const em = ($('#adminEmail')?.value || '').trim().toLowerCase();
-    const pw = ($('#adminPass')?.value || '').trim();
+    if (type === 'signup') {
+      const em = ($('#signupEmail')?.value || '').trim().toLowerCase();
+      if ($('#signupPass')?.value.length < 8) return toast('Password must be at least 8 characters');
+      const fullName = ($('#signupFirst')?.value + ' ' + $('#signupLast')?.value).trim().slice(0, 80);
+      user = { name: fullName || 'User', email: em, role: 'user' };
+      isAdmin = false;
+      sv('aaa_admin_auth', false);
+      sv('aaa_user', user);
+      fillUser();
+      checkAdminUI();
+      window.closeAuthModal();
+      toast('Welcome, ' + user.name + '!');
+      return;
+    }
+
+    // Sign In: Email & Password (Used by both Admin & Clients)
+    const em = ($('#signinEmail')?.value || '').trim().toLowerCase();
+    const pw = ($('#signinPass')?.value || '').trim();
+
+    if (!em || !pw) return toast('Please enter your email and password');
+
+    // Admin Credentials Check
     if ((em === ADMIN_CRED.email || em === 'admin') && pw === ADMIN_CRED.pass) {
       isAdmin = true;
       sv('aaa_admin_auth', true);
+      user = { name: 'Administrator', email: ADMIN_CRED.email, role: 'admin' };
+      sv('aaa_user', user);
+      fillUser();
       checkAdminUI();
       window.closeAuthModal();
+      if ($('#signinPass')) $('#signinPass').value = '';
       toast('Welcome back, Administrator!');
       window.openAdminModal();
-    } else {
-      toast('Invalid Admin Credentials! Use admin@aaarealestate.com / admin123');
+      return;
     }
-  };
 
-  window.handleAdminLogout = () => {
+    // Regular Client Sign In
     isAdmin = false;
     sv('aaa_admin_auth', false);
+    const displayName = em.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    user = { name: displayName, email: em, role: 'user' };
+    sv('aaa_user', user);
+    fillUser();
     checkAdminUI();
+    window.closeAuthModal();
+    if ($('#signinPass')) $('#signinPass').value = '';
+    toast('Welcome, ' + user.name + '!');
+  };
+
+  /* ===== ADMIN ENGINE & DASHBOARD ===== */
+  window.handleAdminLogout = () => {
+    isAdmin = false;
+    user = null;
+    try {
+      localStorage.removeItem('aaa_admin_auth');
+      localStorage.removeItem('aaa_user');
+    } catch (e) {}
+    checkAdminUI();
+    fillUser();
     window.closeAdminModal();
     toast('Logged out from Admin Portal.');
   };
 
   window.openAdminModal = () => {
     if (!isAdmin) {
-      window.openAuthModal('admin');
+      window.openAuthModal('signin');
+      toast('Please sign in with your Administrator credentials.');
       return;
     }
     const m = $('#adminModal');
@@ -881,6 +941,17 @@
     const pid = location.hash.replace('#property-', '');
     if (pid) setTimeout(() => openProperty(pid), 400);
   }
+  if (location.hash === '#admin') {
+    setTimeout(() => window.openAdminModal(), 350);
+  }
+
+  // Admin shortcut: Ctrl+Shift+A opens Admin Portal (or login if unauthenticated)
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+      e.preventDefault();
+      window.openAdminModal();
+    }
+  });
 
   // Init
   render();

@@ -38,7 +38,7 @@
 - **Contact & Enquiry Section**: Validated lead capture form with instant pre-selection for buyers and sellers.
 
 ### 🛡️ 7. Full Admin Management Portal (CRUD & Leads)
-- **Admin Authentication**: Access via Login Modal tab or top navigation (`admin@aaarealestate.com` / `admin123`).
+- **Admin Authentication**: Secure sign-in via standard Login modal using Administrator credentials (`admin@aaarealestate.com` / `admin123`) or `Ctrl+Shift+A`. Admin dashboard controls and navigation buttons remain hidden to public visitors until authenticated.
 - **Property CRUD**: Add new apartments/penthouses, update pricing, edit carpet area/specifications, and delete listings in real-time.
 - **Customer Leads & Site Visits**: View visitor enquiries, filter lead status, call clients directly, or reply with 1-click personalized WhatsApp messages.
 - **Data Persistence & Export**: Stored persistently in browser `localStorage`, with 1-click JSON database export and reset options.

@@ -210,18 +210,14 @@ function closeAuthModal(e) {
 function switchAuthTab(type) {
   const tabSignIn = document.getElementById('tabSignIn');
   const tabSignUp = document.getElementById('tabSignUp');
-  const tabAdmin = document.getElementById('tabAdmin');
   const signInForm = document.getElementById('signInForm');
   const signUpForm = document.getElementById('signUpForm');
-  const adminLoginForm = document.getElementById('adminLoginForm');
 
   if (tabSignIn) tabSignIn.classList.toggle('active', type === 'signin');
   if (tabSignUp) tabSignUp.classList.toggle('active', type === 'signup');
-  if (tabAdmin) tabAdmin.classList.toggle('active', type === 'admin');
 
   if (signInForm) signInForm.classList.toggle('hidden', type !== 'signin');
   if (signUpForm) signUpForm.classList.toggle('hidden', type !== 'signup');
-  if (adminLoginForm) adminLoginForm.classList.toggle('hidden', type !== 'admin');
 }
 
 function handleAuthSubmit(e, type) {
