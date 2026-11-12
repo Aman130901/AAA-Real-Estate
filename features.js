@@ -270,10 +270,12 @@
     const f = favs.includes(p.id);
     const badgeText = p.status ? p.status.split('/')[0].split('(')[0].trim() : 'MahaRERA';
     const displayPrice = p.priceStr || fmt(p.price, p.mode);
+    const photoCount = (p.images && p.images.length > 1) ? `<div class="property-photo-count">📷 ${p.images.length}</div>` : '';
     return `<article class="property-card" data-id="${p.id}" tabindex="0" role="button" aria-label="View details for ${esc(p.title)}" style="cursor:pointer;">
       <div class="property-image-box" data-act="view" style="cursor:pointer;" title="Click to view details">
         <img src="${p.img}" alt="${esc(p.title)}" class="property-img" loading="lazy" width="400" height="260" data-act="view">
         <div class="property-badge">${esc(badgeText)}</div>
+        ${photoCount}
         <button type="button" class="fav${f ? ' on' : ''}" data-act="fav" aria-pressed="${f}" aria-label="${f ? 'Remove from' : 'Add to'} saved">${f ? '♥' : '♡'}</button>
       </div>
       <div class="property-details">
@@ -616,7 +618,29 @@
     const rv = [p.id, ...ls('aaa_recent', []).filter((x) => x !== p.id)].slice(0, 4); sv('aaa_recent', rv); extras();
     history.replaceState(null, '', location.pathname + location.search + '#property-' + p.id);
     const m = $('#roomModal'); const body = $('#roomModalBody');
-    body.innerHTML = `<img class="pd-img" src="${p.img}" alt="${esc(p.title)}" width="700" height="380" loading="lazy">
+    const pImages = (p.images && p.images.length) ? p.images : [p.img || 'assets/rec-1.jpg'];
+    let currentGalIdx = 0;
+
+    body.innerHTML = `
+      <div class="pd-gallery-container">
+        <div class="pd-gallery-main">
+          <img class="pd-img" id="pdMainImg" src="${pImages[0]}" alt="${esc(p.title)}" width="700" height="380" loading="lazy">
+          ${pImages.length > 1 ? `
+            <button type="button" class="pd-nav-btn prev" id="pdGalPrev" aria-label="Previous photo">‹</button>
+            <button type="button" class="pd-nav-btn next" id="pdGalNext" aria-label="Next photo">›</button>
+            <div class="pd-img-counter" id="pdImgCounter">1 / ${pImages.length}</div>
+          ` : ''}
+        </div>
+        ${pImages.length > 1 ? `
+          <div class="pd-thumbs-strip" id="pdThumbsStrip">
+            ${pImages.map((src, idx) => `
+              <button type="button" class="pd-thumb-btn ${idx === 0 ? 'active' : ''}" data-gidx="${idx}" title="Photo ${idx + 1}">
+                <img src="${src}" alt="Thumb ${idx + 1}" loading="lazy">
+              </button>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
       <div class="pd-head"><span>${esc(spec(p))}</span><strong>${esc(p.priceStr || fmt(p.price, p.mode))}</strong></div>
       <h3>${esc(p.title)}</h3>
       <p class="pd-loc">📍 ${esc(p.locality)}, ${esc(p.city)} ${esc(p.pin)} · <strong>Developer:</strong> ${esc(p.developer)}</p>
@@ -633,6 +657,31 @@
       ${p.notes ? `<div class="pd-notes-callout" style="margin:14px 0;padding:12px 16px;background:rgba(22,46,80,0.06);border-left:3px solid var(--color-coral);border-radius:4px;font-size:0.88rem;color:var(--color-text-main);line-height:1.5;"><strong>Verification Note:</strong> ${esc(p.notes)}</div>` : ''}
       <h4>Amenities &amp; Features</h4><p>${p.amen.map((a) => `<span class="chip">${esc(a)}</span>`).join('')}</p>
       <div class="pd-actions"><button class="btn-coral-full" data-pd="visit">Schedule site visit</button><button class="btn-wa" data-pd="wa">WhatsApp Enquiry</button><button data-pd="share">Share</button><button data-pd="fav">${favs.includes(p.id) ? '♥ Saved' : '♡ Save'}</button></div>`;
+
+    // Interactive gallery switching
+    if (pImages.length > 1) {
+      const updateGal = (newIdx) => {
+        currentGalIdx = (newIdx + pImages.length) % pImages.length;
+        const main = $('#pdMainImg');
+        const counter = $('#pdImgCounter');
+        if (main) main.src = pImages[currentGalIdx];
+        if (counter) counter.textContent = `${currentGalIdx + 1} / ${pImages.length}`;
+        $$('.pd-thumb-btn', body).forEach((b) => {
+          b.classList.toggle('active', +b.dataset.gidx === currentGalIdx);
+        });
+      };
+
+      $('#pdGalPrev', body)?.addEventListener('click', (e) => { e.stopPropagation(); updateGal(currentGalIdx - 1); });
+      $('#pdGalNext', body)?.addEventListener('click', (e) => { e.stopPropagation(); updateGal(currentGalIdx + 1); });
+      $('#pdThumbsStrip', body)?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.pd-thumb-btn');
+        if (btn) {
+          e.stopPropagation();
+          updateGal(+btn.dataset.gidx);
+        }
+      });
+    }
+
     body.onclick = (e) => {
       const a = e.target.closest('[data-pd]'); if (!a) return;
       ({
@@ -891,6 +940,7 @@
     $('#admViewLeads')?.classList.toggle('hidden', tabName !== 'leads');
     if (tabName === 'props') renderAdminPropsTable();
     if (tabName === 'leads') renderAdminLeadsTable();
+    if (tabName === 'addprop') renderAdminGallery();
   };
 
   function updateStatsCounter() {
@@ -974,6 +1024,127 @@
     openProperty(id);
   };
 
+  /* ===== ADMIN MULTI-IMAGE MANAGEMENT & COMPRESSION ===== */
+  let currentAdminImages = ['assets/rec-1.jpg'];
+
+  function compressImageFile(file, callback) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_W = 1200;
+        const MAX_H = 800;
+        let w = img.width;
+        let h = img.height;
+        if (w > h) {
+          if (w > MAX_W) {
+            h = Math.round((h * MAX_W) / w);
+            w = MAX_W;
+          }
+        } else {
+          if (h > MAX_H) {
+            w = Math.round((w * MAX_H) / h);
+            h = MAX_H;
+          }
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        callback(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = () => callback(null);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => callback(null);
+    reader.readAsDataURL(file);
+  }
+
+  function renderAdminGallery() {
+    const grid = $('#admGalleryGrid');
+    const countBadge = $('#admImgCountBadge');
+    const hiddenInput = $('#admImg');
+    if (!currentAdminImages.length) {
+      currentAdminImages = ['assets/rec-1.jpg'];
+    }
+    if (hiddenInput) hiddenInput.value = currentAdminImages[0];
+    if (countBadge) countBadge.textContent = `${currentAdminImages.length} ${currentAdminImages.length === 1 ? 'Photo' : 'Photos'}`;
+    if (grid) {
+      grid.innerHTML = currentAdminImages.map((src, i) => `
+        <div class="adm-gal-card ${i === 0 ? 'is-cover' : ''}">
+          <img src="${src}" alt="Photo ${i + 1}" class="adm-gal-img">
+          <div class="adm-gal-bar">
+            ${i === 0 ? '<span class="adm-badge-cover">⭐ Cover</span>' : `<button type="button" class="adm-btn-make-cover" onclick="setAdminCoverImage(${i})">Set Cover</button>`}
+            <button type="button" class="adm-btn-del-single" onclick="deleteAdminImage(${i})" title="Delete this photo">🗑️ Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+
+  window.handleDeviceImageUpload = (event) => {
+    const files = Array.from((event.target && event.target.files) || []);
+    if (!files.length) return;
+
+    const validFiles = files.filter(f => f.type.startsWith('image/'));
+    if (!validFiles.length) {
+      toast('Please select valid image files (JPG, PNG, WebP).');
+      return;
+    }
+
+    if (currentAdminImages.length === 1 && currentAdminImages[0] === 'assets/rec-1.jpg') {
+      currentAdminImages = [];
+    }
+
+    let processed = 0;
+    validFiles.forEach(file => {
+      compressImageFile(file, (dataUrl) => {
+        if (dataUrl) {
+          currentAdminImages.push(dataUrl);
+        }
+        processed++;
+        if (processed === validFiles.length) {
+          renderAdminGallery();
+          toast(`${processed} ${processed === 1 ? 'photo' : 'photos'} added successfully!`);
+          if (event.target && event.target.value !== undefined) {
+            try { event.target.value = ''; } catch (_) {}
+          }
+        }
+      });
+    });
+  };
+
+  window.deleteAdminImage = (index) => {
+    if (index < 0 || index >= currentAdminImages.length) return;
+    if (currentAdminImages.length <= 1) {
+      if (!confirm('This is the only photo for this property. Reset to default photo?')) return;
+      currentAdminImages = ['assets/rec-1.jpg'];
+    } else {
+      currentAdminImages.splice(index, 1);
+    }
+    renderAdminGallery();
+    toast('Photo deleted.');
+  };
+
+  window.setAdminCoverImage = (index) => {
+    if (index <= 0 || index >= currentAdminImages.length) return;
+    const item = currentAdminImages.splice(index, 1)[0];
+    currentAdminImages.unshift(item);
+    renderAdminGallery();
+    toast('Primary cover photo updated!');
+  };
+
+  window.handleAddPresetImg = (val) => {
+    if (!val) return;
+    if (currentAdminImages.length === 1 && currentAdminImages[0] === 'assets/rec-1.jpg') {
+      currentAdminImages = [];
+    }
+    currentAdminImages.push(val);
+    renderAdminGallery();
+    toast('Library photo added to gallery.');
+  };
+
   window.editAdminProp = (id) => {
     const p = byId(id);
     if (!p) return;
@@ -995,123 +1166,11 @@
     $('#admPossession').value = p.poss || '';
     $('#admRera').value = p.rera || '';
     $('#admFloors').value = p.floors || '';
-    const currentImg = p.img || 'assets/rec-1.jpg';
-    $('#admImg').value = currentImg;
-    const previewEl = $('#admImgPreview');
-    if (previewEl) previewEl.src = currentImg;
-    const badgeEl = $('#admImgBadge');
-    if (badgeEl) {
-      const isCustom = currentImg.startsWith('data:');
-      badgeEl.textContent = isCustom ? 'Device Photo ✓' : 'Current Photo';
-      badgeEl.className = isCustom ? 'adm-preview-badge uploaded' : 'adm-preview-badge';
-    }
-    const presetSelect = $('#admPresetImg');
-    if (presetSelect) {
-      const hasMatch = Array.from(presetSelect.options).some(o => o.value === currentImg);
-      presetSelect.value = hasMatch ? currentImg : '';
-    }
+    currentAdminImages = (p.images && p.images.length) ? [...p.images] : [p.img || 'assets/rec-1.jpg'];
+    renderAdminGallery();
     $('#admNotes').value = p.notes || '';
     $('#admSaveBtn').textContent = 'Update Property';
     $('#admViewAddProp')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  /* ===== ADMIN DEVICE IMAGE UPLOAD & OPTIMIZATION ===== */
-  window.handleDeviceImageUpload = (event) => {
-    const file = event.target.files && event.target.files[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      toast('Please select a valid image file (JPG, PNG, WebP).');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const rawDataUrl = e.target.result;
-      // Auto-compress & scale image via canvas to guarantee fast load and zero storage limit issues
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 1200;
-        const MAX_HEIGHT = 800;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height = Math.round((height * MAX_WIDTH) / width);
-            width = MAX_WIDTH;
-          }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width = Math.round((width * MAX_HEIGHT) / height);
-            height = MAX_HEIGHT;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        // Quality 0.82 generates clean crisp photos at ~120KB
-        const compressedUrl = canvas.toDataURL('image/jpeg', 0.82);
-
-        $('#admImg').value = compressedUrl;
-        const preview = $('#admImgPreview');
-        if (preview) preview.src = compressedUrl;
-
-        const badge = $('#admImgBadge');
-        if (badge) {
-          badge.textContent = 'Device Photo ✓';
-          badge.className = 'adm-preview-badge uploaded';
-        }
-
-        const presetSelect = $('#admPresetImg');
-        if (presetSelect) presetSelect.value = '';
-
-        toast('Photo uploaded from device successfully!');
-      };
-      img.onerror = () => {
-        toast('Unable to process the selected image.');
-      };
-      img.src = rawDataUrl;
-    };
-    reader.onerror = () => {
-      toast('Failed to read file from your device.');
-    };
-    reader.readAsDataURL(file);
-  };
-
-  window.handlePresetImgChange = (val) => {
-    if (!val) return;
-    $('#admImg').value = val;
-    const preview = $('#admImgPreview');
-    if (preview) preview.src = val;
-    const badge = $('#admImgBadge');
-    if (badge) {
-      badge.textContent = 'Library Photo';
-      badge.className = 'adm-preview-badge';
-    }
-    const fileInput = $('#admImgFile');
-    if (fileInput) fileInput.value = '';
-  };
-
-  window.resetPropertyImage = () => {
-    const defaultImg = 'assets/rec-1.jpg';
-    $('#admImg').value = defaultImg;
-    const preview = $('#admImgPreview');
-    if (preview) preview.src = defaultImg;
-    const presetSelect = $('#admPresetImg');
-    if (presetSelect) presetSelect.value = defaultImg;
-    const fileInput = $('#admImgFile');
-    if (fileInput) fileInput.value = '';
-    const badge = $('#admImgBadge');
-    if (badge) {
-      badge.textContent = 'Default Photo';
-      badge.className = 'adm-preview-badge';
-    }
-    toast('Image reset to default.');
   };
 
   // Drag & drop support for dropzone
@@ -1136,11 +1195,7 @@
         const dt = e.dataTransfer;
         const files = dt && dt.files;
         if (files && files.length) {
-          const fileInput = $('#admImgFile');
-          if (fileInput) {
-            fileInput.files = files;
-            window.handleDeviceImageUpload({ target: fileInput });
-          }
+          window.handleDeviceImageUpload({ target: { files: files } });
         }
       }, false);
     }
@@ -1150,18 +1205,12 @@
     $('#admFormTitle').textContent = '➕ Add New Luxury Property';
     $('#admEditId').value = '';
     $('#admPropForm')?.reset();
-    $('#admImg').value = 'assets/rec-1.jpg';
-    const preview = $('#admImgPreview');
-    if (preview) preview.src = 'assets/rec-1.jpg';
-    const presetSelect = $('#admPresetImg');
-    if (presetSelect) presetSelect.value = 'assets/rec-1.jpg';
+    currentAdminImages = ['assets/rec-1.jpg'];
+    renderAdminGallery();
     const fileInput = $('#admImgFile');
     if (fileInput) fileInput.value = '';
-    const badge = $('#admImgBadge');
-    if (badge) {
-      badge.textContent = 'Default Photo';
-      badge.className = 'adm-preview-badge';
-    }
+    const presetSelect = $('#admPresetImg');
+    if (presetSelect) presetSelect.value = '';
     $('#admSaveBtn').textContent = 'Save Property';
   };
 
@@ -1182,10 +1231,12 @@
     const rera = $('#admRera').value.trim() || 'Verified';
     const floors = $('#admFloors').value.trim() || '';
     const notes = $('#admNotes').value.trim() || '';
-    const img = $('#admImg').value || 'assets/rec-1.jpg';
     const type = $('#admType').value;
     const status = $('#admStatus').value;
     const locality = $('#admLocality').value.trim();
+
+    const finalImages = currentAdminImages.length ? [...currentAdminImages] : ['assets/rec-1.jpg'];
+    const img = finalImages[0];
 
     const propData = {
       title,
@@ -1205,6 +1256,7 @@
       poss,
       status,
       img,
+      images: finalImages,
       amen: ['Sea View', 'Infinity Pool', 'Clubhouse', 'Private Elevator', '24x7 Security', 'Gym'],
       rera,
       floors,

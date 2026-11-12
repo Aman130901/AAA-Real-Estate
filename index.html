@@ -764,10 +764,10 @@
               <input type="text" id="admFloors" placeholder="e.g. 68 floors / G+77">
             </div>
             <div class="form-group">
-              <label for="admPresetImg">Or Pick Default Library Photo</label>
-              <select id="admPresetImg" onchange="handlePresetImgChange(this.value)">
-                <option value="">-- Custom Uploaded Photo --</option>
-                <option value="assets/rec-1.jpg" selected>Luxury Villa &amp; Pool (assets/rec-1.jpg)</option>
+              <label for="admPresetImg">+ Add Preset Photo From Library</label>
+              <select id="admPresetImg" onchange="handleAddPresetImg(this.value); this.value='';">
+                <option value="">-- Choose Library Image to Add --</option>
+                <option value="assets/rec-1.jpg">Luxury Villa &amp; Pool (assets/rec-1.jpg)</option>
                 <option value="assets/rec-2.jpg">Modern Architecture (assets/rec-2.jpg)</option>
                 <option value="assets/rec-3.jpg">Penthouse &amp; Glass Deck (assets/rec-3.jpg)</option>
                 <option value="assets/site-visit.jpg">High-Rise Skyline (assets/site-visit.jpg)</option>
@@ -778,31 +778,38 @@
             </div>
           </div>
 
-          <!-- DEVICE IMAGE UPLOAD SECTION -->
+          <!-- DEVICE MULTIPLE IMAGE UPLOAD SECTION -->
           <div class="form-group adm-img-upload-group">
-            <label>Property Photo (Upload Directly From Your Device)</label>
-            <input type="hidden" id="admImg" value="assets/rec-1.jpg">
-            
-            <div class="adm-upload-container">
-              <div class="adm-upload-dropzone" id="admDropzone" onclick="document.getElementById('admImgFile').click()">
-                <input type="file" id="admImgFile" accept="image/png, image/jpeg, image/webp, image/jpg" style="display:none;" onchange="handleDeviceImageUpload(event)">
-                <div class="adm-dropzone-icon">📷</div>
-                <div class="adm-dropzone-text">
-                  <strong>Click or Drag &amp; Drop to upload property photo from your device</strong>
-                  <span>Supports JPG, PNG, WebP (auto-optimized for web)</span>
-                </div>
-                <button type="button" class="btn-coral-sm" onclick="event.stopPropagation();document.getElementById('admImgFile').click()">📁 Browse Device Files</button>
+            <div class="adm-img-header-row">
+              <div>
+                <label style="margin-bottom:2px;font-size:0.95rem;">Property Photos &amp; Gallery</label>
+                <span class="adm-subtext">Upload multiple photos from your device, choose cover photo, or delete any particular image.</span>
               </div>
+              <span class="adm-img-count-badge" id="admImgCountBadge">1 Photo</span>
+            </div>
+            <input type="hidden" id="admImg" value="assets/rec-1.jpg">
 
-              <!-- PREVIEW BOX -->
-              <div class="adm-img-preview-box" id="admImgPreviewBox">
-                <div class="adm-preview-wrap">
-                  <img id="admImgPreview" src="assets/rec-1.jpg" alt="Property Preview">
-                  <div class="adm-preview-info">
-                    <span class="adm-preview-badge" id="admImgBadge">Current Photo</span>
-                    <button type="button" class="adm-btn-remove-img" id="admBtnRemoveImg" onclick="resetPropertyImage()" title="Reset to default image">✕ Reset</button>
-                  </div>
-                </div>
+            <!-- DROPZONE -->
+            <div class="adm-upload-dropzone" id="admDropzone" onclick="document.getElementById('admImgFile').click()">
+              <input type="file" id="admImgFile" accept="image/png, image/jpeg, image/webp, image/jpg" multiple style="display:none;" onchange="handleDeviceImageUpload(event)">
+              <div class="adm-dropzone-icon">📷</div>
+              <div class="adm-dropzone-text">
+                <strong>Click or Drag &amp; Drop to upload multiple photos from your device</strong>
+                <span>Supports JPG, PNG, WebP (auto-optimized &amp; compressed for fast web performance)</span>
+              </div>
+              <div class="adm-dropzone-btns">
+                <button type="button" class="btn-coral-sm" onclick="event.stopPropagation();document.getElementById('admImgFile').click()">📁 Browse Photos From Device</button>
+              </div>
+            </div>
+
+            <!-- GALLERY GRID (WITH DELETE BUTTON PER IMAGE) -->
+            <div class="adm-gallery-section" id="admGallerySection">
+              <div class="adm-gallery-grid-header">
+                <span class="adm-gallery-label">Uploaded Photos for this property:</span>
+                <span style="font-size:0.75rem;color:var(--color-text-muted);">First image is used as the main cover photo</span>
+              </div>
+              <div class="adm-gallery-grid" id="admGalleryGrid">
+                <!-- Injected via JavaScript -->
               </div>
             </div>
           </div>
