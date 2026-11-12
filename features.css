@@ -318,116 +318,37 @@ html.lenis, html.lenis body {
   box-shadow: 0 0 10px rgba(229, 168, 53, 0.7);
 }
 
-/* 3D Villa Interactive Viewer */
+/* Hero Visual Card & Floating Badges */
 .hero-visual-wrapper {
   position: relative;
   width: 100%;
-  max-width: 620px;
+  max-width: 640px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.hero-view-switcher {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(16, 33, 58, 0.78);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-full);
-  padding: 4px;
-  margin-bottom: 12px;
-  z-index: 10;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-}
-.view-switch-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.78);
-  border-radius: var(--radius-full);
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.view-switch-btn.active {
-  background: var(--color-coral);
-  color: #fff;
-  box-shadow: 0 2px 10px rgba(222, 88, 68, 0.4);
-}
-.hero-3d-container {
+
+.hero-photo-card {
   position: relative;
   width: 100%;
-  height: 480px;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: radial-gradient(circle at 50% 35%, rgba(30, 59, 100, 0.55) 0%, rgba(16, 33, 58, 0.95) 100%);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4);
+  background: radial-gradient(circle at 50% 35%, rgba(30, 59, 100, 0.55) 0%, rgba(16, 33, 58, 0.95) 100%);
 }
-.hero-3d-canvas {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-  cursor: grab;
-  touch-action: none;
-}
-.hero-3d-canvas:active {
-  cursor: grabbing;
-}
-.hero-photo-img {
+
+.hero-photo-card .hero-visual-img {
   width: 100%;
-  height: 100%;
+  height: 480px;
   object-fit: cover;
   display: block;
   border-radius: var(--radius-lg);
+  transition: transform 0.4s ease;
 }
-.hero-3d-controls {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  display: flex;
-  gap: 8px;
-  z-index: 5;
-}
-.ctrl-btn {
-  background: rgba(16, 33, 58, 0.8);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #fff;
-  font-size: 0.76rem;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  transition: var(--transition);
-}
-.ctrl-btn:hover {
-  background: rgba(22, 46, 80, 0.95);
-  border-color: var(--color-gold);
-}
-.hero-3d-hint {
-  position: absolute;
-  bottom: 14px;
-  left: 16px;
-  transform: none;
-  background: rgba(16, 33, 58, 0.85);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 0.76rem;
-  font-weight: 500;
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  pointer-events: none;
-  white-space: nowrap;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+
+.hero-photo-card:hover .hero-visual-img {
+  transform: scale(1.02);
 }
 
 /* 2D Floating Animated Badges (Compact & Sleek) */
@@ -664,14 +585,14 @@ html.lenis, html.lenis body {
   font-size: 0.95rem;
 }
 
-/* Responsive adjustments for 3D & 2D */
+/* Responsive adjustments */
 @media (max-width: 900px) {
   .hero-visual-wrapper {
     max-width: 100%;
     margin-top: 18px;
   }
-  .hero-3d-container {
-    height: 380px;
+  .hero-photo-card .hero-visual-img {
+    height: 360px;
   }
   .floating-badge {
     display: none !important;
@@ -687,12 +608,8 @@ html.lenis, html.lenis body {
 }
 
 @media (max-width: 600px) {
-  .hero-3d-container {
-    height: 320px;
-  }
-  .hero-3d-hint {
-    font-size: 0.7rem;
-    padding: 4px 10px;
+  .hero-photo-card .hero-visual-img {
+    height: 260px;
   }
 }
 html,body{max-width:100%;overflow-x:hidden}

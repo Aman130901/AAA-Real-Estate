@@ -1,16 +1,15 @@
 # AAA Real Estate 🏡✨
 
-> Modern, high-performance real estate web portal featuring an interactive 3D architectural villa, buttery-smooth Lenis scrolling, advanced property search, and instant WhatsApp enquiry integration.
+> Modern, high-performance real estate web portal featuring buttery-smooth Lenis scrolling, advanced property search, responsive grid & list views, and instant WhatsApp enquiry integration.
 
 ---
 
 ## 🌟 Key Features
 
-### 🎮 1. Interactive 3D Villa (Three.js & OrbitControls)
-- Fully procedural 3D modern luxury villa rendered via WebGL.
-- OrbitControls for smooth 360° mouse drag, touch swipe rotation, and pinch-to-zoom.
-- Dynamic floating trust badges (*4.9/5 Rating* and *RERA Verified*).
-- One-click camera reset and auto-rotation toggle.
+### 🏡 1. Modern Architectural Hero & Trust Badges
+- High-definition architectural hero visual.
+- Floating animated trust badges (*4.9/5 Rating* and *RERA Verified*).
+- Clean, responsive card presentation on desktop and mobile.
 
 ### 🌊 2. Ultra-Smooth Lenis Scrolling
 - Smooth inertial scrolling on both desktop and mobile devices using Lenis.
@@ -45,19 +44,16 @@
 ```text
 AAA-Real-Estate/
 ├── assets/                  # High-resolution property images and logos
-│   ├── hero.jpg
-│   ├── property-1.jpg
+│   ├── hero-visual.png
+│   ├── rec-1.jpg
 │   └── ...
 ├── index.html               # Semantic HTML5 markup (WCAG AA accessible)
 ├── style.css                # Core design system, CSS variables & typography
-├── features.css             # Styles for 3D hero, filters, modal & calculators
+├── features.css             # Styles for hero, filters, modal & calculators
 ├── script.js                # Core UI interactions & mobile navigation
 ├── features.js              # Property listing logic, filters, EMI & comparison
-├── three-villa.js           # Three.js 3D Villa scene, lights & controls
 ├── smooth-scroll.js         # Lenis smooth scroll orchestration
 ├── lenis.min.js             # Lenis smooth scroll library
-├── three.min.js             # Three.js library
-├── OrbitControls.js         # OrbitControls library
 └── README.md                # Documentation & GitHub Pages guide
 ```
 

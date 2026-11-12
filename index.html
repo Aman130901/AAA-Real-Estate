@@ -87,37 +87,10 @@
         </div>
 
         <div class="hero-visual-wrapper" id="heroVisualWrapper">
-          <!-- View switcher pill (3D vs Photo) -->
-          <div class="hero-view-switcher">
-            <button type="button" class="view-switch-btn active" id="viewToggle3d">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-              3D Villa View
-            </button>
-            <button type="button" class="view-switch-btn" id="viewTogglePhoto">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-              Photo View
-            </button>
-          </div>
+          <div class="hero-photo-card">
+            <img src="assets/hero-visual.png" alt="Luxury modern villa" class="hero-visual-img" width="780" height="480" />
 
-          <!-- 3D Interactive Container -->
-          <div class="hero-3d-container" id="hero3dContainer">
-            <canvas id="hero3dCanvas" class="hero-3d-canvas" aria-label="Interactive 3D Villa Model"></canvas>
-            
-            <!-- Controls bar on top of 3D canvas -->
-            <div class="hero-3d-controls">
-              <button type="button" class="ctrl-btn" id="hero3dReset" title="Reset Camera">↺ Reset view</button>
-            </div>
-
-            <!-- Hint pill -->
-            <div class="hero-3d-hint" id="hero3dHint">
-              <span class="hint-icon">🔄</span>
-              <span>Drag / swipe to rotate 3D villa · Pinch/scroll to zoom</span>
-            </div>
-
-            <!-- Fallback Photo (toggled via button) -->
-            <img src="assets/hero-visual.png" alt="Luxury modern home" class="hero-photo-img" id="heroPhotoImg" width="620" height="480" style="display:none;" />
-
-            <!-- 2D Floating Animated Badges inside 3D card -->
+            <!-- 2D Floating Animated Badges -->
             <div class="floating-badge badge-top-left">
               <div class="badge-icon-wrap gold">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
@@ -593,9 +566,6 @@
 
   <!-- SCRIPTS & LIBRARIES -->
   <script src="lenis.min.js"></script>
-  <script src="three.min.js"></script>
-  <script src="OrbitControls.js"></script>
-  <script src="three-villa.js"></script>
   <script src="smooth-scroll.js"></script>
   <script src="script.js"></script>
   <script src="features.js"></script>
