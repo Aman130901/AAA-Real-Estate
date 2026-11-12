@@ -456,13 +456,22 @@
     if (!cmp.length) { if (b) b.remove(); return; }
     if (!b) {
       b = document.createElement('aside'); b.id = 'cmpBar'; b.className = 'cmp-bar';
-      b.innerHTML = '<div class="cmp-inner"><span id="cmpCount"></span><div class="cmp-thumbs" id="cmpThumbs"></div><button type="button" class="btn-coral-sm" id="cmpOpen">Compare now</button><button type="button" class="btn-ghost-sm" id="cmpClr">Clear</button></div>';
+      b.innerHTML = `<div class="cmp-inner">
+        <div class="cmp-left">
+          <span id="cmpCount" class="cmp-count-badge"></span>
+          <div class="cmp-thumbs" id="cmpThumbs"></div>
+        </div>
+        <div class="cmp-actions">
+          <button type="button" class="btn-cmp-open" id="cmpOpen">Compare now</button>
+          <button type="button" class="btn-cmp-clr" id="cmpClr" title="Clear selection">Clear</button>
+        </div>
+      </div>`;
       document.body.appendChild(b);
       $('#cmpOpen').onclick = openCompare;
       $('#cmpClr').onclick = () => { cmp = []; sv('aaa_cmp', cmp); cmpBar(); $$('input[data-act="cmp"]').forEach((c) => (c.checked = false)); };
     }
     $('#cmpCount').textContent = `Compare (${cmp.length}/4)`;
-    $('#cmpThumbs').innerHTML = cmp.map(byId).filter(Boolean).map((p) => `<img src="${p.img}" alt="${esc(p.title)}" width="36" height="36">`).join('');
+    $('#cmpThumbs').innerHTML = cmp.map(byId).filter(Boolean).map((p) => `<img src="${p.img}" alt="${esc(p.title)}" class="cmp-thumb-img" width="36" height="36">`).join('');
   }
 
   /* ===== MODALS ===== */

@@ -78,9 +78,19 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 .mini-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
 .mini{display:flex;gap:10px;align-items:center;min-width:250px;padding:8px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:#fff;text-align:left;cursor:pointer;font-size:.82rem}
 .mini img{width:64px;height:48px;object-fit:cover;border-radius:4px}
-.cmp-bar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:900;display:flex;gap:12px;align-items:center;background:var(--color-navy-dark);color:#fff;padding:10px 16px;border-radius:var(--radius-full);box-shadow:var(--shadow-lg)}
-.cmp-bar[hidden]{display:none}.cmp-bar button{border:0;background:none;color:#fff;cursor:pointer;font-weight:600}
-.cmp-bar .btn-coral-full{width:auto;padding:8px 20px;border-radius:var(--radius-full)}.cmp-bar button:disabled{opacity:.5}
+.cmp-bar{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:1050;width:auto;max-width:92vw;background:rgba(15,23,42,.96);backdrop-filter:blur(10px);color:#fff;padding:10px 18px;border-radius:50px;box-shadow:0 16px 40px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.15);animation:cmpSlideUp .25s cubic-bezier(.16,1,.3,1)}
+@keyframes cmpSlideUp{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}
+.cmp-bar[hidden]{display:none}
+.cmp-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%}
+.cmp-left{display:flex;align-items:center;gap:12px}
+.cmp-count-badge{font-size:.88rem;font-weight:700;color:#fff;white-space:nowrap}
+.cmp-thumbs{display:flex;align-items:center;gap:6px}
+.cmp-thumb-img{width:36px;height:36px;min-width:36px;min-height:36px;border-radius:8px;object-fit:cover;border:2px solid rgba(255,255,255,.4);box-shadow:0 2px 6px rgba(0,0,0,.2);display:block}
+.cmp-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.btn-cmp-open{background:var(--color-coral);color:#fff;border:none;padding:8px 18px;border-radius:30px;font-weight:700;font-size:.85rem;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(235,87,87,.35);transition:all .2s ease}
+.btn-cmp-open:hover{background:var(--color-coral-hover);transform:translateY(-1px)}
+.btn-cmp-clr{background:rgba(255,255,255,.14);color:#F1F5F9;border:1px solid rgba(255,255,255,.2);padding:8px 14px;border-radius:30px;font-weight:600;font-size:.8rem;cursor:pointer;white-space:nowrap;transition:all .2s ease}
+.btn-cmp-clr:hover{background:rgba(255,255,255,.25);color:#fff}
 
 /* stats, how, emi, cities, contact */
 .stats-band{background:var(--color-navy-dark);color:#fff;padding:40px 0}
@@ -325,8 +335,21 @@ html.modal-open,body.modal-open{overflow:hidden!important;touch-action:none}
   .pd-spec{grid-template-columns:1fr 1fr;gap:8px}
   .pd-actions{position:static;display:flex!important;flex-direction:column!important;gap:8px!important;margin-top:16px!important;padding-top:12px!important;border-top:1px solid var(--color-border)!important}
   .pd-actions button{width:100%!important;text-align:center!important;padding:12px 14px!important;font-size:.92rem!important;border-radius:8px!important}
-  .cmp-bar{width:calc(100% - 20px);padding:8px 14px;font-size:.85rem}
-  .cmp-bar .btn-coral-full{padding:6px 14px;font-size:.85rem}
+  .cmp-bar{left:12px!important;right:12px!important;bottom:84px!important;transform:none!important;width:auto!important;max-width:calc(100% - 24px)!important;border-radius:16px!important;padding:10px 12px!important}
+  @keyframes cmpSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .cmp-inner{gap:8px}
+  .cmp-left{gap:8px;overflow:hidden}
+  .cmp-count-badge{font-size:.8rem}
+  .cmp-thumb-img{width:32px;height:32px;min-width:32px;min-height:32px;border-radius:6px}
+  .btn-cmp-open{padding:7px 14px;font-size:.8rem}
+  .btn-cmp-clr{padding:7px 10px;font-size:.75rem}
+}
+
+@media (max-width:420px){
+  .cmp-bar{bottom:80px!important;padding:8px 10px!important}
+  .cmp-thumbs{gap:4px}
+  .cmp-thumb-img{width:28px;height:28px;min-width:28px;min-height:28px}
+  .cmp-count-badge{display:none}
 }
 
 @media (max-width:400px){
