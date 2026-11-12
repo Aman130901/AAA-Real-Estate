@@ -1,6 +1,7 @@
 /**
- * AAA Real Estate — feature layer (listings, filters, compare, EMI, enquiries, motion)
- * Real MahaRERA registered Worli & South Mumbai luxury projects portfolio.
+ * AAA Real Estate — feature layer with full Admin Portal & CRUD Engine
+ * Allows Administrator to list new apartments, update existing listings, delete, export,
+ * and track customer leads & site visit enquiries in real-time.
  */
 (function () {
   'use strict';
@@ -25,7 +26,7 @@
   const PAGE_SIZE = 9;
 
   /* ===== REAL MAHARERA VERIFIED PROPERTIES PORTFOLIO ===== */
-  const PROPS = [
+  const DEFAULT_PROPS = [
     {"id": 1, "title": "Lodha Park – Adrina", "developer": "Lodha Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Pandurang Budhkar Marg, Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1136, "price": 75000000, "priceStr": "₹7.50–19 Cr", "psf": "₹67,783", "furn": "Semi-furnished", "poss": "Jun 2026", "status": "Ready / possession listed", "img": "assets/rec-1.jpg", "amen": ["Sea View", "Infinity Pool", "Clubhouse", "Private Elevator", "24x7 Security", "Gym"], "rera": "P51900014937", "floors": "Tower-specific; verify", "notes": "MPE lists ready; verify OC and phase-specific RERA before treating as RTMI.", "added": 2, "config": "3 BHK"},
     {"id": 2, "title": "Lodha Trump Tower", "developer": "Lodha Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1312, "price": 130000000, "priceStr": "~₹13 Cr", "psf": "₹96,850", "furn": "Semi-furnished", "poss": "Jun 2026", "status": "Ready / possession listed", "img": "assets/rec-2.jpg", "amen": ["Arabian Sea Facing", "Sky Lounge", "Concierge", "Valet Parking", "Spa & Sauna", "Clubhouse"], "rera": "P51900014937", "floors": "78 floors (listing)", "notes": "Confirm actual OC and unit availability; advertised rate may differ from resale ask.", "added": 3, "config": "3 BHK"},
     {"id": 3, "title": "The Imperial Worli", "developer": "D&A Realty", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli Sea Face", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 1060000000, "priceStr": "~₹106 Cr", "psf": "₹160,000", "furn": "Luxury Unfurnished", "poss": "2027 (MPE); RERA record 30 Oct 2028", "status": "Under construction (listing)", "img": "assets/rec-3.jpg", "amen": ["Panoramic Sea Deck", "Heated Pool", "Gymnasium", "Tennis Court", "Banquet Hall", "Security"], "rera": "P51900076737", "floors": "High-rise; listing details vary", "notes": "Large-ticket listing; verify residential configuration and exact registered promoter/project.", "added": 4, "config": "3 BHK"},
@@ -78,6 +79,13 @@
     {"id": 50, "title": "Century Mills High Street Commercial Retail", "developer": "Birla Estates", "mode": "commercial", "type": "Commercial", "city": "Mumbai", "locality": "Century Mills, Worli", "pin": "400018", "bhk": 0, "bath": 2, "carpet": 1800, "price": 32000000, "priceStr": "₹3.2 Cr", "psf": "₹17,777", "furn": "Bare Shell / Warm Shell", "poss": "Ready / Under Construction", "status": "Commercial Listing", "img": "assets/rec-1.jpg", "amen": ["Triple Height Lobby", "High-Speed Elevators", "Central AC", "Ample Parking", "Bespoke Concierge", "24x7 Power Backup"], "rera": "P51900031916", "floors": "Commercial High-Rise", "notes": "Premium grade-A commercial asset in prime Worli corridor", "added": 1, "config": "Commercial"},
     {"id": 51, "title": "Dr. E. Moses Road Executive IT/BFSI Suite", "developer": "Embassy Developments", "mode": "commercial", "type": "Commercial", "city": "Mumbai", "locality": "E-Moses Road, Worli", "pin": "400018", "bhk": 0, "bath": 2, "carpet": 4200, "price": 62000000, "priceStr": "₹6.2 Cr", "psf": "₹14,761", "furn": "Bare Shell / Warm Shell", "poss": "Ready / Under Construction", "status": "Commercial Listing", "img": "assets/rec-2.jpg", "amen": ["Triple Height Lobby", "High-Speed Elevators", "Central AC", "Ample Parking", "Bespoke Concierge", "24x7 Power Backup"], "rera": "PR1170002501931", "floors": "Commercial High-Rise", "notes": "Premium grade-A commercial asset in prime Worli corridor", "added": 1, "config": "Commercial"},
   ];
+
+  // Load from persistent localStorage or initialize with default verified portfolio
+  let PROPS = ls('aaa_props_db', null);
+  if (!Array.isArray(PROPS) || PROPS.length === 0) {
+    PROPS = JSON.parse(JSON.stringify(DEFAULT_PROPS));
+    sv('aaa_props_db', PROPS);
+  }
 
   const byId = (id) => PROPS.find((p) => p.id === +id);
   const fmt = (n, mode) => {
@@ -175,7 +183,7 @@
       grid.innerHTML = '<div class="property-card skel"></div>'.repeat(3);
       setTimeout(show, 250);
     } else show();
-    chips(); pager(pages, page); extras(); cmpBar();
+    chips(); pager(pages, page); extras(); cmpBar(); updateStatsCounter();
   }
   function chips() {
     const L = [];
@@ -386,6 +394,7 @@
     const L = ls('aaa_enquiries', []);
     $('#myEnquiries').innerHTML = L.length ? '<h3>Your requests</h3>' + L.map((x) => `<div class="enq-item"><div><b>${esc(x.type)}</b>${x.prop ? ' · ' + esc(byId(x.prop)?.title || '') : ''}<br><small>${x.date ? esc(x.date) + ', ' + esc(x.slot) + ' · ' : ''}<span class="status ${x.status === 'Cancelled' ? 'off' : ''}">${esc(x.status)}</span></small></div>
       ${x.status !== 'Cancelled' ? `<div><button data-enq="resched" data-id="${x.id}">Reschedule</button><button data-enq="cancel" data-id="${x.id}">Cancel</button></div>` : ''}</div>`).join('') : '';
+    updateStatsCounter();
   }
   $('#myEnquiries').addEventListener('click', (e) => {
     const b = e.target.closest('[data-enq]'); if (!b) return;
@@ -424,7 +433,7 @@
     waLink(p ? propMsg(p) : `Hi AAA Real Estate, I'm ${n || 'interested in a property'} and would like to talk about ${($('#eType').value || 'property consultation').toLowerCase()}.`);
   });
 
-  /* ===== AUTH ===== */
+  /* ===== AUTH (USER) ===== */
   let user = ls('aaa_user', null);
   function fillUser() {
     if (user) {
@@ -456,6 +465,370 @@
     }
     sv('aaa_user', user); fillUser(); window.closeAuthModal(); toast('Welcome, ' + user.name + '!');
   };
+
+  /* ===== ADMIN ENGINE & DASHBOARD ===== */
+  const ADMIN_CRED = { email: 'admin@aaarealestate.com', pass: 'admin123' };
+  let isAdmin = ls('aaa_admin_auth', false);
+
+  function checkAdminUI() {
+    isAdmin = ls('aaa_admin_auth', false);
+    const navAdmin = $('#navAdminBtn');
+    const mobAdmin = $('#mobAdminBtn');
+    if (navAdmin) navAdmin.style.display = isAdmin ? 'inline-flex' : 'none';
+    if (mobAdmin) mobAdmin.style.display = isAdmin ? 'block' : 'none';
+  }
+
+  window.handleAdminAuth = (e) => {
+    e.preventDefault();
+    const em = ($('#adminEmail')?.value || '').trim().toLowerCase();
+    const pw = ($('#adminPass')?.value || '').trim();
+    if ((em === ADMIN_CRED.email || em === 'admin') && pw === ADMIN_CRED.pass) {
+      isAdmin = true;
+      sv('aaa_admin_auth', true);
+      checkAdminUI();
+      window.closeAuthModal();
+      toast('Welcome back, Administrator!');
+      window.openAdminModal();
+    } else {
+      toast('Invalid Admin Credentials! Use admin@aaarealestate.com / admin123');
+    }
+  };
+
+  window.handleAdminLogout = () => {
+    isAdmin = false;
+    sv('aaa_admin_auth', false);
+    checkAdminUI();
+    window.closeAdminModal();
+    toast('Logged out from Admin Portal.');
+  };
+
+  window.openAdminModal = () => {
+    if (!isAdmin) {
+      window.openAuthModal('admin');
+      return;
+    }
+    const m = $('#adminModal');
+    if (!m) return;
+    m.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    renderAdminDashboard();
+  };
+
+  window.closeAdminModal = (e) => {
+    if (e && e.target !== e.currentTarget && !e.target.classList.contains('modal-close-btn')) return;
+    const m = $('#adminModal');
+    if (!m) return;
+    m.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  window.switchAdminTab = (tabName) => {
+    $$('.admin-tab').forEach((b) => b.classList.toggle('active', b.dataset.admtab === tabName));
+    $('#admViewProps')?.classList.toggle('hidden', tabName !== 'props');
+    $('#admViewAddProp')?.classList.toggle('hidden', tabName !== 'addprop');
+    $('#admViewLeads')?.classList.toggle('hidden', tabName !== 'leads');
+    if (tabName === 'props') renderAdminPropsTable();
+    if (tabName === 'leads') renderAdminLeadsTable();
+  };
+
+  function updateStatsCounter() {
+    const el = $('#statProps');
+    if (el) {
+      el.dataset.count = PROPS.length;
+      el.textContent = PROPS.length;
+    }
+    const countEl = $('#admTabPropCount');
+    if (countEl) countEl.textContent = PROPS.length;
+    const statTot = $('#admStatTotal');
+    if (statTot) statTot.textContent = PROPS.length;
+    const statBuy = $('#admStatBuy');
+    if (statBuy) statBuy.textContent = PROPS.filter((p) => p.mode === 'buy').length;
+    const statRent = $('#admStatRent');
+    if (statRent) statRent.textContent = PROPS.filter((p) => p.mode === 'rent').length;
+    const statComm = $('#admStatComm');
+    if (statComm) statComm.textContent = PROPS.filter((p) => p.mode === 'commercial').length;
+    const leads = ls('aaa_enquiries', []);
+    const statLeads = $('#admStatLeads');
+    if (statLeads) statLeads.textContent = leads.length;
+    const leadCount = $('#admTabLeadCount');
+    if (leadCount) leadCount.textContent = leads.length;
+  }
+
+  function renderAdminDashboard() {
+    updateStatsCounter();
+    renderAdminPropsTable();
+    renderAdminLeadsTable();
+  }
+
+  function renderAdminPropsTable() {
+    const tbody = $('#admPropsTbody');
+    if (!tbody) return;
+    const q = ($('#admSearch')?.value || '').trim().toLowerCase();
+    const mode = $('#admFilterMode')?.value || '';
+    const filteredProps = PROPS.filter((p) => {
+      const matchMode = !mode || p.mode === mode;
+      const matchQ = !q || (p.title + ' ' + p.developer + ' ' + p.locality + ' ' + (p.rera || '')).toLowerCase().includes(q);
+      return matchMode && matchQ;
+    });
+
+    tbody.innerHTML = filteredProps.length ? filteredProps.map((p) => `
+      <tr>
+        <td>
+          <img src="${p.img}" alt="${esc(p.title)}" class="adm-thumb" width="48" height="36" style="border-radius:4px;object-fit:cover;">
+        </td>
+        <td>
+          <strong class="adm-row-title">${esc(p.title)}</strong>
+          <span class="adm-row-dev">🏢 ${esc(p.developer)} · 📍 ${esc(p.locality)}</span>
+        </td>
+        <td>
+          <span class="adm-pill mode-${p.mode}">${p.mode.toUpperCase()}</span>
+          <span class="adm-subtext">${esc(p.config || (p.bhk + ' BHK'))}</span>
+        </td>
+        <td>
+          <strong class="adm-price">${esc(p.priceStr || fmt(p.price, p.mode))}</strong>
+          <span class="adm-subtext">${p.carpet} sq.ft. · ${esc(p.psf || '')}</span>
+        </td>
+        <td>
+          <span class="adm-status-badge">${esc(p.status.split('/')[0].trim())}</span>
+          <span class="adm-subtext">Poss: ${esc(p.poss || '—')}</span>
+        </td>
+        <td>
+          <code class="adm-rera">${esc(p.rera || 'Verified')}</code>
+          ${p.floors ? `<span class="adm-subtext">${esc(p.floors)}</span>` : ''}
+        </td>
+        <td style="text-align:right;">
+          <div class="adm-row-actions">
+            <button type="button" class="adm-btn edit" onclick="editAdminProp(${p.id})" title="Edit Property">✏️ Edit</button>
+            <button type="button" class="adm-btn view" onclick="previewAdminProp(${p.id})" title="View on site">👁️</button>
+            <button type="button" class="adm-btn del" onclick="deleteAdminProp(${p.id})" title="Delete Property">🗑️</button>
+          </div>
+        </td>
+      </tr>
+    `).join('') : `<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--color-text-muted);">No properties match your filter criteria.</td></tr>`;
+  }
+
+  window.previewAdminProp = (id) => {
+    window.closeAdminModal();
+    openProperty(id);
+  };
+
+  window.editAdminProp = (id) => {
+    const p = byId(id);
+    if (!p) return;
+    window.switchAdminTab('addprop');
+    $('#admFormTitle').textContent = `✏️ Edit Property: ${p.title}`;
+    $('#admEditId').value = p.id;
+    $('#admTitle').value = p.title || '';
+    $('#admDeveloper').value = p.developer || '';
+    $('#admMode').value = p.mode || 'buy';
+    $('#admType').value = p.type || 'Apartment';
+    $('#admStatus').value = p.status || 'Under construction';
+    $('#admLocality').value = p.locality || '';
+    $('#admBhk').value = p.bhk !== undefined ? p.bhk : 3;
+    $('#admConfig').value = p.config || '';
+    $('#admPriceStr').value = p.priceStr || '';
+    $('#admPrice').value = p.price || '';
+    $('#admCarpet').value = p.carpet || '';
+    $('#admPsf').value = p.psf || '';
+    $('#admPossession').value = p.poss || '';
+    $('#admRera').value = p.rera || '';
+    $('#admFloors').value = p.floors || '';
+    $('#admImg').value = p.img || 'assets/rec-1.jpg';
+    $('#admNotes').value = p.notes || '';
+    $('#admSaveBtn').textContent = 'Update Property';
+    $('#admViewAddProp')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  window.resetAdminForm = () => {
+    $('#admFormTitle').textContent = '➕ Add New Luxury Property';
+    $('#admEditId').value = '';
+    $('#admPropForm')?.reset();
+    $('#admSaveBtn').textContent = 'Save Property';
+  };
+
+  window.handleAdminSaveProp = (e) => {
+    e.preventDefault();
+    const editId = $('#admEditId').value;
+    const isEdit = !!editId;
+    const priceNum = +$('#admPrice').value || 10000000;
+    const carpetNum = +$('#admCarpet').value || 1200;
+    const mode = $('#admMode').value;
+    const title = $('#admTitle').value.trim();
+    const dev = $('#admDeveloper').value.trim();
+    const bhk = +$('#admBhk').value;
+    const config = $('#admConfig').value.trim() || (bhk ? bhk + ' BHK' : $('#admType').value);
+    const priceStr = $('#admPriceStr').value.trim() || fmt(priceNum, mode);
+    const psf = $('#admPsf').value.trim() || ('₹' + Math.round(priceNum / carpetNum).toLocaleString('en-IN') + (mode === 'rent' ? '/mo' : ''));
+    const poss = $('#admPossession').value.trim() || 'Ready / Under construction';
+    const rera = $('#admRera').value.trim() || 'Verified';
+    const floors = $('#admFloors').value.trim() || '';
+    const notes = $('#admNotes').value.trim() || '';
+    const img = $('#admImg').value || 'assets/rec-1.jpg';
+    const type = $('#admType').value;
+    const status = $('#admStatus').value;
+    const locality = $('#admLocality').value.trim();
+
+    const propData = {
+      title,
+      developer: dev,
+      mode,
+      type,
+      city: 'Mumbai',
+      locality,
+      pin: '400018',
+      bhk,
+      bath: Math.max(2, bhk),
+      carpet: carpetNum,
+      price: priceNum,
+      priceStr,
+      psf,
+      furn: 'Semi-furnished',
+      poss,
+      status,
+      img,
+      amen: ['Sea View', 'Infinity Pool', 'Clubhouse', 'Private Elevator', '24x7 Security', 'Gym'],
+      rera,
+      floors,
+      notes,
+      added: 1,
+      config
+    };
+
+    if (isEdit) {
+      const idx = PROPS.findIndex((p) => p.id === +editId);
+      if (idx !== -1) {
+        propData.id = +editId;
+        PROPS[idx] = { ...PROPS[idx], ...propData };
+      }
+    } else {
+      propData.id = Date.now();
+      PROPS.unshift(propData);
+    }
+
+    sv('aaa_props_db', PROPS);
+    render(true);
+    updateStatsCounter();
+    toast(isEdit ? 'Property updated successfully!' : 'New property listed successfully!');
+    window.resetAdminForm();
+    window.switchAdminTab('props');
+  };
+
+  window.deleteAdminProp = (id) => {
+    const p = byId(id);
+    if (!p) return;
+    if (!confirm(`Are you sure you want to delete "${p.title}"?`)) return;
+    PROPS = PROPS.filter((x) => x.id !== id);
+    sv('aaa_props_db', PROPS);
+    render(true);
+    updateStatsCounter();
+    renderAdminPropsTable();
+    toast('Property deleted successfully.');
+  };
+
+  window.resetAdminDB = () => {
+    if (!confirm('Reset entire property database back to original 51 verified projects?')) return;
+    PROPS = JSON.parse(JSON.stringify(DEFAULT_PROPS));
+    sv('aaa_props_db', PROPS);
+    render(true);
+    updateStatsCounter();
+    renderAdminPropsTable();
+    toast('Database reset to original 51 verified projects.');
+  };
+
+  window.exportAdminDB = () => {
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(PROPS, null, 2));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute('href', dataStr);
+    dlAnchor.setAttribute('download', 'aaa_real_estate_portfolio_' + new Date().toISOString().slice(0, 10) + '.json');
+    dlAnchor.click();
+    toast('Database exported as JSON');
+  };
+
+  function renderAdminLeadsTable() {
+    const tbody = $('#admLeadsTbody');
+    if (!tbody) return;
+    const leads = ls('aaa_enquiries', []);
+    tbody.innerHTML = leads.length ? leads.map((lead) => {
+      const p = lead.prop ? byId(lead.prop) : null;
+      const propTitle = p ? p.title : (lead.prop || 'General Consultation');
+      const waMsg = encodeURIComponent(`Hi ${lead.name}, this is AAA Real Estate regarding your enquiry for "${propTitle}". How can we assist you with site visits or pricing?`);
+      return `
+        <tr>
+          <td>
+            <strong>${esc(lead.name)}</strong>
+            ${lead.msg ? `<span class="adm-subtext">“${esc(lead.msg.slice(0, 60))}${lead.msg.length > 60 ? '...' : ''}”</span>` : ''}
+          </td>
+          <td>
+            <div><a href="tel:${lead.phone}" class="adm-lead-link">📞 +91 ${esc(lead.phone)}</a></div>
+            <span class="adm-subtext">${esc(lead.email)}</span>
+          </td>
+          <td>
+            <span class="adm-pill mode-buy">${esc(lead.type || 'Enquiry')}</span>
+          </td>
+          <td>
+            <strong class="adm-subtext" style="font-size:0.85rem;color:var(--color-navy-dark);">${esc(propTitle)}</strong>
+          </td>
+          <td>
+            ${lead.date ? `<span>📅 ${esc(lead.date)}</span><br><span class="adm-subtext">⏰ ${esc(lead.slot || 'Morning')}</span>` : '<span class="adm-subtext">—</span>'}
+          </td>
+          <td>
+            <select class="adm-lead-status" onchange="updateLeadStatus('${lead.id}', this.value)">
+              <option value="New" ${lead.status === 'New' ? 'selected' : ''}>New</option>
+              <option value="Contacted" ${lead.status === 'Contacted' ? 'selected' : ''}>Contacted</option>
+              <option value="Site Visit Scheduled" ${lead.status === 'Site Visit Scheduled' ? 'selected' : ''}>Site Visit Scheduled</option>
+              <option value="Closed / Won" ${lead.status === 'Closed / Won' ? 'selected' : ''}>Closed / Won</option>
+              <option value="Cancelled" ${lead.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+            </select>
+          </td>
+          <td style="text-align:right;">
+            <div class="adm-row-actions">
+              <a href="https://wa.me/91${lead.phone}?text=${waMsg}" target="_blank" rel="noopener" class="adm-btn wa" title="Chat on WhatsApp">💬 WA</a>
+              <a href="tel:+91${lead.phone}" class="adm-btn call" title="Call Client">📞</a>
+              <button type="button" class="adm-btn del" onclick="deleteLead('${lead.id}')" title="Delete Lead">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('') : `<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--color-text-muted);">No customer leads or site visits received yet. Test by submitting the contact form on the website!</td></tr>`;
+  }
+
+  window.updateLeadStatus = (id, newStatus) => {
+    const leads = ls('aaa_enquiries', []);
+    const lead = leads.find((x) => x.id === id);
+    if (lead) {
+      lead.status = newStatus;
+      sv('aaa_enquiries', leads);
+      toast(`Lead status updated to: ${newStatus}`);
+      renderAdminLeadsTable();
+      enqList();
+    }
+  };
+
+  window.deleteLead = (id) => {
+    let leads = ls('aaa_enquiries', []);
+    leads = leads.filter((x) => x.id !== id);
+    sv('aaa_enquiries', leads);
+    toast('Lead removed.');
+    updateStatsCounter();
+    renderAdminLeadsTable();
+    enqList();
+  };
+
+  window.clearAllLeads = () => {
+    if (!confirm('Clear all customer leads and enquiries?')) return;
+    sv('aaa_enquiries', []);
+    toast('All customer leads cleared.');
+    updateStatsCounter();
+    renderAdminLeadsTable();
+    enqList();
+  };
+
+  // Attach toolbar listeners
+  $('#admSearch')?.addEventListener('input', () => renderAdminPropsTable());
+  $('#admFilterMode')?.addEventListener('change', () => renderAdminPropsTable());
+  $('#adminExportBtn')?.addEventListener('click', () => window.exportAdminDB());
+  $('#adminResetBtn')?.addEventListener('click', () => window.resetAdminDB());
+  $('#admClearLeadsBtn')?.addEventListener('click', () => window.clearAllLeads());
 
   /* ===== HERO SEARCH FORM BINDING ===== */
   const hs = $('#heroSearch');
@@ -512,5 +885,6 @@
   // Init
   render();
   fillUser();
+  checkAdminUI();
   enqList();
 })();

@@ -45,10 +45,12 @@
         <a href="#contact" class="nav-link" data-nav="sell">Sell</a>
         <a href="#mission" class="nav-link" data-nav="about">About</a>
         <a href="#footer" class="nav-link" data-nav="contact">Contact</a>
+        <button type="button" class="nav-link mobile-only-auth" id="mobAdminBtn" onclick="openAdminModal()" style="display:none;color:var(--color-gold);font-weight:700;">⚡ Admin Dashboard</button>
         <button type="button" class="nav-link mobile-only-auth" id="mobAuthBtn" onclick="openAuthModal('signin')">Login / Register</button>
       </nav>
 
       <div class="nav-actions">
+        <button class="btn-admin-nav" id="navAdminBtn" onclick="openAdminModal()" style="display:none;">⚡ Admin Dashboard</button>
         <button class="btn-signin" id="authSignIn" onclick="openAuthModal('signin')">Login</button>
         <button class="btn-getstarted" onclick="openAuthModal('signup')">Register</button>
       </div>
@@ -450,6 +452,7 @@
         <ul class="footer-links">
           <li><a href="#mission">About</a></li>
           <li><a href="#footer">Contact</a></li>
+          <li><a href="javascript:void(0)" onclick="openAdminModal()">Admin Portal</a></li>
         </ul>
       </div>
 
@@ -490,6 +493,7 @@
       <div class="auth-tabs">
         <button class="auth-tab active" id="tabSignIn" onclick="switchAuthTab('signin')">Sign In</button>
         <button class="auth-tab" id="tabSignUp" onclick="switchAuthTab('signup')">Create Account</button>
+        <button class="auth-tab" id="tabAdmin" onclick="switchAuthTab('admin')">🔐 Admin Portal</button>
       </div>
 
       <div class="auth-content">
@@ -546,7 +550,278 @@
 
           <button type="submit" class="btn-coral-full">Get Started</button>
         </form>
+
+        <!-- Admin Login Form -->
+        <form class="auth-form hidden" id="adminLoginForm" onsubmit="handleAdminAuth(event)">
+          <h3 class="auth-title">Administrator Portal</h3>
+          <p class="auth-subtitle">Manage apartment listings, update pricing, add new properties &amp; view customer leads.</p>
+          
+          <div class="form-group">
+            <label for="adminEmail">Admin Email</label>
+            <input type="text" id="adminEmail" placeholder="admin@aaarealestate.com" value="admin@aaarealestate.com" required />
+          </div>
+          
+          <div class="form-group">
+            <label for="adminPass">Admin Password</label>
+            <input type="password" id="adminPass" placeholder="••••••••" value="admin123" required />
+          </div>
+
+          <div class="form-actions-row">
+            <span style="font-size:0.8rem;color:var(--color-text-muted);">Default: <code>admin@aaarealestate.com</code> / <code>admin123</code></span>
+            <button type="button" style="font-size:0.75rem;padding:4px 10px;border:1px solid var(--color-border);background:#fff;border-radius:4px;cursor:pointer;font-weight:600;" onclick="document.getElementById('adminEmail').value='admin@aaarealestate.com';document.getElementById('adminPass').value='admin123';">Auto-fill</button>
+          </div>
+
+          <button type="submit" class="btn-coral-full" style="background:var(--color-navy-dark);color:#fff;margin-top:8px;">Log In to Dashboard</button>
+        </form>
       </div>
+    </div>
+  </div>
+
+  <!-- ADMIN MANAGEMENT DASHBOARD MODAL -->
+  <div class="modal-backdrop admin-backdrop" id="adminModal" onclick="closeAdminModal(event)">
+    <div class="modal-dialog admin-dialog" onclick="event.stopPropagation()">
+      <div class="admin-header">
+        <div class="admin-brand">
+          <span class="admin-shield">🛡️</span>
+          <div>
+            <h2 class="admin-title">AAA Real Estate Management Portal</h2>
+            <span class="admin-subtitle">Logged in as <strong>admin@aaarealestate.com</strong> (Administrator)</span>
+          </div>
+        </div>
+        <div class="admin-head-actions">
+          <button type="button" class="btn-admin-action" id="adminExportBtn" title="Export database as JSON">💾 Export DB</button>
+          <button type="button" class="btn-admin-action danger" id="adminResetBtn" title="Reset to original 51 properties">↺ Reset DB</button>
+          <button type="button" class="btn-admin-action" id="adminLogoutBtn" onclick="handleAdminLogout()">🚪 Logout</button>
+          <button type="button" class="modal-close-btn" onclick="closeAdminModal()" aria-label="Close dashboard">&times;</button>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Bar -->
+      <div class="admin-metrics-bar">
+        <div class="admin-metric-card">
+          <span class="metric-val" id="admStatTotal">0</span>
+          <span class="metric-lbl">Total Properties</span>
+        </div>
+        <div class="admin-metric-card">
+          <span class="metric-val" id="admStatBuy">0</span>
+          <span class="metric-lbl">For Sale (Buy)</span>
+        </div>
+        <div class="admin-metric-card">
+          <span class="metric-val" id="admStatRent">0</span>
+          <span class="metric-lbl">For Lease / Rent</span>
+        </div>
+        <div class="admin-metric-card">
+          <span class="metric-val" id="admStatComm">0</span>
+          <span class="metric-lbl">Commercial</span>
+        </div>
+        <div class="admin-metric-card">
+          <span class="metric-val" id="admStatLeads">0</span>
+          <span class="metric-lbl">Customer Leads</span>
+        </div>
+      </div>
+
+      <!-- Admin Tabs Navigation -->
+      <div class="admin-nav-tabs">
+        <button type="button" class="admin-tab active" data-admtab="props" onclick="switchAdminTab('props')">🏢 Manage Properties (<span id="admTabPropCount">0</span>)</button>
+        <button type="button" class="admin-tab" data-admtab="addprop" onclick="switchAdminTab('addprop')">➕ Add / Edit Property</button>
+        <button type="button" class="admin-tab" data-admtab="leads" onclick="switchAdminTab('leads')">📥 Customer Leads &amp; Site Visits (<span id="admTabLeadCount">0</span>)</button>
+      </div>
+
+      <!-- TAB 1: PROPERTIES MANAGEMENT TABLE -->
+      <div class="admin-view" id="admViewProps">
+        <div class="adm-toolbar">
+          <input type="search" id="admSearch" placeholder="Search by title, developer, RERA ID, locality..." class="adm-search-input">
+          <div class="adm-filter-group">
+            <select id="admFilterMode" class="adm-select">
+              <option value="">All Categories</option>
+              <option value="buy">Buy (For Sale)</option>
+              <option value="rent">Rent (For Lease)</option>
+              <option value="commercial">Commercial</option>
+            </select>
+            <button type="button" class="btn-coral-sm" onclick="resetAdminForm();switchAdminTab('addprop')">+ Add New Property</button>
+          </div>
+        </div>
+        <div class="adm-table-wrap">
+          <table class="adm-table" id="admPropsTable">
+            <thead>
+              <tr>
+                <th style="width:60px;">Img</th>
+                <th>Property Title &amp; Developer</th>
+                <th>Category</th>
+                <th>Price &amp; Carpet</th>
+                <th>Status / Possession</th>
+                <th>MahaRERA ID</th>
+                <th style="width:140px;text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admPropsTbody">
+              <!-- Injected via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: ADD / EDIT PROPERTY FORM -->
+      <div class="admin-view hidden" id="admViewAddProp">
+        <form class="adm-form" id="admPropForm" onsubmit="handleAdminSaveProp(event)">
+          <div class="adm-form-header">
+            <h3 id="admFormTitle">➕ Add New Luxury Property</h3>
+            <p class="adm-form-sub">Fill in the specifications below. Once saved, it will immediately appear in live website listings, filters &amp; searches.</p>
+          </div>
+          <input type="hidden" id="admEditId" value="">
+
+          <div class="adm-grid-2">
+            <div class="form-group">
+              <label for="admTitle">Property / Tower Title *</label>
+              <input type="text" id="admTitle" placeholder="e.g. Lodha Park – Tower C" required>
+            </div>
+            <div class="form-group">
+              <label for="admDeveloper">Developer Name *</label>
+              <input type="text" id="admDeveloper" placeholder="e.g. Lodha Group, Birla Estates" required>
+            </div>
+          </div>
+
+          <div class="adm-grid-3">
+            <div class="form-group">
+              <label for="admMode">Category Mode *</label>
+              <select id="admMode" required>
+                <option value="buy">Buy (For Sale)</option>
+                <option value="rent">Rent (For Lease)</option>
+                <option value="commercial">Commercial</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="admType">Property Type *</label>
+              <select id="admType" required>
+                <option value="Apartment">Apartment</option>
+                <option value="Luxury Residence">Luxury Residence</option>
+                <option value="Penthouse">Penthouse</option>
+                <option value="Villa">Villa</option>
+                <option value="Commercial">Commercial</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="admStatus">Listing Status *</label>
+              <select id="admStatus" required>
+                <option value="Under construction">Under construction</option>
+                <option value="Ready / possession listed">Ready / possession listed</option>
+                <option value="New launch / under construction">New launch / under construction</option>
+                <option value="RTMI / resale">RTMI / resale</option>
+                <option value="Near possession">Near possession</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="adm-grid-3">
+            <div class="form-group">
+              <label for="admLocality">Locality / Address *</label>
+              <input type="text" id="admLocality" placeholder="e.g. Worli Sea Face, Mumbai" required>
+            </div>
+            <div class="form-group">
+              <label for="admBhk">Bedrooms (BHK) *</label>
+              <select id="admBhk" required>
+                <option value="1">1 BHK</option>
+                <option value="2">2 BHK</option>
+                <option value="3" selected>3 BHK</option>
+                <option value="4">4 BHK</option>
+                <option value="5">5 BHK</option>
+                <option value="0">0 (Commercial / Studio)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="admConfig">Configuration Text</label>
+              <input type="text" id="admConfig" placeholder="e.g. 3, 4 &amp; 5 BHK">
+            </div>
+          </div>
+
+          <div class="adm-grid-3">
+            <div class="form-group">
+              <label for="admPriceStr">Advertised Price Display *</label>
+              <input type="text" id="admPriceStr" placeholder="e.g. ₹9.50–18 Cr or ₹2.5 L/mo" required>
+            </div>
+            <div class="form-group">
+              <label for="admPrice">Numeric Price (INR) *</label>
+              <input type="number" id="admPrice" placeholder="e.g. 95000000" min="10000" required>
+              <small style="color:var(--color-text-muted);font-size:0.74rem;">Used for sorting and filters</small>
+            </div>
+            <div class="form-group">
+              <label for="admCarpet">Carpet Area (sq. ft.) *</label>
+              <input type="number" id="admCarpet" placeholder="e.g. 1650" min="100" required>
+            </div>
+          </div>
+
+          <div class="adm-grid-3">
+            <div class="form-group">
+              <label for="admPsf">Indicative Carpet PSF</label>
+              <input type="text" id="admPsf" placeholder="e.g. ₹75,000">
+            </div>
+            <div class="form-group">
+              <label for="admPossession">Possession Date / Timeline</label>
+              <input type="text" id="admPossession" placeholder="e.g. Dec 2027 or Ready to move">
+            </div>
+            <div class="form-group">
+              <label for="admRera">MahaRERA ID</label>
+              <input type="text" id="admRera" placeholder="e.g. P51900014937">
+            </div>
+          </div>
+
+          <div class="adm-grid-2">
+            <div class="form-group">
+              <label for="admFloors">Floors / Elevation</label>
+              <input type="text" id="admFloors" placeholder="e.g. 68 floors / G+77">
+            </div>
+            <div class="form-group">
+              <label for="admImg">Property Image</label>
+              <select id="admImg">
+                <option value="assets/rec-1.jpg">Luxury Villa &amp; Pool (assets/rec-1.jpg)</option>
+                <option value="assets/rec-2.jpg">Modern Architecture (assets/rec-2.jpg)</option>
+                <option value="assets/rec-3.jpg">Penthouse &amp; Glass Deck (assets/rec-3.jpg)</option>
+                <option value="assets/site-visit.jpg">High-Rise Skyline (assets/site-visit.jpg)</option>
+                <option value="assets/hero-visual.png">Modern House Graphic (assets/hero-visual.png)</option>
+                <option value="assets/hero-house.png">Estate Exterior (assets/hero-house.png)</option>
+                <option value="assets/hero-right.png">Night View Residence (assets/hero-right.png)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="admNotes">Verification &amp; Agent Notes</label>
+            <textarea id="admNotes" rows="2" placeholder="e.g. Sea view units available above 30th floor. Verify OC and phase RERA."></textarea>
+          </div>
+
+          <div class="adm-form-actions">
+            <button type="submit" class="btn-coral-lg" id="admSaveBtn">Save Property</button>
+            <button type="button" class="btn-ghost-lg" style="color:var(--color-navy-dark);border-color:var(--color-border);" onclick="resetAdminForm();switchAdminTab('props');">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TAB 3: CUSTOMER LEADS & ENQUIRIES -->
+      <div class="admin-view hidden" id="admViewLeads">
+        <div class="adm-toolbar">
+          <p class="adm-sub">Direct enquiries, callback requests, and site visit bookings submitted by website visitors.</p>
+          <button type="button" class="btn-ghost-sm" id="admClearLeadsBtn" style="border:1px solid var(--color-border);padding:6px 12px;border-radius:4px;cursor:pointer;">Clear All Leads</button>
+        </div>
+        <div class="adm-table-wrap">
+          <table class="adm-table" id="admLeadsTable">
+            <thead>
+              <tr>
+                <th>Client Name</th>
+                <th>Contact</th>
+                <th>Request Type</th>
+                <th>Property</th>
+                <th>Scheduled Date</th>
+                <th>Status</th>
+                <th style="text-align:right;">Direct Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admLeadsTbody">
+              <!-- Injected via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   </div>
 
