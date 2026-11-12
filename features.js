@@ -542,7 +542,18 @@
       history.replaceState(null, '', location.pathname + location.search);
     }
   };
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $$('.modal-backdrop.open').forEach(closeM); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const lb = $('#imageLightboxModal');
+      if (lb && lb.classList.contains('open')) {
+        closeLightbox();
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      $$('.modal-backdrop.open').forEach(closeM);
+    }
+  });
 
   /* Isolate modal scrolling so mouse wheel / touch never scrolls the background page */
   document.addEventListener('wheel', (e) => {
@@ -606,6 +617,209 @@
     openM(m);
   }
 
+  /* ===== FULL-SIZE IMAGE LIGHTBOX VIEWER ===== */
+  let currentLbImages = [];
+  let currentLbIdx = 0;
+  let currentLbTitle = '';
+  let isLbZoomed = false;
+
+  function ensureLightboxEl() {
+    let lb = $('#imageLightboxModal');
+    if (!lb) {
+      lb = document.createElement('div');
+      lb.id = 'imageLightboxModal';
+      lb.className = 'lightbox-backdrop';
+      lb.setAttribute('role', 'dialog');
+      lb.setAttribute('aria-modal', 'true');
+      lb.setAttribute('aria-label', 'Full size image viewer');
+      lb.setAttribute('data-lenis-prevent', '');
+      lb.innerHTML = `
+        <div class="lb-header">
+          <div class="lb-title-wrap">
+            <span class="lb-prop-title" id="lbTitle">Property Photo</span>
+            <span class="lb-counter" id="lbCounter">1 / 1</span>
+          </div>
+          <div class="lb-head-actions">
+            <button type="button" class="lb-btn-action" id="lbZoomBtn" title="Toggle Zoom In/Out">🔍 <span>Zoom In</span></button>
+            <button type="button" class="lb-close-btn" id="lbCloseBtn" aria-label="Close full view">&times;</button>
+          </div>
+        </div>
+        <div class="lb-stage" id="lbStage">
+          <div class="lb-img-container" id="lbImgContainer">
+            <img src="" alt="Full view" class="lb-img" id="lbImg" draggable="false">
+          </div>
+          <button type="button" class="lb-nav-btn prev" id="lbPrevBtn" aria-label="Previous photo">‹</button>
+          <button type="button" class="lb-nav-btn next" id="lbNextBtn" aria-label="Next photo">›</button>
+        </div>
+        <div class="lb-footer" id="lbFooter">
+          <div class="lb-thumbs-track" id="lbThumbsTrack"></div>
+        </div>
+      `;
+      document.body.appendChild(lb);
+
+      $('#lbCloseBtn').addEventListener('click', closeLightbox);
+      $('#lbPrevBtn').addEventListener('click', (e) => { e.stopPropagation(); lbStep(-1); });
+      $('#lbNextBtn').addEventListener('click', (e) => { e.stopPropagation(); lbStep(1); });
+
+      $('#lbStage').addEventListener('click', (e) => {
+        if (e.target.id === 'lbStage' || e.target.id === 'lbImgContainer') {
+          closeLightbox();
+        }
+      });
+
+      const toggleZoom = (e) => {
+        if (e) e.stopPropagation();
+        isLbZoomed = !isLbZoomed;
+        const img = $('#lbImg');
+        const container = $('#lbImgContainer');
+        const zoomBtnSpan = $('#lbZoomBtn span');
+        if (img) img.classList.toggle('zoomed', isLbZoomed);
+        if (container) container.classList.toggle('zoomed', isLbZoomed);
+        if (zoomBtnSpan) zoomBtnSpan.textContent = isLbZoomed ? 'Zoom Out' : 'Zoom In';
+      };
+
+      $('#lbZoomBtn').addEventListener('click', toggleZoom);
+      $('#lbImg').addEventListener('click', toggleZoom);
+      $('#lbImg').addEventListener('dblclick', toggleZoom);
+
+      document.addEventListener('keydown', (e) => {
+        const lbEl = $('#imageLightboxModal');
+        if (!lbEl || !lbEl.classList.contains('open')) return;
+        if (e.key === 'ArrowLeft') {
+          lbStep(-1);
+        } else if (e.key === 'ArrowRight') {
+          lbStep(1);
+        }
+      });
+
+      let touchStartX = 0;
+      let touchStartY = 0;
+      lb.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches[0]) {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      lb.addEventListener('touchend', (e) => {
+        if (!e.changedTouches || !e.changedTouches[0] || isLbZoomed) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+          if (dx > 0) lbStep(-1);
+          else lbStep(1);
+        }
+      }, { passive: true });
+    }
+    return lb;
+  }
+
+  function openLightbox(images, startIndex = 0, title = 'Property Photo', onIndexChange = null) {
+    if (!images || !images.length) return;
+    currentLbImages = images;
+    currentLbIdx = Math.max(0, Math.min(startIndex, images.length - 1));
+    currentLbTitle = title;
+    window._lbIndexChangeCallback = onIndexChange;
+
+    const lb = ensureLightboxEl();
+    isLbZoomed = false;
+    const img = $('#lbImg');
+    const container = $('#lbImgContainer');
+    if (img) img.classList.remove('zoomed');
+    if (container) container.classList.remove('zoomed');
+    const zoomBtnSpan = $('#lbZoomBtn span');
+    if (zoomBtnSpan) zoomBtnSpan.textContent = 'Zoom In';
+
+    renderLightboxContent();
+    lb.classList.add('open');
+    lb.style.display = 'flex';
+  }
+
+  function closeLightbox() {
+    const lb = $('#imageLightboxModal');
+    if (lb) {
+      lb.classList.remove('open');
+      lb.style.display = 'none';
+      isLbZoomed = false;
+      const img = $('#lbImg');
+      const container = $('#lbImgContainer');
+      if (img) img.classList.remove('zoomed');
+      if (container) container.classList.remove('zoomed');
+    }
+  }
+
+  function lbStep(dir) {
+    if (!currentLbImages.length) return;
+    currentLbIdx = (currentLbIdx + dir + currentLbImages.length) % currentLbImages.length;
+    isLbZoomed = false;
+    const img = $('#lbImg');
+    const container = $('#lbImgContainer');
+    if (img) img.classList.remove('zoomed');
+    if (container) container.classList.remove('zoomed');
+    const zoomBtnSpan = $('#lbZoomBtn span');
+    if (zoomBtnSpan) zoomBtnSpan.textContent = 'Zoom In';
+    renderLightboxContent();
+    if (typeof window._lbIndexChangeCallback === 'function') {
+      window._lbIndexChangeCallback(currentLbIdx);
+    }
+  }
+
+  function renderLightboxContent() {
+    const total = currentLbImages.length;
+    const currentSrc = currentLbImages[currentLbIdx];
+
+    const titleEl = $('#lbTitle');
+    const counterEl = $('#lbCounter');
+    const imgEl = $('#lbImg');
+    const prevBtn = $('#lbPrevBtn');
+    const nextBtn = $('#lbNextBtn');
+    const thumbsTrack = $('#lbThumbsTrack');
+    const footer = $('#lbFooter');
+
+    if (titleEl) titleEl.textContent = currentLbTitle;
+    if (counterEl) counterEl.textContent = `${currentLbIdx + 1} / ${total}`;
+    if (imgEl) {
+      imgEl.src = currentSrc;
+      imgEl.alt = `${currentLbTitle} - Photo ${currentLbIdx + 1}`;
+    }
+
+    if (prevBtn) prevBtn.style.display = total > 1 ? 'flex' : 'none';
+    if (nextBtn) nextBtn.style.display = total > 1 ? 'flex' : 'none';
+    if (footer) footer.style.display = total > 1 ? 'flex' : 'none';
+
+    if (thumbsTrack && total > 1) {
+      thumbsTrack.innerHTML = currentLbImages.map((src, idx) => `
+        <button type="button" class="lb-thumb ${idx === currentLbIdx ? 'active' : ''}" data-lbidx="${idx}" title="Photo ${idx + 1}">
+          <img src="${src}" alt="Thumb ${idx + 1}">
+        </button>
+      `).join('');
+
+      $$('.lb-thumb', thumbsTrack).forEach(btn => {
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          currentLbIdx = +btn.dataset.lbidx;
+          isLbZoomed = false;
+          $('#lbImg')?.classList.remove('zoomed');
+          $('#lbImgContainer')?.classList.remove('zoomed');
+          const zoomBtnSpan = $('#lbZoomBtn span');
+          if (zoomBtnSpan) zoomBtnSpan.textContent = 'Zoom In';
+          renderLightboxContent();
+          if (typeof window._lbIndexChangeCallback === 'function') {
+            window._lbIndexChangeCallback(currentLbIdx);
+          }
+        };
+      });
+
+      const activeThumb = thumbsTrack.querySelector('.lb-thumb.active');
+      if (activeThumb) {
+        activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }
+  }
+
+  window.openImageLightbox = openLightbox;
+  window.closeImageLightbox = closeLightbox;
+
   /* ===== DETAILS MODAL ===== */
   function waLink(msg, num = BUSINESS_WHATSAPP) {
     if (!num) { toast('WhatsApp number not configured'); return; }
@@ -623,8 +837,9 @@
 
     body.innerHTML = `
       <div class="pd-gallery-container">
-        <div class="pd-gallery-main">
+        <div class="pd-gallery-main" id="pdGalleryMain" title="Click image to view in full size">
           <img class="pd-img" id="pdMainImg" src="${pImages[0]}" alt="${esc(p.title)}" width="700" height="380" loading="lazy">
+          <button type="button" class="pd-enlarge-badge" id="pdEnlargeBtn" title="Click to view full size photo">🔍 Tap to enlarge</button>
           ${pImages.length > 1 ? `
             <button type="button" class="pd-nav-btn prev" id="pdGalPrev" aria-label="Previous photo">‹</button>
             <button type="button" class="pd-nav-btn next" id="pdGalNext" aria-label="Next photo">›</button>
@@ -659,18 +874,18 @@
       <div class="pd-actions"><button class="btn-coral-full" data-pd="visit">Schedule site visit</button><button class="btn-wa" data-pd="wa">WhatsApp Enquiry</button><button data-pd="share">Share</button><button data-pd="fav">${favs.includes(p.id) ? '♥ Saved' : '♡ Save'}</button></div>`;
 
     // Interactive gallery switching
-    if (pImages.length > 1) {
-      const updateGal = (newIdx) => {
-        currentGalIdx = (newIdx + pImages.length) % pImages.length;
-        const main = $('#pdMainImg');
-        const counter = $('#pdImgCounter');
-        if (main) main.src = pImages[currentGalIdx];
-        if (counter) counter.textContent = `${currentGalIdx + 1} / ${pImages.length}`;
-        $$('.pd-thumb-btn', body).forEach((b) => {
-          b.classList.toggle('active', +b.dataset.gidx === currentGalIdx);
-        });
-      };
+    const updateGal = (newIdx) => {
+      currentGalIdx = (newIdx + pImages.length) % pImages.length;
+      const main = $('#pdMainImg');
+      const counter = $('#pdImgCounter');
+      if (main) main.src = pImages[currentGalIdx];
+      if (counter) counter.textContent = `${currentGalIdx + 1} / ${pImages.length}`;
+      $$('.pd-thumb-btn', body).forEach((b) => {
+        b.classList.toggle('active', +b.dataset.gidx === currentGalIdx);
+      });
+    };
 
+    if (pImages.length > 1) {
       $('#pdGalPrev', body)?.addEventListener('click', (e) => { e.stopPropagation(); updateGal(currentGalIdx - 1); });
       $('#pdGalNext', body)?.addEventListener('click', (e) => { e.stopPropagation(); updateGal(currentGalIdx + 1); });
       $('#pdThumbsStrip', body)?.addEventListener('click', (e) => {
@@ -681,6 +896,19 @@
         }
       });
     }
+
+    const triggerLightbox = (e) => {
+      if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+      openLightbox(pImages, currentGalIdx, p.title, (newIdx) => {
+        updateGal(newIdx);
+      });
+    };
+
+    $('#pdMainImg', body)?.addEventListener('click', triggerLightbox);
+    $('#pdEnlargeBtn', body)?.addEventListener('click', triggerLightbox);
 
     body.onclick = (e) => {
       const a = e.target.closest('[data-pd]'); if (!a) return;
