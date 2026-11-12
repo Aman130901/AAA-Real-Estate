@@ -253,6 +253,10 @@ function bookSiteVisit() {
 }
 
 function closeRoomModal(e) {
+  if (typeof window.closeRoomModalFeature === 'function') {
+    window.closeRoomModalFeature(e);
+    return;
+  }
   if (e && e.target !== e.currentTarget && !e.target.classList.contains('modal-close-btn')) {
     return;
   }

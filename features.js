@@ -264,7 +264,7 @@
     const f = favs.includes(p.id);
     const badgeText = p.status ? p.status.split('/')[0].split('(')[0].trim() : 'MahaRERA';
     const displayPrice = p.priceStr || fmt(p.price, p.mode);
-    return `<article class="property-card" data-id="${p.id}">
+    return `<article class="property-card" data-id="${p.id}" tabindex="0" role="button" aria-label="View details for ${esc(p.title)}" style="cursor:pointer;">
       <div class="property-image-box" data-act="view" style="cursor:pointer;" title="Click to view details">
         <img src="${p.img}" alt="${esc(p.title)}" class="property-img" loading="lazy" width="400" height="260" data-act="view">
         <div class="property-badge">${esc(badgeText)}</div>
@@ -352,19 +352,59 @@
   };
   document.addEventListener('click', (e) => {
     const t = e.target;
-    const chip = t.closest('[data-chip]'); if (chip) { set(chip.dataset.chip, ''); return; };
-    const city = t.closest('[data-city]'); if (city) { openCity(city.dataset.city); return; };
-    const ss = t.closest('[data-ss]'); if (ss) { const s = ls('aaa_searches', [])[+ss.dataset.ss]; if (s) { Object.assign(F, D); new URLSearchParams(s.qs).forEach((v, k) => { if (k in D) F[k] = v; }); render(true); } return; };
-    const sd = t.closest('[data-ssdel]'); if (sd) { const a = ls('aaa_searches', []); a.splice(+sd.dataset.ssdel, 1); sv('aaa_searches', a); extras(); return; };
-    const op = t.closest('[data-open]'); if (op) { openProperty(op.dataset.open); return; };
-    const act = t.closest('[data-act]'); if (!act) return;
-    const card = act.closest('.property-card'); const id = card && +card.dataset.id;
+    const chip = t.closest('[data-chip]'); if (chip) { set(chip.dataset.chip, ''); return; }
+    const city = t.closest('[data-city]'); if (city) { openCity(city.dataset.city); return; }
+    const ss = t.closest('[data-ss]'); if (ss) { const s = ls('aaa_searches', [])[+ss.dataset.ss]; if (s) { Object.assign(F, D); new URLSearchParams(s.qs).forEach((v, k) => { if (k in D) F[k] = v; }); render(true); } return; }
+    const sd = t.closest('[data-ssdel]'); if (sd) { const a = ls('aaa_searches', []); a.splice(+sd.dataset.ssdel, 1); sv('aaa_searches', a); extras(); return; }
+    const op = t.closest('[data-open]'); if (op) { openProperty(op.dataset.open); return; }
+
+    // Check if clicked inside a property card
+    const card = t.closest('.property-card');
+    if (card && card.dataset.id) {
+      const id = +card.dataset.id;
+
+      // 1. If clicked favorite button: toggle favorite and do NOT open details modal
+      const favBtn = t.closest('[data-act="fav"], .fav');
+      if (favBtn) {
+        toggleFav(id);
+        return;
+      }
+
+      // 2. If clicked compare checkbox or label: toggle compare and do NOT open details modal
+      const cmpLabel = t.closest('[data-act="cmp"], .cmp');
+      if (cmpLabel) {
+        const chk = cmpLabel.matches('input[type="checkbox"]')
+          ? cmpLabel
+          : (cmpLabel.querySelector('input[type="checkbox"]') || card.querySelector('input[data-act="cmp"]'));
+        if (t === chk) {
+          toggleCmp(id, chk);
+        }
+        return;
+      }
+
+      // 3. Clicked ANYWHERE else on the card (white space, title, image, details, padding, button):
+      // OPEN PROPERTY DETAILS!
+      openProperty(id);
+      return;
+    }
+
+    const act = t.closest('[data-act]');
+    if (!act) return;
     switch (act.dataset.act) {
       case 'clear': clearAll(); break;
       case 'savesearch': savedSearch(); break;
-      case 'view': openProperty(id); break;
-      case 'fav': toggleFav(id); break;
-      case 'cmp': toggleCmp(id, act); break;
+    }
+  });
+
+  // Keyboard accessibility: Enter or Space on a focused property card opens details
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (e.target.matches('button, input, textarea, select, a, label')) return;
+      const card = e.target.closest('.property-card');
+      if (card && card.dataset.id) {
+        e.preventDefault();
+        openProperty(+card.dataset.id);
+      }
     }
   });
   function openCity(c) {
@@ -419,7 +459,15 @@
     }
     return m;
   }
+  let savedScrollY = 0;
+  let lastOpenedPropertyId = null;
+
   const openM = (m) => {
+    // Save current scroll position before modal locks the page
+    savedScrollY = window.lenis
+      ? (typeof window.lenis.scroll === 'number' ? window.lenis.scroll : (window.scrollY || 0))
+      : (window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0);
+
     m.classList.add('open');
     document.documentElement.classList.add('modal-open');
     document.body.classList.add('modal-open');
@@ -438,6 +486,27 @@
       document.documentElement.style.overflow = '';
       if (window.lenis && typeof window.lenis.start === 'function') {
         window.lenis.start();
+      }
+
+      // Restore scroll to where the user was (never jump to hero / top of page)
+      const recSec = document.getElementById('recommendations');
+      const fallbackY = recSec ? recSec.offsetTop : 0;
+      const targetY = savedScrollY > 60 ? savedScrollY : fallbackY;
+
+      window.scrollTo({ top: targetY, left: 0, behavior: 'instant' });
+      if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+        window.lenis.scrollTo(targetY, { immediate: true });
+      }
+
+      // Ensure the inspected property card is visible in view
+      if (lastOpenedPropertyId) {
+        const card = document.querySelector(`.property-card[data-id="${lastOpenedPropertyId}"]`);
+        if (card) {
+          const rect = card.getBoundingClientRect();
+          if (rect.top < 60 || rect.bottom > window.innerHeight) {
+            card.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+          }
+        }
       }
     }
     if (m.id === 'roomModal' && location.hash.startsWith('#property-')) {
@@ -516,6 +585,7 @@
   const propMsg = (p) => `Hi AAA Real Estate, I'm interested in "${p.title}" by ${p.developer} (${p.priceStr || fmt(p.price, p.mode)}), ${p.locality}, Mumbai (RERA: ${p.rera || 'Verified'}). Please share more details.`;
   function openProperty(id) {
     const p = byId(id); if (!p) return;
+    lastOpenedPropertyId = p.id;
     const rv = [p.id, ...ls('aaa_recent', []).filter((x) => x !== p.id)].slice(0, 4); sv('aaa_recent', rv); extras();
     history.replaceState(null, '', location.pathname + location.search + '#property-' + p.id);
     const m = $('#roomModal'); const body = $('#roomModalBody');
@@ -548,7 +618,18 @@
     openM(m);
   }
   window.openRoomModal = openProperty;
-  window.closeRoomModal = (e) => { const m = $('#roomModal'); if (!e || e.target === m || (e.target.classList && e.target.classList.contains('modal-close-btn'))) closeM(m); };
+  window.closeRoomModalFeature = (e) => {
+    if (e) {
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
+    const m = $('#roomModal');
+    if (!m) return;
+    if (!e || e.target === m || (e.target.classList && e.target.classList.contains('modal-close-btn')) || (e.currentTarget && e.currentTarget.classList && e.currentTarget.classList.contains('modal-close-btn'))) {
+      closeM(m);
+    }
+  };
+  window.closeRoomModal = window.closeRoomModalFeature;
 
   /* ===== CITIES / LOCATIONS ===== */
   const cImg = ['assets/rec-1.jpg', 'assets/rec-2.jpg', 'assets/rec-3.jpg', 'assets/hero-visual.png', 'assets/hero-house.png'];
