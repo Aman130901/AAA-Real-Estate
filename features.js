@@ -532,7 +532,10 @@
     const navAdmin = $('#navAdminBtn');
     const mobAdmin = $('#mobAdminBtn');
     if (navAdmin) navAdmin.style.display = isAdmin ? 'inline-flex' : 'none';
-    if (mobAdmin) mobAdmin.style.display = isAdmin ? 'block' : 'none';
+    if (mobAdmin) {
+      mobAdmin.classList.toggle('admin-visible', isAdmin);
+      mobAdmin.style.display = isAdmin ? 'block' : 'none';
+    }
   }
 
   function fillUser() {
