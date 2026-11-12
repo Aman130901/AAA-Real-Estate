@@ -71,11 +71,12 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 .how-grid>div{padding:22px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:#fff}
 .how-grid b{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--color-gold);color:#fff}
 .how-grid h3{margin:12px 0 6px}.how-grid p{color:var(--color-text-muted);font-size:.92rem}
-.emi-section,.cities-section,.contact-section{padding:70px 0}
+.emi-section,.cities-section{padding:70px 0}
 .emi-section{background:var(--color-bg-light)}
 .cities-section{background:var(--color-white)}
-.contact-section{background:#F8FAFC}
-.emi-grid,.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:24px}
+.contact-section{background:#F1F5F9;padding:80px 0;border-top:2px solid #CBD5E1;border-bottom:2px solid #CBD5E1}
+.emi-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:24px}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:24px;align-items:start}
 .emi-inputs{display:grid;gap:18px}.emi-inputs input[type=range]{width:100%;padding:0}
 .emi-out{background:var(--color-navy-dark);color:#fff;padding:28px;border-radius:var(--radius-md)}
 .emi-out strong{display:block;font-size:2.2rem;color:var(--color-gold);margin:4px 0 14px}
@@ -84,13 +85,33 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 .city-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:22px}
 .city-card{height:220px;border:0;border-radius:var(--radius-md);background-size:cover;background-position:center;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;text-align:left;padding:18px;cursor:pointer;transition:transform .25s}
 .city-card:hover{transform:translateY(-4px)}.city-card b{font-size:1.25rem}.city-card span{font-size:.82rem;opacity:.9}
-.enq-form{display:grid;gap:12px;background:#fff;padding:24px;border:1px solid var(--color-border);border-radius:var(--radius-md)}
-.enq-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.enq-actions{display:flex;gap:10px;flex-wrap:wrap}.enq-actions .btn-coral-full{flex:1;min-width:160px}
-.btn-wa{background:#25D366;color:#fff;border:0;border-radius:var(--radius-sm);padding:12px 18px;font-weight:700;cursor:pointer}
+.enq-form{display:grid;gap:14px;background:#FFFFFF;padding:32px 28px;border:2px solid #CBD5E1;border-radius:18px;box-shadow:0 12px 36px rgba(15,23,42,.08)}
+.enq-form-title-wrap{margin-bottom:8px;padding-bottom:14px;border-bottom:1.5px solid #E2E8F0}
+.enq-form-badge{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--color-navy-dark);background:#EEF2F6;padding:4px 10px;border-radius:6px;margin-bottom:8px}
+.enq-form-title{font-size:1.32rem;font-weight:800;color:var(--color-navy-dark);margin:0 0 4px}
+.enq-form-subtitle{font-size:.86rem;color:var(--color-text-muted);margin:0;line-height:1.45}
+.enq-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.enq-form .form-group{margin-bottom:0}
+.enq-form label{display:flex;flex-direction:column;gap:6px;font-size:.78rem;font-weight:800;color:#1E293B;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.enq-form input,
+.enq-form select,
+.enq-form textarea{width:100%;padding:12px 14px;border:1.5px solid #CBD5E1!important;border-radius:8px;font:inherit;font-size:.95rem;color:#0F172A;background:#F8FAFC!important;transition:all .2s ease}
+.enq-form input:hover,
+.enq-form select:hover,
+.enq-form textarea:hover{border-color:#94A3B8!important;background:#FFFFFF!important}
+.enq-form input:focus,
+.enq-form select:focus,
+.enq-form textarea:focus{border-color:var(--color-navy-dark)!important;background:#FFFFFF!important;box-shadow:0 0 0 3.5px rgba(22,46,80,.14)!important;outline:none}
+.enq-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;padding-top:12px;border-top:1.5px solid #E2E8F0}
+.enq-actions .btn-coral-full{flex:1;min-width:160px;padding:13px 20px;font-size:.96rem;font-weight:700;border-radius:8px;box-shadow:0 4px 12px rgba(224,86,60,.28);transition:var(--transition)}
+.enq-actions .btn-coral-full:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(224,86,60,.38)}
+.btn-wa{background:#25D366;color:#fff;border:0;border-radius:8px;padding:13px 20px;font-weight:700;font-size:.96rem;cursor:pointer;box-shadow:0 4px 12px rgba(37,211,102,.28);transition:var(--transition)}
+.btn-wa:hover{background:#20ba59;transform:translateY(-2px);box-shadow:0 6px 18px rgba(37,211,102,.38)}
 .form-error{color:var(--color-coral);font-size:.85rem;min-height:1.2em;margin:0}
-.my-enq h3{margin:18px 0 8px}.enq-item{display:flex;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--color-border);border-radius:var(--radius-md);margin-bottom:8px;font-size:.9rem}
-.enq-item button{margin-left:6px;border:1px solid var(--color-border);background:#fff;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:.8rem}
+.my-enq h3{margin:18px 0 8px;font-size:1.15rem;font-weight:800;color:var(--color-navy-dark)}
+.enq-item{display:flex;justify-content:space-between;gap:10px;padding:14px 16px;border:2px solid #CBD5E1;border-radius:14px;margin-bottom:10px;background:#FFFFFF;box-shadow:0 4px 12px rgba(15,23,42,.05);font-size:.9rem}
+.enq-item button{margin-left:6px;border:1.5px solid #CBD5E1;background:#F8FAFC;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:.8rem;font-weight:700}
+.enq-item button:hover{background:#FEECE9;border-color:var(--color-coral);color:var(--color-coral)}
 .status{color:#1b7f4d;font-weight:700}.status.off{color:var(--color-text-light)}
 
 /* modals */
@@ -116,31 +137,32 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 .cmp-table th,.cmp-table td{padding:10px;border-bottom:1px solid var(--color-border);text-align:left;vertical-align:top}
 
 /* contact visual card */
-.contact-visual-card{margin-top:22px;background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .25s ease,box-shadow .25s ease}
-.contact-visual-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
-.contact-site-img{width:100%;height:240px;object-fit:cover;display:block}
-.contact-visual-info{padding:16px 20px 20px}
+.contact-visual-card{margin-top:24px;background:#FFFFFF;border:2px solid #CBD5E1;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(15,23,42,.07);transition:transform .25s ease,box-shadow .25s ease}
+.contact-visual-card:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(15,23,42,.12)}
+.contact-site-img{width:100%;height:240px;object-fit:cover;display:block;border-bottom:1.5px solid #E2E8F0}
+.contact-visual-info{padding:20px 22px 22px}
 .contact-visual-tag{display:inline-block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--color-coral);background:#FEECE9;padding:4px 10px;border-radius:var(--radius-full);margin-bottom:8px}
-.contact-visual-heading{font-size:1.15rem;font-weight:700;color:var(--color-navy-dark);margin:0 0 6px}
-.contact-visual-desc{font-size:.88rem;color:var(--color-text-muted);line-height:1.55;margin:0}
+.contact-visual-heading{font-size:1.2rem;font-weight:800;color:var(--color-navy-dark);margin:0 0 6px}
+.contact-visual-desc{font-size:.9rem;color:var(--color-text-muted);line-height:1.55;margin:0}
 
 /* Direct Contact & WhatsApp Card */
-.direct-contact-card{margin-top:16px;background:linear-gradient(135deg,rgba(22,46,80,.04) 0%,rgba(229,168,53,.07) 100%);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:20px;box-shadow:var(--shadow-sm)}
-.contact-card-title{font-size:1.15rem;font-weight:700;color:var(--color-navy-dark);margin:0 0 4px}
-.contact-card-sub{font-size:.88rem;color:var(--color-text-muted);margin:0 0 16px}
+.direct-contact-card{margin-top:18px;background:#FFFFFF;border:2px solid #CBD5E1;border-radius:18px;padding:26px;box-shadow:0 10px 30px rgba(15,23,42,.07)}
+.contact-card-title{font-size:1.25rem;font-weight:800;color:var(--color-navy-dark);margin:0 0 4px}
+.contact-card-sub{font-size:.88rem;color:var(--color-text-muted);margin:0 0 16px;padding-bottom:12px;border-bottom:1.5px solid #E2E8F0}
 .direct-phone-list{display:flex;flex-direction:column;gap:12px}
-.direct-phone-item{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:12px 14px;gap:10px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.direct-phone-item{display:flex;align-items:center;justify-content:space-between;background:#F8FAFC;border:1.5px solid #CBD5E1;border-radius:12px;padding:14px 16px;gap:12px;flex-wrap:wrap;box-shadow:0 2px 6px rgba(0,0,0,.02);transition:var(--transition)}
+.direct-phone-item:hover{background:#FFFFFF;border-color:var(--color-navy-dark);box-shadow:0 6px 18px rgba(15,23,42,.08)}
 .phone-meta{display:flex;flex-direction:column}
-.phone-label{font-size:.74rem;font-weight:700;color:var(--color-text-light);text-transform:uppercase;letter-spacing:.05em}
-.phone-number{font-size:1.05rem;font-weight:700;color:var(--color-navy-dark);text-decoration:none;margin-top:2px}
+.phone-label{font-size:.74rem;font-weight:800;color:#64748B;text-transform:uppercase;letter-spacing:.05em}
+.phone-number{font-size:1.1rem;font-weight:800;color:var(--color-navy-dark);text-decoration:none;margin-top:2px}
 .phone-number:hover{color:var(--color-coral)}
 .phone-actions{display:flex;align-items:center;gap:8px}
 .btn-wa-pill{display:inline-flex;align-items:center;gap:6px;background:#25D366;color:#fff!important;font-size:.85rem;font-weight:700;padding:8px 14px;border-radius:var(--radius-full);text-decoration:none;transition:var(--transition);box-shadow:0 2px 8px rgba(37,211,102,.25)}
 .btn-wa-pill:hover{background:#20ba59;transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,211,102,.35)}
 .btn-call-pill{display:inline-flex;align-items:center;background:var(--color-navy-light);color:#fff!important;font-size:.85rem;font-weight:700;padding:8px 14px;border-radius:var(--radius-full);text-decoration:none;transition:var(--transition)}
 .btn-call-pill:hover{background:var(--color-navy-dark);transform:translateY(-1px)}
-.direct-contact-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px dashed var(--color-border);font-size:.85rem;color:var(--color-text-muted)}
-.direct-contact-footer a{color:var(--color-coral);font-weight:600}
+.direct-contact-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:16px;padding-top:14px;border-top:1.5px dashed #CBD5E1;font-size:.86rem;color:#475569}
+.direct-contact-footer a{color:var(--color-coral);font-weight:700}
 .direct-contact-footer a:hover{text-decoration:underline}
 
 /* Footer WhatsApp Badge */
