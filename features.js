@@ -130,11 +130,115 @@
     ...PROPS.map((p) => p.locality),
     ...PROPS.map((p) => p.developer)
   ])].filter((v) => v && typeof v === 'string' && !v.includes('₹') && !v.includes('Cr') && !v.includes('L/mo') && !/^\d+/.test(v.trim()));
-  $('#cityList').innerHTML = cleanLocations.map((v) => `<option value="${esc(v)}">`).join('');
+  if ($('#cityList')) $('#cityList').innerHTML = cleanLocations.map((v) => `<option value="${esc(v)}">`).join('');
   const lsSort = $('#lsSort');
   const lsPrice = document.createElement('select');
   lsPrice.id = 'lsPrice'; lsPrice.setAttribute('aria-label', 'Max price');
   lsSort.before(lsPrice);
+
+  /* ===== CUSTOM LOCATION DROPDOWN LOGIC ===== */
+  const locWrap = $('.loc-dropdown-wrapper');
+  const hsQ = $('#hsQ');
+  const locBtn = $('#locDropdownBtn');
+  const locMenu = $('#locDropdownMenu');
+
+  function renderLocMenu(filterText = '', forceAll = false) {
+    if (!locMenu) return;
+    const query = forceAll ? '' : (filterText || '').trim().toLowerCase();
+    const filteredLocs = query
+      ? cleanLocations.filter((loc) => loc.toLowerCase().includes(query))
+      : cleanLocations;
+
+    if (filteredLocs.length === 0) {
+      locMenu.innerHTML = `<div class="loc-dropdown-empty">No locations matching "${esc(filterText)}"</div>`;
+      return;
+    }
+
+    const currentVal = (hsQ?.value || '').trim().toLowerCase();
+    let html = '';
+
+    if (currentVal) {
+      html += `<div class="loc-dropdown-item" data-val="" style="color:var(--color-coral);font-weight:700;border-bottom:1px solid #E2E8F0;">
+        <span class="loc-item-icon">✕</span> Clear location filter (Any location)
+      </div>`;
+    }
+
+    html += `<div class="loc-dropdown-header">All Available Locations &amp; Developers (${filteredLocs.length})</div>`;
+
+    html += filteredLocs.map((loc) => {
+      const isSelected = loc.toLowerCase() === currentVal;
+      return `<div class="loc-dropdown-item ${isSelected ? 'active' : ''}" data-val="${esc(loc)}" role="option" aria-selected="${isSelected}">
+        <span class="loc-item-icon">📍</span>
+        <span>${esc(loc)}</span>
+      </div>`;
+    }).join('');
+
+    locMenu.innerHTML = html;
+  }
+
+  function toggleLocDropdown(forceState) {
+    if (!locWrap) return;
+    const willOpen = typeof forceState === 'boolean' ? forceState : !locWrap.classList.contains('open');
+    if (willOpen) {
+      // Whenever clicking dropdown arrow: ALWAYS SHOW ALL LOCATIONS!
+      renderLocMenu('', true);
+      locWrap.classList.add('open');
+      if (hsQ) hsQ.setAttribute('aria-expanded', 'true');
+    } else {
+      locWrap.classList.remove('open');
+      if (hsQ) hsQ.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  if (locBtn && hsQ && locMenu) {
+    // Click arrow button: ALWAYS show ALL available locations
+    locBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleLocDropdown();
+      hsQ.focus();
+    });
+
+    // Clicking into the input box: open dropdown and show all locations
+    hsQ.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!locWrap.classList.contains('open')) {
+        toggleLocDropdown(true);
+      }
+    });
+
+    // Typing in the input box: filter locations in real-time
+    hsQ.addEventListener('input', () => {
+      renderLocMenu(hsQ.value, false);
+      if (!locWrap.classList.contains('open')) {
+        locWrap.classList.add('open');
+        hsQ.setAttribute('aria-expanded', 'true');
+      }
+    });
+
+    // Selecting an item in dropdown
+    locMenu.addEventListener('click', (e) => {
+      const item = e.target.closest('.loc-dropdown-item');
+      if (!item) return;
+      const val = item.dataset.val || '';
+      hsQ.value = val;
+      toggleLocDropdown(false);
+    });
+
+    // Click outside: close dropdown
+    document.addEventListener('click', (e) => {
+      if (locWrap && locWrap.classList.contains('open') && !locWrap.contains(e.target)) {
+        toggleLocDropdown(false);
+      }
+    });
+
+    // Escape key: close dropdown
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && locWrap && locWrap.classList.contains('open')) {
+        toggleLocDropdown(false);
+      }
+    });
+  }
 
   /* ===== RENDER ===== */
   function syncURL() {

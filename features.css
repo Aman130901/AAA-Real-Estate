@@ -19,6 +19,24 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 .adv-grid input,.adv-grid select,.filter-bar input[type=search],.filter-bar select,.enq-form input,.enq-form select,.enq-form textarea,.emi-inputs input[type=number]{width:100%;padding:11px 12px;border:1px solid var(--color-border);border-radius:var(--radius-sm);font:inherit;font-size:.92rem;color:var(--color-text-main);background:#fff;text-transform:none;letter-spacing:0}
 .adv-grid .btn-search{height:44px;padding:0 28px}
 
+/* Custom Location Dropdown & Combobox */
+.loc-field-label{position:relative}
+.loc-dropdown-wrapper{position:relative;width:100%}
+.loc-dropdown-wrapper input{width:100%;padding-right:42px!important;cursor:text}
+.loc-dropdown-arrow-btn{position:absolute;right:1px;top:1px;bottom:1px;width:38px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--color-navy-dark);z-index:4;border-radius:0 var(--radius-sm) var(--radius-sm) 0;transition:transform .2s ease,color .2s ease}
+.loc-dropdown-arrow-btn:hover{color:var(--color-coral);background:rgba(22,46,80,.05)}
+.loc-dropdown-wrapper.open .loc-dropdown-arrow-btn svg{transform:rotate(180deg)}
+.loc-dropdown-wrapper.open .loc-dropdown-arrow-btn{color:var(--color-coral)}
+.loc-dropdown-menu{position:absolute;top:calc(100% + 6px);left:0;right:0;max-height:280px;overflow-y:auto;background:#FFFFFF;border:2px solid var(--color-navy-dark);border-radius:12px;box-shadow:0 16px 40px rgba(15,23,42,.22);z-index:1000;display:none;padding:6px 0;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.loc-dropdown-wrapper.open .loc-dropdown-menu{display:block;animation:locMenuFadeIn .18s ease-out}
+@keyframes locMenuFadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.loc-dropdown-header{padding:8px 14px 4px;font-size:.72rem;font-weight:800;color:#64748B;text-transform:uppercase;letter-spacing:.06em;background:#F8FAFC;border-bottom:1px solid #E2E8F0;margin-bottom:4px}
+.loc-dropdown-item{padding:10px 14px;font-size:.92rem;font-weight:600;color:#1E293B;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .15s,color .15s}
+.loc-dropdown-item:hover{background:#F1F5F9;color:var(--color-navy-dark)}
+.loc-dropdown-item.active{background:#EEF2F6;color:var(--color-coral);font-weight:700}
+.loc-dropdown-item .loc-item-icon{font-size:.95rem;opacity:.8}
+.loc-dropdown-empty{padding:16px 14px;font-size:.88rem;color:#64748B;text-align:center}
+
 /* listings */
 .listings .section-container{padding-top:70px}
 .filter-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 8px}
