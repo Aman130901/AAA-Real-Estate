@@ -101,6 +101,45 @@
     if (needsUpdate) sv('aaa_props_db', PROPS);
   }
 
+  /* ===== CROSS-DEVICE DATABASE & IMAGE SYNC ===== */
+  async function syncPropsToServer(data) {
+    try {
+      const res = await fetch('/api/properties', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
+  function loadSharedDatabase() {
+    fetch('properties.json?t=' + Date.now())
+      .then((res) => (res.ok ? res.json() : null))
+      .then((remoteData) => {
+        if (Array.isArray(remoteData) && remoteData.length > 0) {
+          const localData = ls('aaa_props_db', null);
+          const localHasCustom = localData && localData.some(p => p.added || (p.images && p.images.length > 1) || (p.img && (p.img.startsWith('data:') || p.img.startsWith('uploads/'))));
+          const remoteHasCustom = remoteData.some(p => p.added || (p.images && p.images.length > 1) || (p.img && (p.img.startsWith('data:') || p.img.startsWith('uploads/'))));
+
+          if (localHasCustom && !remoteHasCustom) {
+            syncPropsToServer(localData);
+          } else {
+            PROPS = remoteData;
+            sv('aaa_props_db', PROPS);
+            render(false);
+            updateStatsCounter();
+            if ($('#admPropsTbody')) renderAdminPropsTable();
+          }
+        }
+      })
+      .catch(() => {});
+  }
+  loadSharedDatabase();
+
   const byId = (id) => PROPS.find((p) => p.id === +id);
   const fmt = (n, mode) => {
     if (mode === 'rent') return '₹' + n.toLocaleString('en-IN') + '/mo';
@@ -1166,6 +1205,7 @@
     $('#admViewProps')?.classList.toggle('hidden', tabName !== 'props');
     $('#admViewAddProp')?.classList.toggle('hidden', tabName !== 'addprop');
     $('#admViewLeads')?.classList.toggle('hidden', tabName !== 'leads');
+    $('#admViewMobileSync')?.classList.toggle('hidden', tabName !== 'mobilesync');
     if (tabName === 'props') renderAdminPropsTable();
     if (tabName === 'leads') renderAdminLeadsTable();
     if (tabName === 'addprop') renderAdminGallery();
@@ -1327,9 +1367,24 @@
 
     let processed = 0;
     validFiles.forEach(file => {
-      compressImageFile(file, (dataUrl) => {
+      compressImageFile(file, async (dataUrl) => {
         if (dataUrl) {
-          currentAdminImages.push(dataUrl);
+          let finalUrl = dataUrl;
+          try {
+            const upRes = await fetch('/api/upload', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ data: dataUrl })
+            });
+            if (upRes.ok) {
+              const upJson = await upRes.json();
+              if (upJson && upJson.url) {
+                finalUrl = upJson.url;
+              }
+            }
+          } catch (_) {}
+
+          currentAdminImages.push(finalUrl);
         }
         processed++;
         if (processed === validFiles.length) {
@@ -1505,6 +1560,7 @@
     }
 
     sv('aaa_props_db', PROPS);
+    syncPropsToServer(PROPS);
     render(true);
     updateStatsCounter();
     toast(isEdit ? 'Property updated successfully!' : 'New property listed successfully!');
@@ -1518,6 +1574,7 @@
     if (!confirm(`Are you sure you want to delete "${p.title}"?`)) return;
     PROPS = PROPS.filter((x) => x.id !== id);
     sv('aaa_props_db', PROPS);
+    syncPropsToServer(PROPS);
     render(true);
     updateStatsCounter();
     renderAdminPropsTable();
@@ -1528,6 +1585,7 @@
     if (!confirm('Reset entire property database back to original 51 verified projects?')) return;
     PROPS = JSON.parse(JSON.stringify(DEFAULT_PROPS));
     sv('aaa_props_db', PROPS);
+    syncPropsToServer(PROPS);
     render(true);
     updateStatsCounter();
     renderAdminPropsTable();
@@ -1541,6 +1599,88 @@
     dlAnchor.setAttribute('download', 'aaa_real_estate_portfolio_' + new Date().toISOString().slice(0, 10) + '.json');
     dlAnchor.click();
     toast('Database exported as JSON');
+  };
+
+  /* ===== MOBILE & CROSS-DEVICE SYNC UTILITIES ===== */
+  window.syncNowToServer = async () => {
+    const ok = await syncPropsToServer(PROPS);
+    if (ok) {
+      toast('✅ Database synced to server & properties.json! Mobile devices will now see this update.');
+    } else {
+      toast('Database saved locally in browser memory.');
+    }
+  };
+
+  window.copyMobileUrl = () => {
+    const urlEl = $('#syncMobileUrl');
+    const url = urlEl ? urlEl.textContent : 'http://192.168.0.112:8000';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url);
+      toast('📋 Mobile Wi-Fi URL copied! Open this in your phone browser.');
+    } else {
+      prompt('Mobile URL:', url);
+    }
+  };
+
+  setTimeout(() => {
+    const syncMobileUrl = $('#syncMobileUrl');
+    if (syncMobileUrl && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+      syncMobileUrl.textContent = location.origin;
+    }
+  }, 300);
+
+  window.exportSyncCode = () => {
+    try {
+      const code = btoa(unescape(encodeURIComponent(JSON.stringify(PROPS))));
+      const area = $('#syncCodeArea');
+      if (area) area.value = code;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(code);
+        toast('📋 Sync code copied! Paste it in the Mobile Sync tab on your phone.');
+      } else {
+        toast('Sync code generated in the text area below.');
+      }
+    } catch (e) {
+      toast('Failed to generate sync code: ' + e.message);
+    }
+  };
+
+  window.importSyncCode = () => {
+    const area = $('#syncCodeArea');
+    let code = (area ? area.value : '').trim();
+    if (!code) {
+      code = prompt('Paste sync code here:');
+    }
+    if (!code) return;
+
+    try {
+      const jsonStr = decodeURIComponent(escape(atob(code.trim())));
+      const parsed = JSON.parse(jsonStr);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        PROPS = parsed;
+        sv('aaa_props_db', PROPS);
+        syncPropsToServer(PROPS);
+        render(true);
+        updateStatsCounter();
+        if ($('#admPropsTbody')) renderAdminPropsTable();
+        toast(`🎉 Success! ${parsed.length} properties synchronized on this device!`);
+      } else {
+        toast('Invalid sync data format.');
+      }
+    } catch (e) {
+      toast('Error applying sync code: Invalid data');
+    }
+  };
+
+  window.downloadPropertiesJson = () => {
+    const blob = new Blob([JSON.stringify(PROPS, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'properties.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('properties.json downloaded.');
   };
 
   function renderAdminLeadsTable() {

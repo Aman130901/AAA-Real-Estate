@@ -582,6 +582,7 @@
           </div>
         </div>
         <div class="admin-head-actions">
+          <button type="button" class="btn-admin-action highlight" id="adminSyncBtn" onclick="syncNowToServer()" title="Sync database to server and mobile devices">🔄 Sync to Mobile</button>
           <button type="button" class="btn-admin-action" id="adminExportBtn" title="Export database as JSON">💾 Export DB</button>
           <button type="button" class="btn-admin-action danger" id="adminResetBtn" title="Reset to original 51 properties">↺ Reset DB</button>
           <button type="button" class="btn-admin-action" id="adminLogoutBtn" onclick="handleAdminLogout()">🚪 Logout</button>
@@ -618,6 +619,7 @@
         <button type="button" class="admin-tab active" data-admtab="props" onclick="switchAdminTab('props')">🏢 Manage Properties (<span id="admTabPropCount">0</span>)</button>
         <button type="button" class="admin-tab" data-admtab="addprop" onclick="switchAdminTab('addprop')">➕ Add / Edit Property</button>
         <button type="button" class="admin-tab" data-admtab="leads" onclick="switchAdminTab('leads')">📥 Customer Leads &amp; Site Visits (<span id="admTabLeadCount">0</span>)</button>
+        <button type="button" class="admin-tab" data-admtab="mobilesync" onclick="switchAdminTab('mobilesync')">📲 Mobile Sync</button>
       </div>
 
       <!-- TAB 1: PROPERTIES MANAGEMENT TABLE -->
@@ -849,6 +851,53 @@
               <!-- Injected via JavaScript -->
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- TAB 4: MOBILE & CROSS-DEVICE SYNC -->
+      <div class="admin-view hidden" id="admViewMobileSync">
+        <div class="adm-sync-card">
+          <div class="adm-sync-header">
+            <h3>📲 Mobile &amp; Cross-Device Synchronization</h3>
+            <span class="adm-subtext">View all uploaded photos and new property listings on your mobile phone, tablet, and across devices.</span>
+          </div>
+
+          <div class="adm-sync-grid">
+            <!-- METHOD 1: LOCAL WI-FI LIVE URL -->
+            <div class="adm-sync-box">
+              <div class="sync-icon">📶</div>
+              <h4>Option 1: Live Wi-Fi Mobile URL (Instant Live Sync)</h4>
+              <p>Connect your phone to the same Wi-Fi network as this laptop, then open this URL in your mobile browser (Chrome/Safari):</p>
+              <div class="sync-url-box">
+                <code id="syncMobileUrl">http://192.168.0.112:8000</code>
+                <button type="button" class="btn-coral-sm" onclick="copyMobileUrl()">📋 Copy URL</button>
+              </div>
+              <span class="sync-note">✨ Any photo uploaded on your laptop will instantly appear on your phone upon refresh!</span>
+            </div>
+
+            <!-- METHOD 2: DIRECT SYNC CODE -->
+            <div class="adm-sync-box">
+              <div class="sync-icon">🔄</div>
+              <h4>Option 2: 1-Click Sync Code (Offline / 4G Data)</h4>
+              <p>Transfer updated properties &amp; photos directly to your mobile phone even when not on the same Wi-Fi:</p>
+              <div class="sync-code-actions">
+                <button type="button" class="btn-coral-sm" onclick="exportSyncCode()">📋 Copy Sync Code From Laptop</button>
+                <button type="button" class="btn-admin-action" onclick="importSyncCode()">📥 Paste &amp; Apply on Phone</button>
+              </div>
+              <textarea id="syncCodeArea" class="sync-textarea" placeholder="Paste sync code here on your mobile device..."></textarea>
+            </div>
+          </div>
+
+          <!-- SERVER STATUS BAR -->
+          <div class="adm-server-bar">
+            <div>
+              <strong>Server Database Status:</strong> <span class="sync-status-indicator online" id="syncServerStatus">● Active (properties.json synchronized)</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button type="button" class="btn-coral-sm" onclick="syncNowToServer()">🔄 Sync Database Now</button>
+              <button type="button" class="btn-admin-action" onclick="downloadPropertiesJson()">💾 Download properties.json</button>
+            </div>
+          </div>
         </div>
       </div>
 
