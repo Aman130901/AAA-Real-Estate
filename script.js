@@ -193,7 +193,13 @@ function openAuthModal(type = 'signin') {
   const modal = document.getElementById('authModal');
   if (!modal) return;
   modal.classList.add('open');
+  document.documentElement.classList.add('modal-open');
+  document.body.classList.add('modal-open');
   document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
+  if (window.lenis && typeof window.lenis.stop === 'function') {
+    window.lenis.stop();
+  }
   switchAuthTab(type);
 }
 
@@ -204,7 +210,15 @@ function closeAuthModal(e) {
   const modal = document.getElementById('authModal');
   if (!modal) return;
   modal.classList.remove('open');
-  document.body.style.overflow = '';
+  if (!document.querySelector('.modal-backdrop.open')) {
+    document.documentElement.classList.remove('modal-open');
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    if (window.lenis && typeof window.lenis.start === 'function') {
+      window.lenis.start();
+    }
+  }
 }
 
 function switchAuthTab(type) {

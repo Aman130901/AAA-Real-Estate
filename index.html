@@ -491,8 +491,8 @@
   </footer>
 
   <!-- AUTH MODAL (SIGN IN & REGISTER) -->
-  <div class="modal-backdrop" id="authModal" onclick="closeAuthModal(event)">
-    <div class="modal-dialog auth-dialog" onclick="event.stopPropagation()">
+  <div class="modal-backdrop" id="authModal" data-lenis-prevent onclick="closeAuthModal(event)">
+    <div class="modal-dialog auth-dialog" data-lenis-prevent onclick="event.stopPropagation()">
       <button class="modal-close-btn" onclick="closeAuthModal()" aria-label="Close dialog">&times;</button>
       
       <div class="auth-tabs">
@@ -559,8 +559,8 @@
   </div>
 
   <!-- ADMIN MANAGEMENT DASHBOARD MODAL -->
-  <div class="modal-backdrop admin-backdrop" id="adminModal" onclick="closeAdminModal(event)">
-    <div class="modal-dialog admin-dialog" onclick="event.stopPropagation()">
+  <div class="modal-backdrop admin-backdrop" id="adminModal" data-lenis-prevent onclick="closeAdminModal(event)">
+    <div class="modal-dialog admin-dialog" data-lenis-prevent onclick="event.stopPropagation()">
       <div class="admin-header">
         <div class="admin-brand">
           <span class="admin-shield">🛡️</span>
@@ -807,10 +807,10 @@
   </div>
 
   <!-- ROOM DETAIL MODAL -->
-  <div class="modal-backdrop" id="roomModal" onclick="closeRoomModal(event)">
-    <div class="modal-dialog room-dialog" onclick="event.stopPropagation()">
+  <div class="modal-backdrop" id="roomModal" data-lenis-prevent onclick="closeRoomModal(event)">
+    <div class="modal-dialog room-dialog" data-lenis-prevent onclick="event.stopPropagation()">
       <button class="modal-close-btn" onclick="closeRoomModal()" aria-label="Close dialog">&times;</button>
-      <div class="room-modal-body" id="roomModalBody">
+      <div class="room-modal-body" id="roomModalBody" data-lenis-prevent>
         <!-- Injected via JavaScript -->
       </div>
     </div>

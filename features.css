@@ -118,11 +118,13 @@ canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z
 .auth-tabs{display:flex;border-bottom:1px solid var(--color-border);padding-right:56px;background:#F8FAFC;border-radius:var(--radius-lg) var(--radius-lg) 0 0}
 .auth-tab{flex:1;padding:16px 20px;font-size:1rem;font-weight:700;color:var(--color-text-muted);border:0;border-bottom:3px solid transparent;background:transparent;cursor:pointer;transition:var(--transition);text-align:center}
 .auth-tab.active{color:var(--color-navy-dark);border-bottom-color:var(--color-coral);background:#fff}
-.modal-backdrop{position:fixed;inset:0;background-color:rgba(10,20,36,.78);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px 16px;z-index:2000;overflow-y:auto}
+html.modal-open,body.modal-open{overflow:hidden!important;height:100%!important;touch-action:none}
+.modal-backdrop{position:fixed;inset:0;background-color:rgba(10,20,36,.78);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px 16px;z-index:2000;overflow-y:auto;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch}
 .modal-backdrop.open{display:flex}
-.room-dialog{max-width:700px;width:100%;max-height:min(90vh,820px);background:#fff;border-radius:var(--radius-lg);box-shadow:0 24px 60px rgba(0,0,0,.35);position:relative;display:flex;flex-direction:column;overflow:hidden;margin:auto}
+.room-dialog{max-width:700px;width:100%;max-height:min(90vh,820px);background:#fff;border-radius:var(--radius-lg);box-shadow:0 24px 60px rgba(0,0,0,.35);position:relative;display:flex;flex-direction:column;overflow:hidden;margin:auto;overscroll-behavior:contain!important}
 .room-dialog.wide{max-width:920px;width:95vw}
-.room-modal-body{padding:22px 26px 26px;overflow-y:auto;max-height:100%;-webkit-overflow-scrolling:touch}
+.room-modal-body{padding:22px 26px 26px;overflow-y:auto;max-height:100%;-webkit-overflow-scrolling:touch;overscroll-behavior:contain!important}
+.auth-dialog,.admin-dialog,.admin-modal-body{overscroll-behavior:contain!important}
 .modal-close-btn{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:50%;background:rgba(22,46,80,.88);color:#fff;font-size:1.6rem;line-height:1;display:flex;align-items:center;justify-content:center;z-index:35;cursor:pointer;border:1.5px solid rgba(255,255,255,.4);box-shadow:0 4px 14px rgba(0,0,0,.3);backdrop-filter:blur(4px);transition:all .2s ease}
 .modal-close-btn:hover{background:var(--color-coral);color:#fff;transform:scale(1.08)}
 .pd-img{width:100%;height:220px;max-height:28vh;object-fit:cover;border-radius:var(--radius-md);margin-bottom:14px}

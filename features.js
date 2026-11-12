@@ -289,15 +289,85 @@
     let m = $('#' + id);
     if (!m) {
       m = document.createElement('div'); m.id = id; m.className = 'modal-backdrop';
-      m.innerHTML = '<div class="modal-dialog room-dialog wide" role="dialog" aria-modal="true"><button class="modal-close-btn" aria-label="Close dialog">&times;</button><div class="room-modal-body"></div></div>';
+      m.setAttribute('data-lenis-prevent', '');
+      m.innerHTML = '<div class="modal-dialog room-dialog wide" role="dialog" aria-modal="true" data-lenis-prevent><button class="modal-close-btn" aria-label="Close dialog">&times;</button><div class="room-modal-body" data-lenis-prevent></div></div>';
       m.addEventListener('click', (e) => { if (e.target === m || e.target.classList.contains('modal-close-btn')) closeM(m); });
       document.body.appendChild(m);
     }
     return m;
   }
-  const openM = (m) => { m.classList.add('open'); document.body.style.overflow = 'hidden'; };
-  const closeM = (m) => { m.classList.remove('open'); document.body.style.overflow = ''; if (m.id === 'roomModal' && location.hash.startsWith('#property-')) history.replaceState(null, '', location.pathname + location.search); };
+  const openM = (m) => {
+    m.classList.add('open');
+    document.documentElement.classList.add('modal-open');
+    document.body.classList.add('modal-open');
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    if (window.lenis && typeof window.lenis.stop === 'function') {
+      window.lenis.stop();
+    }
+  };
+  const closeM = (m) => {
+    m.classList.remove('open');
+    if (!document.querySelector('.modal-backdrop.open')) {
+      document.documentElement.classList.remove('modal-open');
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      if (window.lenis && typeof window.lenis.start === 'function') {
+        window.lenis.start();
+      }
+    }
+    if (m.id === 'roomModal' && location.hash.startsWith('#property-')) {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+  };
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $$('.modal-backdrop.open').forEach(closeM); });
+
+  /* Isolate modal scrolling so mouse wheel / touch never scrolls the background page */
+  document.addEventListener('wheel', (e) => {
+    const activeModal = document.querySelector('.modal-backdrop.open');
+    if (!activeModal) return;
+
+    if (activeModal.contains(e.target)) {
+      // Find nearest scrollable container inside modal
+      let el = e.target;
+      let scrollable = null;
+      while (el && el !== document.body) {
+        if (el === activeModal) {
+          if (activeModal.scrollHeight > activeModal.clientHeight) scrollable = activeModal;
+          break;
+        }
+        const oY = window.getComputedStyle(el).overflowY;
+        if ((oY === 'auto' || oY === 'scroll') && el.scrollHeight > el.clientHeight) {
+          scrollable = el;
+          break;
+        }
+        el = el.parentElement;
+      }
+
+      if (scrollable) {
+        const atTop = scrollable.scrollTop <= 0;
+        const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 1;
+        if ((e.deltaY < 0 && atTop) || (e.deltaY > 0 && atBottom)) {
+          e.preventDefault();
+        }
+      } else {
+        e.preventDefault();
+      }
+      e.stopPropagation();
+    } else {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchmove', (e) => {
+    const activeModal = document.querySelector('.modal-backdrop.open');
+    if (!activeModal) return;
+    if (!activeModal.contains(e.target) || e.target === activeModal) {
+      e.preventDefault();
+    }
+  }, { passive: false });
   function openCompare() {
     const m = modal('cmpModal'), L = cmp.map(byId);
     const row = (l, f) => `<tr><th scope="row">${l}</th>${L.map((p) => `<td>${f(p)}</td>`).join('')}</tr>`;
@@ -569,8 +639,7 @@
     }
     const m = $('#adminModal');
     if (!m) return;
-    m.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    openM(m);
     renderAdminDashboard();
   };
 
@@ -578,8 +647,7 @@
     if (e && e.target !== e.currentTarget && !e.target.classList.contains('modal-close-btn')) return;
     const m = $('#adminModal');
     if (!m) return;
-    m.classList.remove('open');
-    document.body.style.overflow = '';
+    closeM(m);
   };
 
   window.switchAdminTab = (tabName) => {
