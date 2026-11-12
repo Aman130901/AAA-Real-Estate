@@ -341,7 +341,19 @@
       (ss.length ? `<h3>Saved searches</h3><div>${ss.map((s, i) => `<span class="chip"><button type="button" data-ss="${i}">${esc(s.label)}</button> <button type="button" data-ssdel="${i}" aria-label="Delete saved search">✕</button></span>`).join('')}</div>` : '');
   }
 
-  /* ===== FILTER EVENTS ===== */
+  /* ===== FILTER & PAGINATION EVENTS ===== */
+  function scrollToResults() {
+    const target = document.getElementById('resultCount') || document.getElementById('recGrid') || document.getElementById('recommendations');
+    if (!target) return;
+    const navbarHeight = document.getElementById('navbar')?.offsetHeight || 72;
+    const targetY = Math.max(0, target.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0) - navbarHeight - 14);
+    if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+      window.lenis.scrollTo(targetY, { duration: RM ? 0 : 0.7 });
+    } else {
+      window.scrollTo({ top: targetY, behavior: RM ? 'auto' : 'smooth' });
+    }
+  }
+
   const set = (k, v) => { F[k] = v; F.page = '1'; render(true); };
   $('#lsMode').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { F.max = ''; set('mode', b.dataset.mode); } });
   let qt; $('#lsQ').addEventListener('input', (e) => { clearTimeout(qt); qt = setTimeout(() => set('q', e.target.value.slice(0, 60)), 300); });
@@ -349,7 +361,7 @@
   lsPrice.addEventListener('change', (e) => set('max', e.target.value));
   $('#lsSaved').addEventListener('change', (e) => set('saved', e.target.checked ? '1' : ''));
   $('.view-toggle').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { F.view = b.dataset.view; render(); } });
-  $('#pager').addEventListener('click', (e) => { const b = e.target.closest('[data-page]'); if (b) { F.page = b.dataset.page; render(true); $('#recommendations').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' }); } });
+  $('#pager').addEventListener('click', (e) => { const b = e.target.closest('[data-page]'); if (b) { F.page = b.dataset.page; render(true); scrollToResults(); } });
   const clearAll = () => { const m = F.mode; Object.assign(F, D, { mode: m }); render(true); };
   const savedSearch = () => {
     const u = new URLSearchParams(); Object.keys(D).forEach((k) => { if (F[k] !== D[k] && k !== 'page') u.set(k, F[k]); });
@@ -416,7 +428,7 @@
   function openCity(c) {
     Object.assign(F, D); F.q = c;
     render(true);
-    $('#recommendations').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
+    scrollToResults();
   }
 
   /* ===== FAVORITES & COMPARE ===== */
@@ -1182,7 +1194,7 @@
       F.max = $('#hsPrice').value;
       F.page = '1';
       render(true);
-      $('#recommendations').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
+      scrollToResults();
     });
     const hsModeTabs = $$('#heroSearch .mode-tab');
     hsModeTabs.forEach((tab) => {
