@@ -1,4 +1,5 @@
 /* AAA Real Estate — styles for added features */
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .sample-note{font-size:.8rem;color:var(--color-text-muted);margin:4px 0}
 canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
