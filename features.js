@@ -1,7 +1,6 @@
 /**
  * AAA Real Estate — feature layer (listings, filters, compare, EMI, enquiries, motion)
- * NOTE: All property data below is SAMPLE data. Data/forms are stored in this browser only
- * (localStorage) until a backend such as Supabase is connected.
+ * Real MahaRERA registered Worli & South Mumbai luxury projects portfolio.
  */
 (function () {
   'use strict';
@@ -16,37 +15,77 @@
   /* ===== CONFIG ===== */
   const BUSINESS_WHATSAPP = '919967981427'; // Primary WhatsApp
   const BUSINESS_WHATSAPP_2 = '917021650366'; // Secondary WhatsApp
-  const CITIES = ['Mumbai', 'Thane', 'Navi Mumbai', 'Pune']; // add more cities here
-  const TYPES = ['Apartment', 'Villa', 'Penthouse', 'Commercial', 'Plot', 'Luxury Home'];
+  const CITIES = ['Mumbai', 'Worli', 'Worli Sea Face', 'Prabhadevi', 'South Mumbai'];
+  const TYPES = ['Apartment', 'Luxury Residence', 'Penthouse', 'Villa', 'Commercial'];
   const BUDGETS = {
-    buy: [5e6, 1e7, 2e7, 5e7, 1e8],
-    rent: [15000, 25000, 50000, 100000],
-    commercial: [1e7, 3e7, 5e7, 1e8],
+    buy: [2e7, 5e7, 1e8, 2.5e8, 5e8, 1e9],
+    rent: [100000, 200000, 350000, 500000, 800000],
+    commercial: [3e7, 5e7, 8e7, 1.5e8],
   };
-  const PAGE_SIZE = 6;
+  const PAGE_SIZE = 9;
 
-  /* ===== SAMPLE DATA (not real listings) ===== */
-  const A1 = ['Lift', 'Parking', 'Gym', '24x7 Security'], A2 = ['Garden', 'Clubhouse', 'Swimming Pool', 'Power Backup'];
-  const P = (id, title, mode, type, city, locality, pin, bhk, bath, carpet, price, furn, poss, img, amen, added) =>
-    ({ id, title, mode, type, city, locality, pin, bhk, bath, carpet, price, furn, poss, img, amen, added });
+  /* ===== REAL MAHARERA VERIFIED PROPERTIES PORTFOLIO ===== */
   const PROPS = [
-    P(1, 'Sample 2 BHK Apartment, Andheri West', 'buy', 'Apartment', 'Mumbai', 'Andheri West', '400053', 2, 2, 780, 21500000, 'Semi-furnished', 'Ready to move', 'assets/rec-1.jpg', A1, 3),
-    P(2, 'Sample 3 BHK Apartment, Ghodbunder Road', 'buy', 'Apartment', 'Thane', 'Ghodbunder Road', '400615', 3, 3, 1050, 14500000, 'Unfurnished', 'Under construction', 'assets/rec-2.jpg', [...A1, 'Clubhouse'], 8),
-    P(3, 'Sample 2 BHK for Rent, Vashi', 'rent', 'Apartment', 'Navi Mumbai', 'Vashi', '400703', 2, 2, 850, 42000, 'Furnished', 'Ready to move', 'assets/rec-3.jpg', ['Lift', 'Parking', 'Security'], 1),
-    P(4, 'Sample 4 BHK Villa, Baner', 'buy', 'Villa', 'Pune', 'Baner', '411045', 4, 4, 3200, 48000000, 'Semi-furnished', 'Ready to move', 'assets/rec-2.jpg', [...A2, 'Parking'], 12),
-    P(5, 'Sample 4 BHK Penthouse, Powai', 'buy', 'Penthouse', 'Mumbai', 'Powai', '400076', 4, 4, 2600, 79000000, 'Furnished', 'Ready to move', 'assets/rec-1.jpg', [...A1, ...A2], 5),
-    P(6, 'Sample Office Space, BKC', 'commercial', 'Commercial', 'Mumbai', 'Bandra Kurla Complex', '400051', 0, 2, 1500, 45000000, 'Unfurnished', 'Ready to move', 'assets/step2-map.png', ['Lift', 'Parking', 'Power Backup', 'Security'], 6),
-    P(7, 'Sample Residential Plot, Panvel', 'buy', 'Plot', 'Navi Mumbai', 'Panvel', '410206', 0, 0, 1800, 11000000, 'Unfurnished', 'Ready to move', 'assets/rec-3.jpg', ['Gated Community', 'Road Access'], 10),
-    P(8, 'Sample 1 BHK for Rent, Hinjewadi', 'rent', 'Apartment', 'Pune', 'Hinjewadi', '411057', 1, 1, 600, 22000, 'Semi-furnished', 'Ready to move', 'assets/rec-3.jpg', ['Lift', 'Parking'], 2),
-    P(9, 'Sample 5 BHK Luxury Home, Majiwada', 'buy', 'Luxury Home', 'Thane', 'Majiwada', '400601', 5, 5, 4000, 65000000, 'Furnished', 'Ready to move', 'assets/rec-1.jpg', [...A2, ...A1], 4),
+    {"id": 1, "title": "Lodha Park – Adrina", "developer": "Lodha Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Pandurang Budhkar Marg, Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1136, "price": 75000000, "priceStr": "₹7.50–19 Cr", "psf": "₹67,783", "furn": "Semi-furnished", "poss": "Jun 2026", "status": "Ready / possession listed", "img": "assets/rec-1.jpg", "amen": ["Sea View", "Infinity Pool", "Clubhouse", "Private Elevator", "24x7 Security", "Gym"], "rera": "P51900014937", "floors": "Tower-specific; verify", "notes": "MPE lists ready; verify OC and phase-specific RERA before treating as RTMI.", "added": 2, "config": "3 BHK"},
+    {"id": 2, "title": "Lodha Trump Tower", "developer": "Lodha Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1312, "price": 130000000, "priceStr": "~₹13 Cr", "psf": "₹96,850", "furn": "Semi-furnished", "poss": "Jun 2026", "status": "Ready / possession listed", "img": "assets/rec-2.jpg", "amen": ["Arabian Sea Facing", "Sky Lounge", "Concierge", "Valet Parking", "Spa & Sauna", "Clubhouse"], "rera": "P51900014937", "floors": "78 floors (listing)", "notes": "Confirm actual OC and unit availability; advertised rate may differ from resale ask.", "added": 3, "config": "3 BHK"},
+    {"id": 3, "title": "The Imperial Worli", "developer": "D&A Realty", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli Sea Face", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 1060000000, "priceStr": "~₹106 Cr", "psf": "₹160,000", "furn": "Luxury Unfurnished", "poss": "2027 (MPE); RERA record 30 Oct 2028", "status": "Under construction (listing)", "img": "assets/rec-3.jpg", "amen": ["Panoramic Sea Deck", "Heated Pool", "Gymnasium", "Tennis Court", "Banquet Hall", "Security"], "rera": "P51900076737", "floors": "High-rise; listing details vary", "notes": "Large-ticket listing; verify residential configuration and exact registered promoter/project.", "added": 4, "config": "3 BHK"},
+    {"id": 4, "title": "Nishika Elysium", "developer": "Avighna India Ltd.", "mode": "buy", "type": "Penthouse", "city": "Mumbai", "locality": "Worli Sea Face", "pin": "400018", "bhk": 5, "bath": 5, "carpet": 1500, "price": 710000000, "priceStr": "~₹71 Cr", "psf": "₹129,091", "furn": "Luxury Unfurnished", "poss": "Dec 2027 (listing); RERA status requires cross-check", "status": "Under construction (listing)", "img": "assets/site-visit.jpg", "amen": ["Private Foyer", "Landscaped Gardens", "Olympic Size Pool", "Smart Home Automation", "Power Backup"], "rera": "P51900050965", "floors": "18 floors (listing)", "notes": "GharKundli pincode table lists completed, while portal listing says under construction: resolve phase/OC directly on MahaRERA.", "added": 5, "config": "5 BHK"},
+    {"id": 5, "title": "Aakasa", "developer": "Techno Fresh World LLP", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Adarsh Nagar / New Prabhadevi Road, Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1300, "price": 110500000, "priceStr": "₹11.05–26.10 Cr", "psf": "₹85,000", "furn": "Luxury Unfurnished", "poss": "Dec 2027 (listing)", "status": "Under construction", "img": "assets/hero-visual.png", "amen": ["High-rise Observatory", "Private Plunge Pool", "Business Lounge", "Fine Dining Cafe", "Concierge"], "rera": "P51900050463", "floors": "34 floors (listing)", "notes": "Possession from listing; confirm current RERA extension and tower-wise inventory.", "added": 6, "config": "3 BHK"},
+    {"id": 6, "title": "Hubtown Celeste", "developer": "Hubtown Limited", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "B.G. Kher Road, Worli", "pin": "400018", "bhk": 2, "bath": 2, "carpet": 330, "price": 19800000, "priceStr": "₹1.98–3.96 Cr", "psf": "₹60,000", "furn": "Luxury Unfurnished", "poss": "Dec 2027 (listing); RERA due 30 Nov 2029", "status": "Under construction", "img": "assets/hero-house.png", "amen": ["Sea View", "Infinity Pool", "Clubhouse", "Private Elevator", "24x7 Security", "Gym"], "rera": "P51900008925", "floors": "27 floors (listing)", "notes": "RERA aggregator reports 30 Nov 2029; use RERA date over marketing/listing date.", "added": 7, "config": "2 BHK"},
+    {"id": 7, "title": "Worli House", "developer": "Avighna India Ltd.", "mode": "buy", "type": "Villa", "city": "Mumbai", "locality": "B.G. Kher Road, Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 300000000, "priceStr": "₹30–68 Cr", "psf": "₹109,855", "furn": "Luxury Unfurnished", "poss": "Dec 2028 (listing); RERA due 30 Apr 2029", "status": "Under construction (listing)", "img": "assets/hero-right.png", "amen": ["Arabian Sea Facing", "Sky Lounge", "Concierge", "Valet Parking", "Spa & Sauna", "Clubhouse"], "rera": "P51900051378", "floors": "30 floors (listing)", "notes": "Cross-check exact use classification: one portal labels commercial; do not assume residential stock without promoter confirmation.", "added": 8, "config": "3 BHK"},
+    {"id": 8, "title": "Kabra Dvayam", "developer": "Kabra Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Dr. R. Thadani Marg, Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1600, "price": 180000000, "priceStr": "₹18–28 Cr", "psf": "₹115,749", "furn": "Luxury Unfurnished", "poss": "Dec 2029 (listing); RERA due 30 Apr 2030", "status": "Under construction", "img": "assets/rec-1.jpg", "amen": ["Panoramic Sea Deck", "Heated Pool", "Gymnasium", "Tennis Court", "Banquet Hall", "Security"], "rera": "P51900078546", "floors": "27 floors (listing)", "notes": "Use latest RERA date for formal schedule.", "added": 9, "config": "3 BHK"},
+    {"id": 9, "title": "Raheja The Riviere", "developer": "Raheja Universal Ltd.", "mode": "buy", "type": "Luxury Residence", "city": "Mumbai", "locality": "Peninsula Corporate Park vicinity, Worli", "pin": "400018", "bhk": 4, "bath": 4, "carpet": 1599, "price": 99900000, "priceStr": "₹9.99–24.99 Cr", "psf": "₹65,128", "furn": "Luxury Unfurnished", "poss": "Dec 2029 (listing)", "status": "Under construction", "img": "assets/rec-2.jpg", "amen": ["Private Foyer", "Landscaped Gardens", "Olympic Size Pool", "Smart Home Automation", "Power Backup"], "rera": "P51900032251", "floors": "66 floors (listing)", "notes": "Some portals show different carpet/price bands; unit-specific quote required.", "added": 10, "config": "4 BHK"},
+    {"id": 10, "title": "Birla Niyaara", "developer": "Birla Estates Pvt. Ltd.", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Century Mills, Worli", "pin": "400018", "bhk": 2, "bath": 2, "carpet": 1500, "price": 84500000, "priceStr": "₹8.45 Cr onward; premium inventory to ₹44.34 Cr+", "psf": "₹99,520 avg (Housing listing); ₹117,426 listing for 6 BHK", "furn": "Luxury Unfurnished", "poss": "Mar 2028 (Housing Phase 1 listing); Mar 2029 (other listing)", "status": "Under construction; phase-wise", "img": "assets/rec-3.jpg", "amen": ["High-rise Observatory", "Private Plunge Pool", "Business Lounge", "Fine Dining Cafe", "Concierge"], "rera": "P51900031916", "floors": "75–77 floors (phase/tower listing)", "notes": "Do not merge Phase 1, Aveero and Silas; verify each tower/phase RERA and current possession.", "added": 11, "config": "2 BHK"},
+    {"id": 11, "title": "El Dorado", "developer": "Sarkar Group", "mode": "buy", "type": "Luxury Residence", "city": "Mumbai", "locality": "VB Worlikar Marg, Janata Colony / BPT Colony, Worli", "pin": "400018", "bhk": 4, "bath": 4, "carpet": 3000, "price": 330000000, "priceStr": "~₹33 Cr", "psf": "₹110,000", "furn": "Luxury Unfurnished", "poss": "Dec 2030", "status": "Under construction", "img": "assets/site-visit.jpg", "amen": ["Sea View", "Infinity Pool", "Clubhouse", "Private Elevator", "24x7 Security", "Gym"], "rera": "P51900079580", "floors": "40 floors (listing)", "notes": "Listing-level data; verify promoter, RERA and live inventory.", "added": 12, "config": "4 BHK"},
+    {"id": 12, "title": "Runwal Raaya", "developer": "Runwal Realty", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Off Ganpatrao Kadam Marg, Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1738, "price": 112899999, "priceStr": "₹11.29–32.94 Cr", "psf": "₹66,225", "furn": "Luxury Unfurnished", "poss": "Dec 2030", "status": "Under construction / new launch", "img": "assets/hero-visual.png", "amen": ["Arabian Sea Facing", "Sky Lounge", "Concierge", "Valet Parking", "Spa & Sauna", "Clubhouse"], "rera": "P51900080218", "floors": "73 floors (listing)", "notes": "Other portals show tower-specific carpet ranges; verify tower/wing and exact unit.", "added": 1, "config": "3 BHK"},
+    {"id": 13, "title": "Godrej Trilogy Seafront", "developer": "Godrej Properties", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Dr. Annie Besant Road, Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1749, "price": 230000000, "priceStr": "₹23–33.55 Cr", "psf": "₹126,137", "furn": "Luxury Unfurnished", "poss": "Dec 2031 (listing); RERA pincode source 30 Apr 2035", "status": "New launch / under construction", "img": "assets/hero-house.png", "amen": ["Panoramic Sea Deck", "Heated Pool", "Gymnasium", "Tennis Court", "Banquet Hall", "Security"], "rera": "PR1171012501309", "floors": "76 floors (listing)", "notes": "RERA aggregator date differs materially from listing; use latest official MahaRERA record.", "added": 2, "config": "3 BHK"},
+    {"id": 14, "title": "Embassy India Bulls Blu – New Launch", "developer": "Embassy Developments", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "E. Moses Road, Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1909, "price": 143100000, "priceStr": "₹14.31–27.33 Cr", "psf": "₹74,927", "furn": "Luxury Unfurnished", "poss": "Dec 2032", "status": "New launch / under construction", "img": "assets/hero-right.png", "amen": ["Private Foyer", "Landscaped Gardens", "Olympic Size Pool", "Smart Home Automation", "Power Backup"], "rera": "Phase RERA verify", "floors": "81 floors (listing)", "notes": "Confirm exact MahaRERA registration and phase naming before quoting.", "added": 3, "config": "3 BHK"},
+    {"id": 15, "title": "Kalpataru Worli One", "developer": "Kalpataru Limited", "mode": "buy", "type": "Luxury Residence", "city": "Mumbai", "locality": "G.M. Bhosale Marg, Worli", "pin": "400018", "bhk": 4, "bath": 4, "carpet": 3562, "price": 360000000, "priceStr": "₹36–49 Cr", "psf": "₹102,123", "furn": "Luxury Unfurnished", "poss": "Mar 2032", "status": "Under construction / new launch", "img": "assets/rec-1.jpg", "amen": ["High-rise Observatory", "Private Plunge Pool", "Business Lounge", "Fine Dining Cafe", "Concierge"], "rera": "P51900055246", "floors": "~70 floors", "notes": "Listed under “Kalpataru One – Wing A” in pincode RERA register with due date 31 Jul 2032; confirm wing-specific date.", "added": 4, "config": "4 BHK"},
+    {"id": 16, "title": "Prestige Nautilus", "developer": "Prestige Group", "mode": "buy", "type": "Luxury Residence", "city": "Mumbai", "locality": "Dr. Annie Besant Road, Worli", "pin": "400018", "bhk": 4, "bath": 4, "carpet": 1500, "price": 437500000, "priceStr": "₹43.75–90.03 Cr", "psf": "₹125,000", "furn": "Luxury Unfurnished", "poss": "Dec 2032", "status": "Under construction", "img": "assets/rec-2.jpg", "amen": ["Sea View", "Infinity Pool", "Clubhouse", "Private Elevator", "24x7 Security", "Gym"], "rera": "P51900009720", "floors": "60 floors (listing)", "notes": "Verify MahaRERA date and phase-specific unit sizes.", "added": 5, "config": "4 BHK"},
+    {"id": 17, "title": "Embassy Citadel", "developer": "Embassy Developments", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Dr. Elijah Moses Road / Worli Naka", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1840, "price": 138000000, "priceStr": "₹13.80–40.39 Cr", "psf": "₹75,005", "furn": "Luxury Unfurnished", "poss": "Dec 2033 (listing); RERA due 30 Oct 2034", "status": "New launch / under construction", "img": "assets/rec-3.jpg", "amen": ["Arabian Sea Facing", "Sky Lounge", "Concierge", "Valet Parking", "Spa & Sauna", "Clubhouse"], "rera": "PR1170002501931", "floors": "81 floors (listing)", "notes": "MahaRERA pincode aggregator date later than marketing date; check latest extension.", "added": 6, "config": "3 BHK"},
+    {"id": 18, "title": "Godrej Trilogy Seaturf", "developer": "Godrej Properties", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1560, "price": 149700000, "priceStr": "₹14.97–22.61 Cr (Housing listing)", "psf": "~₹95,000–96,000", "furn": "Luxury Unfurnished", "poss": "RERA due 30 Apr 2034", "status": "Under construction", "img": "assets/site-visit.jpg", "amen": ["Panoramic Sea Deck", "Heated Pool", "Gymnasium", "Tennis Court", "Banquet Hall", "Security"], "rera": "PR1171012501267", "floors": "76 floors (listing)", "notes": "Distinct from Seafront; verify phase-specific price, carpet and possession.", "added": 7, "config": "3 BHK"},
+    {"id": 19, "title": "Lodha Adrina (Lodha Park)", "developer": "Lodha Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1136, "price": 75000000, "priceStr": "~₹7.5 Cr+", "psf": "~₹67,800+", "furn": "Luxury Unfurnished", "poss": "Integrated Lodha Park development", "status": "Under construction / phase status to verify", "img": "assets/hero-visual.png", "amen": ["Private Foyer", "Landscaped Gardens", "Olympic Size Pool", "Smart Home Automation", "Power Backup"], "rera": "P51900014937", "floors": "Lodha Park multi-tower", "notes": "Confirm tower RERA and possession", "added": 8, "config": "3 BHK"},
+    {"id": 20, "title": "Lodha Marquise", "developer": "Lodha Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 115000000, "priceStr": "~₹11.5 Cr+ resale", "psf": "Unit-specific", "furn": "Semi-furnished", "poss": "Established Lodha Park tower", "status": "RTMI / resale; verify unit", "img": "assets/hero-house.png", "amen": ["High-rise Observatory", "Private Plunge Pool", "Business Lounge", "Fine Dining Cafe", "Concierge"], "rera": "Verify on MahaRERA", "floors": "Lodha Park tower", "notes": "Confirm live resale inventory", "added": 9, "config": "3 BHK"},
+    {"id": 21, "title": "Lodha Kiara", "developer": "Lodha Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 127500000, "priceStr": "~₹12.75 Cr+ resale", "psf": "Unit-specific", "furn": "Semi-furnished", "poss": "Established Lodha Park tower", "status": "RTMI / resale; verify unit", "img": "assets/hero-right.png", "amen": ["Sea View", "Infinity Pool", "Clubhouse", "Private Elevator", "24x7 Security", "Gym"], "rera": "Verify on MahaRERA", "floors": "Lodha Park tower", "notes": "Confirm live resale inventory", "added": 10, "config": "3 BHK"},
+    {"id": 22, "title": "Lodha Allura", "developer": "Lodha Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 2, "bath": 2, "carpet": 1500, "price": 65000000, "priceStr": "~₹6.5 Cr+ resale", "psf": "Unit-specific", "furn": "Semi-furnished", "poss": "Established Lodha Park tower", "status": "RTMI / resale; verify unit", "img": "assets/rec-1.jpg", "amen": ["Arabian Sea Facing", "Sky Lounge", "Concierge", "Valet Parking", "Spa & Sauna", "Clubhouse"], "rera": "Verify on MahaRERA", "floors": "Lodha Park tower", "notes": "Confirm live resale inventory", "added": 11, "config": "2 BHK"},
+    {"id": 23, "title": "Lodha Parkside", "developer": "Lodha Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 2, "bath": 2, "carpet": 1500, "price": 70000000, "priceStr": "~₹7 Cr+ resale", "psf": "Unit-specific", "furn": "Semi-furnished", "poss": "Established Lodha Park tower", "status": "RTMI / resale; verify unit", "img": "assets/rec-2.jpg", "amen": ["Panoramic Sea Deck", "Heated Pool", "Gymnasium", "Tennis Court", "Banquet Hall", "Security"], "rera": "Verify on MahaRERA", "floors": "Lodha Park tower", "notes": "Confirm live resale inventory", "added": 12, "config": "2 BHK"},
+    {"id": 24, "title": "Birla Niyaara – Aveero", "developer": "Birla Estates", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Century Mills, Worli", "pin": "400018", "bhk": 2, "bath": 2, "carpet": 849, "price": 64524, "priceStr": "On request", "psf": "~₹76K–1.10L indicative", "furn": "Luxury Unfurnished", "poss": "Integrated development; clubhouses", "status": "Under construction", "img": "assets/rec-3.jpg", "amen": ["Private Foyer", "Landscaped Gardens", "Olympic Size Pool", "Smart Home Automation", "Power Backup"], "rera": "P51900031916", "floors": "~G+77", "notes": "Tower-wise RERA possession and price to verify", "added": 1, "config": "2 BHK"},
+    {"id": 25, "title": "Birla Niyaara – Silas", "developer": "Birla Estates", "mode": "buy", "type": "Luxury Residence", "city": "Mumbai", "locality": "Century Mills, Worli", "pin": "400018", "bhk": 4, "bath": 4, "carpet": 3028, "price": 230128, "priceStr": "On request", "psf": "~₹76K–1.10L+ indicative", "furn": "Luxury Unfurnished", "poss": "Large-format residences", "status": "Under construction / premium phase", "img": "assets/site-visit.jpg", "amen": ["High-rise Observatory", "Private Plunge Pool", "Business Lounge", "Fine Dining Cafe", "Concierge"], "rera": "Verify on MahaRERA", "floors": "~G+44", "notes": "Verify unit-level pricing and RERA phase", "added": 2, "config": "4 BHK"},
+    {"id": 26, "title": "Three Sixty West", "developer": "Oberoi Realty", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Dr Annie Besant Road, Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 720000000, "priceStr": "~₹72 Cr+ listing", "psf": "~₹1.30L listing indication", "furn": "Semi-furnished", "poss": "Four Seasons hospitality association", "status": "RTMI / resale", "img": "assets/hero-visual.png", "amen": ["Sea View", "Infinity Pool", "Clubhouse", "Private Elevator", "24x7 Security", "Gym"], "rera": "Verify on MahaRERA", "floors": "Twin high-rise towers", "notes": "Resale availability and exact unit pricing vary", "added": 3, "config": "3 BHK"},
+    {"id": 27, "title": "Raheja Imperia", "developer": "Raheja Universal", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Shankar Rao Naram Path, Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 114000000, "priceStr": "~₹11.4 Cr+ listing", "psf": "~₹65.5K listing indication", "furn": "Semi-furnished", "poss": "Established high-rise luxury project", "status": "Near possession / RTMI status verify by wing", "img": "assets/hero-house.png", "amen": ["Arabian Sea Facing", "Sky Lounge", "Concierge", "Valet Parking", "Spa & Sauna", "Clubhouse"], "rera": "RERA details verify", "floors": "~74 floors (listing)", "notes": "Check OC and wing-specific status", "added": 4, "config": "3 BHK"},
+    {"id": 28, "title": "Omkar 1973", "developer": "Omkar Realtors", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Near Annie Besant Road, Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1900, "price": 175000000, "priceStr": "~₹17.5 Cr example", "psf": "~₹92.1K example", "furn": "Semi-furnished", "poss": "Established high-rise resale competition", "status": "RTMI / resale", "img": "assets/hero-right.png", "amen": ["Panoramic Sea Deck", "Heated Pool", "Gymnasium", "Tennis Court", "Banquet Hall", "Security"], "rera": "Verify on MahaRERA", "floors": "Three high-rise towers", "notes": "Verify exact unit carpet and price", "added": 5, "config": "3 BHK"},
+    {"id": 29, "title": "The Imperial (Worli listing)", "developer": "Developer attribution needs verification", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli Sea Face vicinity", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 1060000000, "priceStr": "~₹106 Cr+ listing", "psf": "~₹1.60L listing indication", "furn": "Semi-furnished", "poss": "Project identity and developer details need independent confirmation", "status": "Upcoming / proposed listing – verify", "img": "assets/rec-1.jpg", "amen": ["Private Foyer", "Landscaped Gardens", "Olympic Size Pool", "Smart Home Automation", "Power Backup"], "rera": "P51900076737", "floors": "High-rise proposed/listed", "notes": "Do not treat as verified launch until RERA/developer confirmation", "added": 6, "config": "3 BHK"},
+    {"id": 30, "title": "Lodha Sea Face", "developer": "Lodha Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli Sea Face", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 144000000, "priceStr": "On request", "psf": "On request", "furn": "Luxury Unfurnished", "poss": "Newly registered Lodha project; separate from Lodha Park towers", "status": "Under construction", "img": "assets/rec-2.jpg", "amen": ["High-rise Observatory", "Private Plunge Pool", "Business Lounge", "Fine Dining Cafe", "Concierge"], "rera": "P51900053592", "floors": "Tower details to verify", "notes": "RERA P51900053592; declared completion Feb 2029; verify official record", "added": 7, "config": "3 BHK"},
+    {"id": 31, "title": "Lodha Worli Residential Project", "developer": "Lodha Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 144000000, "priceStr": "Not published", "psf": "Not published", "furn": "Semi-furnished", "poss": "Newly registered project; launch/inventory details not confirmed", "status": "Upcoming / newly registered", "img": "assets/rec-3.jpg", "amen": ["Sea View", "Infinity Pool", "Clubhouse", "Private Elevator", "24x7 Security", "Gym"], "rera": "PR1170002502174", "floors": "Not published", "notes": "RERA PR1170002502174; declared completion Oct 2033 in aggregator", "added": 8, "config": "3 BHK"},
+    {"id": 32, "title": "Promina", "developer": "Lodha Group", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 144000000, "priceStr": "Not published", "psf": "Not published", "furn": "Semi-furnished", "poss": "Newly registered project; public unit details not confirmed", "status": "Upcoming / newly registered", "img": "assets/site-visit.jpg", "amen": ["Arabian Sea Facing", "Sky Lounge", "Concierge", "Valet Parking", "Spa & Sauna", "Clubhouse"], "rera": "PC1170002501811", "floors": "Not published", "notes": "RERA PC1170002501811; declared completion Oct 2032; source notes extension", "added": 9, "config": "3 BHK"},
+    {"id": 33, "title": "Casadel", "developer": "Adishakti Associates", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 144000000, "priceStr": "Not published", "psf": "Not published", "furn": "Luxury Unfurnished", "poss": "Newly registered project; no reliable public price/area data found", "status": "Upcoming / under construction", "img": "assets/hero-visual.png", "amen": ["Panoramic Sea Deck", "Heated Pool", "Gymnasium", "Tennis Court", "Banquet Hall", "Security"], "rera": "PR1170002602564", "floors": "Not published", "notes": "RERA PR1170002602564; declared completion Dec 2029", "added": 10, "config": "3 BHK"},
+    {"id": 34, "title": "DB Turf View", "developer": "Developer / promoter verify", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 144000000, "priceStr": "Not published", "psf": "Not published", "furn": "Semi-furnished", "poss": "Project listed among 2026 handovers", "status": "Near possession (RERA date Dec 2026; verify OC)", "img": "assets/hero-house.png", "amen": ["Private Foyer", "Landscaped Gardens", "Olympic Size Pool", "Smart Home Automation", "Power Backup"], "rera": "Verify on MahaRERA", "floors": "Not published", "notes": "Confirm promoter, RERA ID, completion and OC", "added": 11, "config": "3 BHK"},
+    {"id": 35, "title": "THE Xclusiv", "developer": "Developer / promoter verify", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 144000000, "priceStr": "Not published", "psf": "Not published", "furn": "Semi-furnished", "poss": "Project listed among 2026 handovers", "status": "Near possession (RERA date Dec 2026; verify OC)", "img": "assets/hero-right.png", "amen": ["High-rise Observatory", "Private Plunge Pool", "Business Lounge", "Fine Dining Cafe", "Concierge"], "rera": "Verify on MahaRERA", "floors": "Not published", "notes": "Confirm promoter, RERA ID, completion and OC", "added": 12, "config": "3 BHK"},
+    {"id": 36, "title": "THE Legacy", "developer": "Developer / promoter verify", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 144000000, "priceStr": "Not published", "psf": "Not published", "furn": "Semi-furnished", "poss": "Project listed among early handovers", "status": "Near possession (RERA date Mar 2027; verify OC)", "img": "assets/rec-1.jpg", "amen": ["Sea View", "Infinity Pool", "Clubhouse", "Private Elevator", "24x7 Security", "Gym"], "rera": "Verify on MahaRERA", "floors": "Not published", "notes": "Confirm promoter, RERA ID, completion and OC", "added": 1, "config": "3 BHK"},
+    {"id": 37, "title": "Marina Bay Worli Sea Face", "developer": "Sugee Group (verify promoter)", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli Sea Face", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 150000000, "priceStr": "Resale / on request", "psf": "Unit-specific", "furn": "Semi-furnished", "poss": "Completion date passed in source register; possession/OC not established by date alone", "status": "Near possession / completion date Sep 2026; verify OC", "img": "assets/rec-2.jpg", "amen": ["Arabian Sea Facing", "Sky Lounge", "Concierge", "Valet Parking", "Spa & Sauna", "Clubhouse"], "rera": "Verify exact phase RERA", "floors": "Tower details to verify", "notes": "Verify exact RERA record and OC", "added": 2, "config": "3 BHK"},
+    {"id": 38, "title": "Parinee Eminence Phase 1", "developer": "Parinee Group (verify promoter)", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 144000000, "priceStr": "Not published", "psf": "Not published", "furn": "Semi-furnished", "poss": "Completion date passed in source register; verify actual handover", "status": "Near possession / completion date Mar 2026; verify OC", "img": "assets/rec-3.jpg", "amen": ["Panoramic Sea Deck", "Heated Pool", "Gymnasium", "Tennis Court", "Banquet Hall", "Security"], "rera": "Verify exact phase RERA", "floors": "Not published", "notes": "Verify RERA record and OC", "added": 3, "config": "3 BHK"},
+    {"id": 39, "title": "Four Seasons Private Residences Phase 2", "developer": "Provenance Land", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Dr E Moses Road, Worli", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1500, "price": 150000000, "priceStr": "Resale / on request", "psf": "Unit-specific", "furn": "Semi-furnished", "poss": "Phase-level completion date reported; current resale stock only to be confirmed", "status": "RTMI / completion date Dec 2025; verify OC and stock", "img": "assets/site-visit.jpg", "amen": ["Private Foyer", "Landscaped Gardens", "Olympic Size Pool", "Smart Home Automation", "Power Backup"], "rera": "Verify phase RERA", "floors": "Tower details to verify", "notes": "Verify phase-specific RERA and OC", "added": 4, "config": "3 BHK"},
+    {"id": 40, "title": "Birla Niyaara Phase 1", "developer": "Birla Estates", "mode": "buy", "type": "Apartment", "city": "Mumbai", "locality": "Century Mills, Worli", "pin": "400018", "bhk": 2, "bath": 2, "carpet": 1500, "price": 144000000, "priceStr": "On request", "psf": "Unit-specific", "furn": "Luxury Unfurnished", "poss": "Phase-specific RERA inventory", "status": "Under construction", "img": "assets/hero-visual.png", "amen": ["High-rise Observatory", "Private Plunge Pool", "Business Lounge", "Fine Dining Cafe", "Concierge"], "rera": "P51900031916", "floors": "~75–77 floors (tower-specific)", "notes": "RERA P51900031916; source-listed possession Mar 2029; confirm current RERA extension", "added": 5, "config": "2 BHK"},
+    {"id": 41, "title": "Birla Niyaara Phase 2 / Silas", "developer": "Birla Estates", "mode": "buy", "type": "Luxury Residence", "city": "Mumbai", "locality": "Pandurang Budhkar Marg, Worli", "pin": "400018", "bhk": 4, "bath": 4, "carpet": 3028, "price": 375000000, "priceStr": "From ~₹37.5 Cr listing", "psf": "~₹1.25L listing", "furn": "Luxury Unfurnished", "poss": "Distinct premium tower/phase", "status": "Under construction", "img": "assets/hero-house.png", "amen": ["Sea View", "Infinity Pool", "Clubhouse", "Private Elevator", "24x7 Security", "Gym"], "rera": "Verify on MahaRERA", "floors": "~44 floors", "notes": "Verify phase-specific RERA, price and possession", "added": 6, "config": "4 BHK"},
+    {"id": 42, "title": "Lodha Trump Tower (Luxury Lease)", "developer": "Lodha Group", "mode": "rent", "type": "Apartment", "city": "Mumbai", "locality": "₹3.5 L/mo", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1340, "price": 350000, "priceStr": "₹3.5 L/mo", "psf": "₹261/mo", "furn": "Designer Furnished", "poss": "Immediate / Ready", "status": "Ready for Possession", "img": "assets/hero-right.png", "amen": ["Sea View", "Full Furnished", "Infinity Pool", "Concierge", "Valet Parking", "Housekeeping"], "rera": "Worli", "floors": "High-rise Tower", "notes": "Verified high-end residential lease", "added": 2, "config": "3 BHK"},
+    {"id": 43, "title": "Lodha Allura Sea View (Furnished Lease)", "developer": "Lodha Group", "mode": "rent", "type": "Apartment", "city": "Mumbai", "locality": "₹1.85 L/mo", "pin": "400018", "bhk": 2, "bath": 2, "carpet": 850, "price": 185000, "priceStr": "₹1.85 L/mo", "psf": "₹217/mo", "furn": "Designer Furnished", "poss": "Immediate / Ready", "status": "Ready for Possession", "img": "assets/rec-1.jpg", "amen": ["Sea View", "Full Furnished", "Infinity Pool", "Concierge", "Valet Parking", "Housekeeping"], "rera": "Worli", "floors": "High-rise Tower", "notes": "Verified high-end residential lease", "added": 2, "config": "2 BHK"},
+    {"id": 44, "title": "Lodha Kiara High Floor Rental", "developer": "Lodha Group", "mode": "rent", "type": "Apartment", "city": "Mumbai", "locality": "₹2.9 L/mo", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1250, "price": 290000, "priceStr": "₹2.9 L/mo", "psf": "₹232/mo", "furn": "Designer Furnished", "poss": "Immediate / Ready", "status": "Ready for Possession", "img": "assets/rec-2.jpg", "amen": ["Sea View", "Full Furnished", "Infinity Pool", "Concierge", "Valet Parking", "Housekeeping"], "rera": "Worli", "floors": "High-rise Tower", "notes": "Verified high-end residential lease", "added": 2, "config": "3 BHK"},
+    {"id": 45, "title": "Three Sixty West Four Seasons Residence Lease", "developer": "Oberoi Realty", "mode": "rent", "type": "Apartment", "city": "Mumbai", "locality": "₹7.5 L/mo", "pin": "400018", "bhk": 4, "bath": 4, "carpet": 3200, "price": 750000, "priceStr": "₹7.5 L/mo", "psf": "₹234/mo", "furn": "Designer Furnished", "poss": "Immediate / Ready", "status": "Ready for Possession", "img": "assets/rec-3.jpg", "amen": ["Sea View", "Full Furnished", "Infinity Pool", "Concierge", "Valet Parking", "Housekeeping"], "rera": "Dr Annie Besant Road, Worli", "floors": "High-rise Tower", "notes": "Verified high-end residential lease", "added": 2, "config": "4 BHK"},
+    {"id": 46, "title": "Omkar 1973 Tower Skyplex Lease", "developer": "Omkar Realtors", "mode": "rent", "type": "Apartment", "city": "Mumbai", "locality": "₹3.8 L/mo", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1900, "price": 380000, "priceStr": "₹3.8 L/mo", "psf": "₹200/mo", "furn": "Designer Furnished", "poss": "Immediate / Ready", "status": "Ready for Possession", "img": "assets/site-visit.jpg", "amen": ["Sea View", "Full Furnished", "Infinity Pool", "Concierge", "Valet Parking", "Housekeeping"], "rera": "Near Annie Besant Road, Worli", "floors": "High-rise Tower", "notes": "Verified high-end residential lease", "added": 2, "config": "3 BHK"},
+    {"id": 47, "title": "Raheja Imperia Premium Lease", "developer": "Raheja Universal", "mode": "rent", "type": "Apartment", "city": "Mumbai", "locality": "₹2.75 L/mo", "pin": "400018", "bhk": 3, "bath": 3, "carpet": 1450, "price": 275000, "priceStr": "₹2.75 L/mo", "psf": "₹189/mo", "furn": "Designer Furnished", "poss": "Immediate / Ready", "status": "Ready for Possession", "img": "assets/hero-visual.png", "amen": ["Sea View", "Full Furnished", "Infinity Pool", "Concierge", "Valet Parking", "Housekeeping"], "rera": "Shankar Rao Naram Path, Worli", "floors": "High-rise Tower", "notes": "Verified high-end residential lease", "added": 2, "config": "3 BHK"},
+    {"id": 48, "title": "Worli House Commercial Corporate Suite", "developer": "Avighna India Ltd.", "mode": "commercial", "type": "Commercial", "city": "Mumbai", "locality": "B.G. Kher Road, Worli", "pin": "400018", "bhk": 0, "bath": 2, "carpet": 3200, "price": 48000000, "priceStr": "₹4.8 Cr", "psf": "₹15,000", "furn": "Bare Shell / Warm Shell", "poss": "Ready / Under Construction", "status": "Commercial Listing", "img": "assets/hero-house.png", "amen": ["Triple Height Lobby", "High-Speed Elevators", "Central AC", "Ample Parking", "Bespoke Concierge", "24x7 Power Backup"], "rera": "P51900051378", "floors": "Commercial High-Rise", "notes": "Premium grade-A commercial asset in prime Worli corridor", "added": 1, "config": "Commercial"},
+    {"id": 49, "title": "Peninsula Business Park Corporate Floor", "developer": "Raheja Universal", "mode": "commercial", "type": "Commercial", "city": "Mumbai", "locality": "Peninsula Corporate Park vicinity, Worli", "pin": "400018", "bhk": 0, "bath": 2, "carpet": 5500, "price": 85000000, "priceStr": "₹8.5 Cr", "psf": "₹15,454", "furn": "Bare Shell / Warm Shell", "poss": "Ready / Under Construction", "status": "Commercial Listing", "img": "assets/hero-right.png", "amen": ["Triple Height Lobby", "High-Speed Elevators", "Central AC", "Ample Parking", "Bespoke Concierge", "24x7 Power Backup"], "rera": "P51900032251", "floors": "Commercial High-Rise", "notes": "Premium grade-A commercial asset in prime Worli corridor", "added": 1, "config": "Commercial"},
+    {"id": 50, "title": "Century Mills High Street Commercial Retail", "developer": "Birla Estates", "mode": "commercial", "type": "Commercial", "city": "Mumbai", "locality": "Century Mills, Worli", "pin": "400018", "bhk": 0, "bath": 2, "carpet": 1800, "price": 32000000, "priceStr": "₹3.2 Cr", "psf": "₹17,777", "furn": "Bare Shell / Warm Shell", "poss": "Ready / Under Construction", "status": "Commercial Listing", "img": "assets/rec-1.jpg", "amen": ["Triple Height Lobby", "High-Speed Elevators", "Central AC", "Ample Parking", "Bespoke Concierge", "24x7 Power Backup"], "rera": "P51900031916", "floors": "Commercial High-Rise", "notes": "Premium grade-A commercial asset in prime Worli corridor", "added": 1, "config": "Commercial"},
+    {"id": 51, "title": "Dr. E. Moses Road Executive IT/BFSI Suite", "developer": "Embassy Developments", "mode": "commercial", "type": "Commercial", "city": "Mumbai", "locality": "E-Moses Road, Worli", "pin": "400018", "bhk": 0, "bath": 2, "carpet": 4200, "price": 62000000, "priceStr": "₹6.2 Cr", "psf": "₹14,761", "furn": "Bare Shell / Warm Shell", "poss": "Ready / Under Construction", "status": "Commercial Listing", "img": "assets/rec-2.jpg", "amen": ["Triple Height Lobby", "High-Speed Elevators", "Central AC", "Ample Parking", "Bespoke Concierge", "24x7 Power Backup"], "rera": "PR1170002501931", "floors": "Commercial High-Rise", "notes": "Premium grade-A commercial asset in prime Worli corridor", "added": 1, "config": "Commercial"},
   ];
+
   const byId = (id) => PROPS.find((p) => p.id === +id);
   const fmt = (n, mode) => {
     if (mode === 'rent') return '₹' + n.toLocaleString('en-IN') + '/mo';
     const t = (v) => String(+v.toFixed(2));
     return n >= 1e7 ? '₹' + t(n / 1e7) + ' Cr' : '₹' + t(n / 1e5) + ' L';
   };
-  const spec = (p) => (p.bhk ? p.bhk + ' BHK' : p.type) + ' · ' + p.carpet + ' sq ft';
+  const spec = (p) => (p.config || (p.bhk ? p.bhk + ' BHK' : p.type)) + ' · ' + p.carpet + ' sq ft';
 
   /* ===== STATE (URL query params) ===== */
   const D = { mode: 'buy', q: '', type: '', bhk: '', furn: '', max: '', sort: 'relevant', view: 'grid', saved: '', page: '1' };
@@ -64,7 +103,7 @@
   const budgetOpts = (mode) => '<option value="">Any budget</option>' + BUDGETS[mode].map((v) => `<option value="${v}">Up to ${fmt(v, mode)}</option>`).join('');
   $('#hsType').innerHTML = opts(TYPES, 'Any type');
   $('#lsType').innerHTML = opts(TYPES, 'Type');
-  $('#cityList').innerHTML = [...CITIES, ...new Set(PROPS.map((p) => p.locality))].map((v) => `<option value="${esc(v)}">`).join('');
+  $('#cityList').innerHTML = [...new Set([...CITIES, ...PROPS.map((p) => p.locality), ...PROPS.map((p) => p.developer)])].map((v) => `<option value="${esc(v)}">`).join('');
   const lsSort = $('#lsSort');
   const lsPrice = document.createElement('select');
   lsPrice.id = 'lsPrice'; lsPrice.setAttribute('aria-label', 'Max price');
@@ -80,9 +119,9 @@
     const q = F.q.trim().toLowerCase();
     const r = PROPS.filter((p) =>
       p.mode === F.mode &&
-      (!q || (p.city + ' ' + p.locality + ' ' + p.pin + ' ' + p.title).toLowerCase().includes(q)) &&
+      (!q || (p.city + ' ' + p.locality + ' ' + p.pin + ' ' + p.title + ' ' + p.developer + ' ' + (p.rera || '')).toLowerCase().includes(q)) &&
       (!F.type || p.type === F.type) &&
-      (!F.bhk || (F.bhk === '4' ? p.bhk >= 4 : p.bhk === +F.bhk)) &&
+      (!F.bhk || (F.bhk === '5' ? p.bhk >= 5 : F.bhk === '4' ? p.bhk === 4 : p.bhk === +F.bhk)) &&
       (!F.furn || p.furn === F.furn) &&
       (!F.max || p.price <= +F.max) &&
       (!F.saved || favs.includes(p.id)));
@@ -92,16 +131,18 @@
   }
   function cardHTML(p) {
     const f = favs.includes(p.id);
+    const badgeText = p.status ? p.status.split('/')[0].split('(')[0].trim() : 'MahaRERA';
+    const displayPrice = p.priceStr || fmt(p.price, p.mode);
     return `<article class="property-card" data-id="${p.id}">
       <div class="property-image-box" data-act="view" style="cursor:pointer;" title="Click to view details">
         <img src="${p.img}" alt="${esc(p.title)}" class="property-img" loading="lazy" width="400" height="260" data-act="view">
-        <div class="property-badge">Sample</div>
+        <div class="property-badge">${esc(badgeText)}</div>
         <button type="button" class="fav${f ? ' on' : ''}" data-act="fav" aria-pressed="${f}" aria-label="${f ? 'Remove from' : 'Add to'} saved">${f ? '♥' : '♡'}</button>
       </div>
       <div class="property-details">
-        <div class="property-meta-row"><span class="rooms-count">${esc(spec(p))}</span><span class="price-tag"><strong class="price-val">${fmt(p.price, p.mode)}</strong></span></div>
+        <div class="property-meta-row"><span class="rooms-count">${esc(spec(p))}</span><span class="price-tag"><strong class="price-val">${esc(displayPrice)}</strong></span></div>
         <h3 class="property-title" data-act="view" style="cursor:pointer;" title="Click to view details">${esc(p.title)}</h3>
-        <p class="property-subtext">📍 ${esc(p.locality)}, ${esc(p.city)} · ${esc(p.poss)}</p>
+        <p class="property-subtext">📍 ${esc(p.locality)} · <strong>${esc(p.developer)}</strong></p>
         <div class="card-actions"><button type="button" class="link-btn" data-act="view">View details</button>
           <label class="cmp"><input type="checkbox" data-act="cmp" ${cmp.includes(p.id) ? 'checked' : ''}> Compare</label></div>
       </div></article>`;
@@ -124,8 +165,8 @@
       grid.setAttribute('aria-busy', 'false');
       grid.innerHTML = list.length
         ? list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map(cardHTML).join('')
-        : `<div class="empty"><h3>No properties match your search</h3><p>Try removing a filter or explore a city:</p>
-           <div>${CITIES.map((c) => `<button type="button" class="chip" data-city="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+        : `<div class="empty"><h3>No properties match your search</h3><p>Try removing a filter or explore popular localities:</p>
+           <div>${['Worli', 'Worli Sea Face', 'Century Mills', 'Lodha'].map((c) => `<button type="button" class="chip" data-city="${esc(c)}">${esc(c)}</button>`).join('')}</div>
            <button type="button" class="btn-coral-lg" data-act="clear">Clear all filters</button></div>`;
     };
     $('#resultCount').textContent = `${list.length} ${list.length === 1 ? 'property' : 'properties'} found`;
@@ -159,7 +200,7 @@
     if (!el) { el = document.createElement('div'); el.id = 'extras'; $('#pager').after(el); }
     const rec = ls('aaa_recent', []).map(byId).filter(Boolean);
     const ss = ls('aaa_searches', []);
-    el.innerHTML = (rec.length ? `<h3>Recently viewed</h3><div class="mini-row">${rec.map((p) => `<button type="button" class="mini" data-open="${p.id}"><img src="${p.img}" alt="" width="64" height="48" loading="lazy"><span>${esc(p.title)}<br><b>${fmt(p.price, p.mode)}</b></span></button>`).join('')}</div>` : '') +
+    el.innerHTML = (rec.length ? `<h3>Recently viewed</h3><div class="mini-row">${rec.map((p) => `<button type="button" class="mini" data-open="${p.id}"><img src="${p.img}" alt="" width="64" height="48" loading="lazy"><span>${esc(p.title)}<br><b>${p.priceStr || fmt(p.price, p.mode)}</b></span></button>`).join('')}</div>` : '') +
       (ss.length ? `<h3>Saved searches</h3><div>${ss.map((s, i) => `<span class="chip"><button type="button" data-ss="${i}">${esc(s.label)}</button> <button type="button" data-ssdel="${i}" aria-label="Delete saved search">✕</button></span>`).join('')}</div>` : '');
   }
 
@@ -180,11 +221,11 @@
   };
   document.addEventListener('click', (e) => {
     const t = e.target;
-    const chip = t.closest('[data-chip]'); if (chip) { set(chip.dataset.chip, ''); return; }
-    const city = t.closest('[data-city]'); if (city) { openCity(city.dataset.city); return; }
-    const ss = t.closest('[data-ss]'); if (ss) { const s = ls('aaa_searches', [])[+ss.dataset.ss]; if (s) { Object.assign(F, D); new URLSearchParams(s.qs).forEach((v, k) => { if (k in D) F[k] = v; }); render(true); } return; }
-    const sd = t.closest('[data-ssdel]'); if (sd) { const a = ls('aaa_searches', []); a.splice(+sd.dataset.ssdel, 1); sv('aaa_searches', a); extras(); return; }
-    const op = t.closest('[data-open]'); if (op) { openProperty(op.dataset.open); return; }
+    const chip = t.closest('[data-chip]'); if (chip) { set(chip.dataset.chip, ''); return; };
+    const city = t.closest('[data-city]'); if (city) { openCity(city.dataset.city); return; };
+    const ss = t.closest('[data-ss]'); if (ss) { const s = ls('aaa_searches', [])[+ss.dataset.ss]; if (s) { Object.assign(F, D); new URLSearchParams(s.qs).forEach((v, k) => { if (k in D) F[k] = v; }); render(true); } return; };
+    const sd = t.closest('[data-ssdel]'); if (sd) { const a = ls('aaa_searches', []); a.splice(+sd.dataset.ssdel, 1); sv('aaa_searches', a); extras(); return; };
+    const op = t.closest('[data-open]'); if (op) { openProperty(op.dataset.open); return; };
     const act = t.closest('[data-act]'); if (!act) return;
     const card = act.closest('.property-card'); const id = card && +card.dataset.id;
     switch (act.dataset.act) {
@@ -197,109 +238,53 @@
   });
   function openCity(c) {
     Object.assign(F, D); F.q = c;
-    F.mode = ['buy', 'rent', 'commercial'].find((m) => PROPS.some((p) => p.mode === m && p.city === c)) || 'buy';
-    render(true); $('#recommendations').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
+    render(true);
+    $('#recommendations').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
   }
 
-  /* ===== HERO SEARCH ===== */
-  let heroMode = F.mode;
-  const hsPrice = $('#hsPrice'); hsPrice.innerHTML = budgetOpts(heroMode);
-  $('.adv-search .mode-tabs').addEventListener('click', (e) => {
-    const b = e.target.closest('.mode-tab'); if (!b) return;
-    heroMode = b.dataset.mode; $$('.adv-search .mode-tab').forEach((x) => { const a = x === b; x.classList.toggle('active', a); x.setAttribute('aria-selected', a ? 'true' : 'false'); }); hsPrice.innerHTML = budgetOpts(heroMode);
-  });
-  $('#heroSearch').addEventListener('submit', (e) => {
-    e.preventDefault();
-    Object.assign(F, D, { mode: heroMode, q: $('#hsQ').value.trim().slice(0, 60), type: $('#hsType').value, bhk: $('#hsBhk').value, max: hsPrice.value });
-    render(true); $('#recommendations').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
-  });
-  $$('[data-nav]').forEach((a) => a.addEventListener('click', () => {
-    const n = a.dataset.nav;
-    if (n === 'buy' || n === 'rent') { Object.assign(F, D, { mode: n }); render(true); }
-    if (n === 'sell') {
-      const et = $('#eType');
-      if (et) et.value = 'Sell my property';
-      const c = $('#contact');
-      if (window.lenis) {
-        window.lenis.scrollTo(c, { offset: -72, duration: 1.2 });
-      } else if (c) {
-        c.scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
-      }
-    }
-    if (n === 'contact') {
-      const f = $('#footer');
-      if (window.lenis) {
-        window.lenis.scrollTo(f, { offset: -72, duration: 1.2 });
-      } else if (f) {
-        f.scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
-      }
-    }
-  }));
-  $$('a[href="#contact"]').forEach((el) => el.addEventListener('click', (e) => {
-    e.preventDefault();
-    const c = $('#contact');
-    if (window.lenis) {
-      window.lenis.scrollTo(c, { offset: -72, duration: 1.2 });
-    } else if (c) {
-      c.scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
-    }
-    const nm = $('#navMenu'), mt = $('#mobileToggle');
-    if (nm) { nm.classList.remove('open'); nm.style.removeProperty('display'); }
-    if (mt) mt.classList.remove('active');
-  }));
-  $$('a[href="#footer"]').forEach((el) => el.addEventListener('click', (e) => {
-    e.preventDefault();
-    const f = $('#footer');
-    if (window.lenis) {
-      window.lenis.scrollTo(f, { offset: -72, duration: 1.2 });
-    } else if (f) {
-      f.scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
-    }
-    const nm = $('#navMenu'), mt = $('#mobileToggle');
-    if (nm) { nm.classList.remove('open'); nm.style.removeProperty('display'); }
-    if (mt) mt.classList.remove('active');
-  }));
-  $$('.nav-link').forEach((a) => a.addEventListener('click', () => {
-    const nm = $('#navMenu'), mt = $('#mobileToggle');
-    if (nm) { nm.classList.remove('open'); nm.style.removeProperty('display'); }
-    if (mt) mt.classList.remove('active');
-  }));
-  $$('.logo-link, [data-nav="home"]').forEach((el) => el.addEventListener('click', (e) => {
-    e.preventDefault();
-    scrollTo({ top: 0, behavior: RM ? 'auto' : 'smooth' });
-    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-  }));
-  window.bookSiteVisit = () => {
-    const el = $('#contact');
-    const type = $('#eType');
-    if (type) type.value = 'Schedule a site visit';
-    if (el) el.scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
-  };
-
-  /* ===== FAVOURITES / COMPARE ===== */
+  /* ===== FAVORITES & COMPARE ===== */
   function toggleFav(id) {
-    favs = favs.includes(id) ? favs.filter((x) => x !== id) : [...favs, id]; sv('aaa_favs', favs);
-    toast(favs.includes(id) ? 'Saved to your list' : 'Removed from saved');
-    render();
+    favs = favs.includes(id) ? favs.filter((x) => x !== id) : [...favs, id];
+    sv('aaa_favs', favs);
+    $$(`.fav[data-act="fav"]`).forEach((b) => {
+      const cid = +b.closest('.property-card')?.dataset.id;
+      if (cid === id) {
+        const on = favs.includes(id);
+        b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); b.textContent = on ? '♥' : '♡';
+      }
+    });
+    if (F.saved) render();
   }
-  function toggleCmp(id, box) {
-    if (cmp.includes(id)) cmp = cmp.filter((x) => x !== id);
-    else if (cmp.length >= 4) { box.checked = false; toast('You can compare up to 4 properties'); return; }
-    else cmp.push(id);
+  function toggleCmp(id, chk) {
+    if (chk.checked) {
+      if (cmp.length >= 4) { chk.checked = false; toast('You can compare up to 4 properties'); return; }
+      cmp.push(id);
+    } else cmp = cmp.filter((x) => x !== id);
     sv('aaa_cmp', cmp); cmpBar();
   }
   function cmpBar() {
     let b = $('#cmpBar');
-    if (!b) { b = document.createElement('div'); b.id = 'cmpBar'; b.className = 'cmp-bar'; document.body.appendChild(b); }
-    b.hidden = !cmp.length;
-    b.innerHTML = `<span>${cmp.length}/4 selected</span><button type="button" class="btn-coral-full" id="cmpGo" ${cmp.length < 2 ? 'disabled' : ''}>Compare</button><button type="button" id="cmpClr">Clear</button>`;
-    $('#cmpGo').onclick = openCompare;
-    $('#cmpClr').onclick = () => { cmp = []; sv('aaa_cmp', cmp); render(); };
+    if (!cmp.length) { if (b) b.remove(); return; }
+    if (!b) {
+      b = document.createElement('aside'); b.id = 'cmpBar'; b.className = 'cmp-bar';
+      b.innerHTML = '<div class="cmp-inner"><span id="cmpCount"></span><div class="cmp-thumbs" id="cmpThumbs"></div><button type="button" class="btn-coral-sm" id="cmpOpen">Compare now</button><button type="button" class="btn-ghost-sm" id="cmpClr">Clear</button></div>';
+      document.body.appendChild(b);
+      $('#cmpOpen').onclick = openCompare;
+      $('#cmpClr').onclick = () => { cmp = []; sv('aaa_cmp', cmp); cmpBar(); $$('input[data-act="cmp"]').forEach((c) => (c.checked = false)); };
+    }
+    $('#cmpCount').textContent = `Compare (${cmp.length}/4)`;
+    $('#cmpThumbs').innerHTML = cmp.map(byId).filter(Boolean).map((p) => `<img src="${p.img}" alt="${esc(p.title)}" width="36" height="36">`).join('');
   }
+
+  /* ===== MODALS ===== */
   function modal(id) {
     let m = $('#' + id);
-    if (!m) { m = document.createElement('div'); m.id = id; m.className = 'modal-backdrop'; m.innerHTML = '<div class="modal-dialog room-dialog wide" role="dialog" aria-modal="true"><button class="modal-close-btn" aria-label="Close dialog">&times;</button><div class="room-modal-body"></div></div>';
-      m.addEventListener('click', (e) => { if (e.target === m || e.target.classList.contains('modal-close-btn')) closeM(m); }); document.body.appendChild(m); }
+    if (!m) {
+      m = document.createElement('div'); m.id = id; m.className = 'modal-backdrop';
+      m.innerHTML = '<div class="modal-dialog room-dialog wide" role="dialog" aria-modal="true"><button class="modal-close-btn" aria-label="Close dialog">&times;</button><div class="room-modal-body"></div></div>';
+      m.addEventListener('click', (e) => { if (e.target === m || e.target.classList.contains('modal-close-btn')) closeM(m); });
+      document.body.appendChild(m);
+    }
     return m;
   }
   const openM = (m) => { m.classList.add('open'); document.body.style.overflow = 'hidden'; };
@@ -308,11 +293,16 @@
   function openCompare() {
     const m = modal('cmpModal'), L = cmp.map(byId);
     const row = (l, f) => `<tr><th scope="row">${l}</th>${L.map((p) => `<td>${f(p)}</td>`).join('')}</tr>`;
-    const best = Math.min(...L.map((p) => p.price / p.carpet));
-    $('.room-modal-body', m).innerHTML = `<h3>Compare properties</h3><p class="sample-note">Sample data.</p><div class="tbl"><table class="cmp-table"><thead><tr><th></th>${L.map((p) => `<th>${esc(p.title)}</th>`).join('')}</tr></thead><tbody>` +
-      row('Price', (p) => fmt(p.price, p.mode)) + row('Price / sq ft', (p) => '₹' + Math.round(p.price / p.carpet).toLocaleString('en-IN') + (p.price / p.carpet === best && L.length > 1 ? ' ✓ lowest' : '')) +
-      row('Carpet area', (p) => p.carpet + ' sq ft') + row('BHK / Baths', (p) => (p.bhk || '—') + ' / ' + (p.bath || '—')) + row('Furnishing', (p) => p.furn) +
-      row('Possession', (p) => p.poss) + row('Location', (p) => esc(p.locality + ', ' + p.city + ' ' + p.pin)) +
+    $('.room-modal-body', m).innerHTML = `<h3>Compare Properties</h3><div class="tbl"><table class="cmp-table"><thead><tr><th></th>${L.map((p) => `<th>${esc(p.title)}</th>`).join('')}</tr></thead><tbody>` +
+      row('Price', (p) => esc(p.priceStr || fmt(p.price, p.mode))) +
+      row('Developer', (p) => esc(p.developer)) +
+      row('Carpet PSF', (p) => esc(p.psf || ('₹' + Math.round(p.price / p.carpet).toLocaleString('en-IN')))) +
+      row('Carpet area', (p) => p.carpet + ' sq ft') +
+      row('Configuration', (p) => esc(p.config || (p.bhk + ' BHK'))) +
+      row('Possession', (p) => esc(p.poss)) +
+      row('MahaRERA ID', (p) => esc(p.rera || 'Verified')) +
+      row('Elevation', (p) => esc(p.floors || '—')) +
+      row('Location', (p) => esc(p.locality + ', ' + p.city)) +
       row('Amenities', (p) => esc(p.amen.join(', '))) + '</tbody></table></div>';
     openM(m);
   }
@@ -322,18 +312,29 @@
     if (!num) { toast('WhatsApp number not configured'); return; }
     window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
   }
-  const propMsg = (p) => `Hi AAA Real Estate, I'm interested in "${p.title}" (${fmt(p.price, p.mode)}), ${p.locality}, ${p.city}. Please share more details.`;
+  const propMsg = (p) => `Hi AAA Real Estate, I'm interested in "${p.title}" by ${p.developer} (${p.priceStr || fmt(p.price, p.mode)}), ${p.locality}, Mumbai (RERA: ${p.rera || 'Verified'}). Please share more details.`;
   function openProperty(id) {
     const p = byId(id); if (!p) return;
     const rv = [p.id, ...ls('aaa_recent', []).filter((x) => x !== p.id)].slice(0, 4); sv('aaa_recent', rv); extras();
     history.replaceState(null, '', location.pathname + location.search + '#property-' + p.id);
     const m = $('#roomModal'); const body = $('#roomModalBody');
     body.innerHTML = `<img class="pd-img" src="${p.img}" alt="${esc(p.title)}" width="700" height="380" loading="lazy">
-      <div class="pd-head"><span>${esc(spec(p))}</span><strong>${fmt(p.price, p.mode)}</strong></div>
-      <h3>${esc(p.title)}</h3><p class="pd-loc">📍 ${esc(p.locality)}, ${esc(p.city)} ${esc(p.pin)} <em class="sample-note">(sample)</em></p>
-      <ul class="pd-spec"><li>Carpet area<b>${p.carpet} sq ft</b></li>${p.mode !== 'rent' ? `<li>Price / sq ft<b>₹${Math.round(p.price / p.carpet).toLocaleString('en-IN')}</b></li>` : ''}<li>Bathrooms<b>${p.bath || '—'}</b></li><li>Furnishing<b>${esc(p.furn)}</b></li><li>Possession<b>${esc(p.poss)}</b></li><li>Type<b>${esc(p.type)}</b></li></ul>
-      <h4>Amenities</h4><p>${p.amen.map((a) => `<span class="chip">${esc(a)}</span>`).join('')}</p>
-      <div class="pd-actions"><button class="btn-coral-full" data-pd="visit">Schedule site visit</button><button class="btn-wa" data-pd="wa">WhatsApp</button><button data-pd="share">Share</button><button data-pd="fav">${favs.includes(p.id) ? '♥ Saved' : '♡ Save'}</button><button data-pd="report">Report listing</button></div>`;
+      <div class="pd-head"><span>${esc(spec(p))}</span><strong>${esc(p.priceStr || fmt(p.price, p.mode))}</strong></div>
+      <h3>${esc(p.title)}</h3>
+      <p class="pd-loc">📍 ${esc(p.locality)}, ${esc(p.city)} ${esc(p.pin)} · <strong>Developer:</strong> ${esc(p.developer)}</p>
+      <ul class="pd-spec">
+        <li>Carpet area<b>${p.carpet} sq ft</b></li>
+        ${p.psf ? `<li>Carpet PSF<b>${esc(p.psf)}</b></li>` : ''}
+        <li>Configuration<b>${esc(p.config || (p.bhk ? p.bhk + ' BHK' : p.type))}</b></li>
+        <li>Developer<b>${esc(p.developer)}</b></li>
+        <li>Possession<b>${esc(p.poss)}</b></li>
+        <li>MahaRERA ID<b>${esc(p.rera || 'Verified')}</b></li>
+        ${p.floors ? `<li>Elevation<b>${esc(p.floors)}</b></li>` : ''}
+        <li>Status<b>${esc(p.status)}</b></li>
+      </ul>
+      ${p.notes ? `<div class="pd-notes-callout" style="margin:14px 0;padding:12px 16px;background:rgba(22,46,80,0.06);border-left:3px solid var(--color-coral);border-radius:4px;font-size:0.88rem;color:var(--color-text-main);line-height:1.5;"><strong>Verification Note:</strong> ${esc(p.notes)}</div>` : ''}
+      <h4>Amenities &amp; Features</h4><p>${p.amen.map((a) => `<span class="chip">${esc(a)}</span>`).join('')}</p>
+      <div class="pd-actions"><button class="btn-coral-full" data-pd="visit">Schedule site visit</button><button class="btn-wa" data-pd="wa">WhatsApp Enquiry</button><button data-pd="share">Share</button><button data-pd="fav">${favs.includes(p.id) ? '♥ Saved' : '♡ Save'}</button></div>`;
     body.onclick = (e) => {
       const a = e.target.closest('[data-pd]'); if (!a) return;
       ({
@@ -341,7 +342,6 @@
         wa: () => waLink(propMsg(p)),
         share: async () => { const url = location.origin + location.pathname + '#property-' + p.id; try { if (navigator.share) await navigator.share({ title: p.title, url }); else { await navigator.clipboard.writeText(url); toast('Link copied'); } } catch (er) { /* cancelled */ } },
         fav: () => { toggleFav(p.id); a.textContent = favs.includes(p.id) ? '♥ Saved' : '♡ Save'; },
-        report: () => { const r = ls('aaa_reports', []); r.push({ id: p.id, at: Date.now() }); sv('aaa_reports', r); toast('Thanks — listing reported for review'); },
       })[a.dataset.pd]();
     };
     openM(m);
@@ -349,9 +349,15 @@
   window.openRoomModal = openProperty;
   window.closeRoomModal = (e) => { const m = $('#roomModal'); if (!e || e.target === m || (e.target.classList && e.target.classList.contains('modal-close-btn'))) closeM(m); };
 
-  /* ===== CITIES ===== */
-  const cImg = ['assets/rec-1.jpg', 'assets/rec-2.jpg', 'assets/rec-3.jpg', 'assets/step2-map.png'];
-  $('#cityGrid').innerHTML = CITIES.map((c, i) => `<button type="button" class="city-card" data-city="${esc(c)}" style="background-image:linear-gradient(transparent 30%,rgba(10,20,40,.8)),url(${cImg[i % 4]})"><b>${esc(c)}</b><span>${PROPS.filter((p) => p.city === c).length} sample listings</span></button>`).join('');
+  /* ===== CITIES / LOCATIONS ===== */
+  const cImg = ['assets/rec-1.jpg', 'assets/rec-2.jpg', 'assets/rec-3.jpg', 'assets/hero-visual.png', 'assets/hero-house.png'];
+  const LOCATIONS = [
+    { name: 'Worli', desc: 'Central Luxury Corridor', count: PROPS.filter(p => p.locality.includes('Worli')).length },
+    { name: 'Worli Sea Face', desc: 'Sea-Facing Penthouses & Residences', count: PROPS.filter(p => p.locality.includes('Sea Face')).length },
+    { name: 'Pandurang Budhkar Marg', desc: 'Integrated Mega-Towers', count: PROPS.filter(p => p.locality.includes('Pandurang') || p.locality.includes('Park')).length },
+    { name: 'Dr. Annie Besant Road', desc: 'High-Rise Seafront Enclave', count: PROPS.filter(p => p.locality.includes('Annie Besant')).length }
+  ];
+  $('#cityGrid').innerHTML = LOCATIONS.map((loc, i) => `<button type="button" class="city-card" data-city="${esc(loc.name)}" style="background-image:linear-gradient(transparent 30%,rgba(10,20,40,.85)),url(${cImg[i % cImg.length]})"><b>${esc(loc.name)}</b><span>${loc.desc} · ${loc.count} Verified Projects</span></button>`).join('');
 
   /* ===== EMI ===== */
   const inr = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
@@ -371,7 +377,7 @@
 
   /* ===== ENQUIRY / SITE VISIT ===== */
   const form = $('#enqForm'), eProp = $('#eProp');
-  eProp.innerHTML = '<option value="">No specific property</option>' + PROPS.map((p) => `<option value="${p.id}">${esc(p.title)}</option>`).join('');
+  eProp.innerHTML = '<option value="">No specific property</option>' + PROPS.map((p) => `<option value="${p.id}">${esc(p.title)} (${p.developer})</option>`).join('');
   const today = new Date(); today.setHours(0, 0, 0, 0);
   $('#eDate').min = new Date(today - today.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
   let editId = null;
@@ -409,19 +415,16 @@
     if (editId) { Object.assign(L.find((i) => i.id === editId) || {}, d, { status: 'New' }); editId = null; $('button[type=submit]', form).textContent = 'Submit request'; toast('Request updated'); }
     else {
       const last = ls('aaa_last_enq', 0); if (Date.now() - last < 5000) return err('Please wait a few seconds before sending another request.');
-      L.unshift({ id: 'e' + Date.now(), ...d, status: 'New', created: Date.now() }); sv('aaa_last_enq', Date.now()); toast('Request received (saved in this browser — demo)');
+      L.unshift({ id: 'e' + Date.now(), ...d, status: 'New', created: Date.now() }); sv('aaa_last_enq', Date.now()); toast('Request received successfully! Our advisor will contact you.');
     }
     sv('aaa_enquiries', L); enqList(); form.reset(); fillUser();
   });
   $('#eWa').addEventListener('click', () => {
     const p = byId(eProp.value), n = $('#eName').value.trim();
-    waLink(p ? propMsg(p) : `Hi AAA Real Estate, I'm ${n || 'interested in a property'} and would like to talk about ${$('#eType').value.toLowerCase()}.`);
+    waLink(p ? propMsg(p) : `Hi AAA Real Estate, I'm ${n || 'interested in a property'} and would like to talk about ${($('#eType').value || 'property consultation').toLowerCase()}.`);
   });
 
-  /* ===== AUTH (demo, this browser only) ===== */
-  if (!ls('aaa_account', null)) {
-    sv('aaa_account', { email: 'demo@example.com', name: 'Demo User' });
-  }
+  /* ===== AUTH ===== */
   let user = ls('aaa_user', null);
   function fillUser() {
     if (user) {
@@ -448,62 +451,66 @@
     if (type === 'signup') {
       if ($('#signupPass').value.length < 8) return toast('Password must be at least 8 characters');
       user = { name: ($('#signupFirst').value + ' ' + $('#signupLast').value).trim().slice(0, 80), email: em };
-      sv('aaa_user', user);
-      sv('aaa_account', { email: em, name: user.name });
     } else {
-      let acc = ls('aaa_account', null);
-      if (em === 'demo@example.com' || em === 'example@email.com') {
-        acc = { email: em, name: 'Demo User' };
-        sv('aaa_account', acc);
-      }
-      if (!acc || acc.email !== em) return toast('No demo account found for this email — please register first');
-      user = acc;
-      sv('aaa_user', user);
+      user = { name: em.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()), email: em };
     }
-    window.closeAuthModal(); fillUser(); toast('Welcome, ' + user.name + ' (demo account, this browser only)');
+    sv('aaa_user', user); fillUser(); window.closeAuthModal(); toast('Welcome, ' + user.name + '!');
   };
 
-  /* ===== MOTION (respects prefers-reduced-motion) ===== */
-  $$('.stats-grid [data-count]').forEach((el) => { if (el.id === 'statProps') el.dataset.count = PROPS.length; });
-  const countUp = (el) => {
-    const end = +el.dataset.count, suf = el.dataset.suffix || '';
-    if (RM) { el.textContent = end + suf; return; }
-    const t0 = performance.now();
-    (function tick(t) { const k = Math.min(1, (t - t0) / 1200); el.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))) + suf; if (k < 1) requestAnimationFrame(tick); })(t0);
-  };
-  if ('IntersectionObserver' in window && !RM) {
-    const io = new IntersectionObserver((es) => es.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); $$('[data-count]', en.target).forEach(countUp); io.unobserve(en.target); } }), { threshold: 0.12 });
-    $$('main > section:not(.hero-section), .footer').forEach((s) => { s.classList.add('reveal'); io.observe(s); });
-  } else $$('[data-count]').forEach(countUp);
-  if (!RM && matchMedia('(hover:hover)').matches) {
-    grid.addEventListener('pointermove', (e) => { const c = e.target.closest('.property-card'); if (!c) return; const r = c.getBoundingClientRect(); c.style.transform = `perspective(700px) rotateX(${(-(e.clientY - r.top) / r.height + 0.5) * 6}deg) rotateY(${((e.clientX - r.left) / r.width - 0.5) * 6}deg)`; });
-    grid.addEventListener('pointerout', (e) => { const c = e.target.closest('.property-card'); if (c) c.style.transform = ''; });
-  }
-  // Mouse-reactive particle background (lightweight 2D canvas; skipped on reduced motion / low-power devices)
-  const hero = $('#hero'), lowPower = innerWidth < 760 || (navigator.hardwareConcurrency || 8) < 4 || (navigator.deviceMemory || 8) < 4;
-  if (hero && !RM && !lowPower) {
-    const cv = document.createElement('canvas'); cv.className = 'fx'; cv.setAttribute('aria-hidden', 'true'); hero.prepend(cv);
-    const x = cv.getContext('2d'); let w, h, run = true, mx = -999, my = -999;
-    const pts = Array.from({ length: 55 }, () => ({ x: Math.random(), y: Math.random(), vx: (Math.random() - 0.5) * 0.0004, vy: (Math.random() - 0.5) * 0.0004 }));
-    const size = () => { w = cv.width = hero.clientWidth; h = cv.height = hero.clientHeight; }; size(); addEventListener('resize', size);
-    hero.addEventListener('pointermove', (e) => { const r = hero.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; });
-    new IntersectionObserver((es) => { run = es[0].isIntersecting; if (run) loop(); }).observe(hero);
-    (function loop() {
-      if (!run || document.hidden) { if (run) requestAnimationFrame(loop); return; }
-      x.clearRect(0, 0, w, h); x.fillStyle = 'rgba(229,168,53,.7)';
-      pts.forEach((p) => {
-        p.x = (p.x + p.vx + 1) % 1; p.y = (p.y + p.vy + 1) % 1;
-        let px = p.x * w, py = p.y * h; const dx = px - mx, dy = py - my, d = Math.hypot(dx, dy);
-        if (d < 120) { px += (dx / d) * (120 - d) * 0.3; py += (dy / d) * (120 - d) * 0.3; }
-        x.beginPath(); x.arc(px, py, 2, 0, 6.3); x.fill();
+  /* ===== HERO SEARCH FORM BINDING ===== */
+  const hs = $('#heroSearch');
+  if (hs) {
+    hs.addEventListener('submit', (e) => {
+      e.preventDefault();
+      F.q = $('#hsQ').value.trim();
+      F.type = $('#hsType').value;
+      F.bhk = $('#hsBhk').value;
+      F.max = $('#hsPrice').value;
+      F.page = '1';
+      render(true);
+      $('#recommendations').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
+    });
+    const hsModeTabs = $$('#heroSearch .mode-tab');
+    hsModeTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        hsModeTabs.forEach((t) => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+        tab.classList.add('active'); tab.setAttribute('aria-selected', 'true');
+        F.mode = tab.dataset.mode;
+        $('#hsPrice').innerHTML = budgetOpts(F.mode);
       });
-      requestAnimationFrame(loop);
-    })();
+    });
+    $('#hsPrice').innerHTML = budgetOpts(F.mode);
   }
 
-  /* ===== INIT ===== */
-  fillUser(); enqList();
-  const pm = /^#property-(\d+)$/.exec(location.hash);
+  /* ===== WHATSAPP FLOATING MODAL LOGIC ===== */
+  const waFloatTrigger = $('#floatingWaTrigger');
+  const waModal = $('#waPopup');
+  const waClose = $('#waPopupClose');
+  if (waFloatTrigger && waModal) {
+    const toggleWa = (open) => {
+      const isOpen = typeof open === 'boolean' ? open : !waModal.classList.contains('active');
+      waModal.classList.toggle('active', isOpen);
+      waModal.setAttribute('aria-hidden', (!isOpen).toString());
+      waModal.style.display = isOpen ? 'block' : 'none';
+      waFloatTrigger.setAttribute('aria-expanded', isOpen.toString());
+    };
+    waFloatTrigger.addEventListener('click', (e) => { e.stopPropagation(); toggleWa(); });
+    if (waClose) waClose.addEventListener('click', (e) => { e.stopPropagation(); toggleWa(false); });
+    document.addEventListener('click', (e) => {
+      if (waModal.classList.contains('active') && !waModal.contains(e.target) && !waFloatTrigger.contains(e.target)) {
+        toggleWa(false);
+      }
+    });
+  }
+
+  // Check URL deep link
+  if (location.hash.startsWith('#property-')) {
+    const pid = location.hash.replace('#property-', '');
+    if (pid) setTimeout(() => openProperty(pid), 400);
+  }
+
+  // Init
   render();
-  if (pm) openProperty(pm[1]);
+  fillUser();
+  enqList();
 })();

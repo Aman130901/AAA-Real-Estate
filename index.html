@@ -123,9 +123,9 @@
             <button type="button" class="mode-tab" data-mode="commercial" role="tab" aria-selected="false">Commercial</button>
           </div>
           <div class="adv-grid">
-            <label>Location<input type="text" id="hsQ" placeholder="City, locality or pincode" list="cityList"><datalist id="cityList"></datalist></label>
+            <label>Location<input type="text" id="hsQ" placeholder="City, locality or developer" list="cityList"><datalist id="cityList"></datalist></label>
             <label>Property type<select id="hsType"></select></label>
-            <label>Bedrooms<select id="hsBhk"><option value="">Any</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+            <label>Bedrooms<select id="hsBhk"><option value="">Any</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
             <label>Max budget<select id="hsPrice"></select></label>
             <button class="btn-search" type="submit">Search</button>
           </div>
@@ -136,13 +136,13 @@
     <!-- LISTINGS -->
     <section class="recommendations-section listings" id="recommendations">
       <div class="section-container">
-        <div class="section-header-row"><h2 class="section-title">Featured Properties</h2>
-          <p class="sample-note">Sample listings for demonstration — not real properties.</p></div>
+        <div class="section-header-row"><h2 class="section-title">Featured Luxury Properties</h2>
+          <p class="section-subtitle">MahaRERA verified luxury residences, sea-facing penthouses &amp; premium developments across Worli &amp; South Mumbai.</p></div>
         <div class="filter-bar" id="filterBar">
           <div class="mode-tabs small" id="lsMode" role="tablist" aria-label="Filter mode"><button type="button" data-mode="buy" role="tab" aria-selected="true">Buy</button><button type="button" data-mode="rent" role="tab" aria-selected="false">Rent</button><button type="button" data-mode="commercial" role="tab" aria-selected="false">Commercial</button></div>
-          <input type="search" id="lsQ" placeholder="Search city, locality, pincode" aria-label="Search">
+          <input type="search" id="lsQ" placeholder="Search developer, project, locality, RERA" aria-label="Search">
           <select id="lsType" aria-label="Property type"></select>
-          <select id="lsBhk" aria-label="Bedrooms"><option value="">BHK</option><option>1</option><option>2</option><option>3</option><option>4</option></select>
+          <select id="lsBhk" aria-label="Bedrooms"><option value="">BHK</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
           <select id="lsFurn" aria-label="Furnishing"><option value="">Furnishing</option><option>Furnished</option><option>Semi-furnished</option><option>Unfurnished</option></select>
           <select id="lsSort" aria-label="Sort"><option value="relevant">Most relevant</option><option value="new">Recently added</option><option value="plh">Price: low to high</option><option value="phl">Price: high to low</option></select>
           <label class="chk"><input type="checkbox" id="lsSaved"> Saved only</label>
@@ -156,11 +156,10 @@
     </section>
 
     <section class="stats-band" id="stats"><div class="section-container stats-grid">
-      <div><strong data-count="10" data-suffix="+">0</strong><span>Years of experience</span></div>
-      <div><strong data-count="9" id="statProps">0</strong><span>Properties listed (sample)</span></div>
-      <div><strong data-count="500" data-suffix="+">0</strong><span>Happy clients</span></div>
-      <div><strong data-count="4">0</strong><span>Cities covered</span></div>
-      <p class="sample-note">Sample figures — replace with real numbers in features.js before launch.</p>
+      <div><strong data-count="15" data-suffix="+">0</strong><span>Years of Real Estate Excellence</span></div>
+      <div><strong data-count="51" id="statProps">0</strong><span>Verified Properties Listed</span></div>
+      <div><strong data-count="12000" data-suffix="+">0</strong><span>Happy Clients Served</span></div>
+      <div><strong data-count="100" data-suffix="%">0</strong><span>MahaRERA Registered Portfolio</span></div>
     </div></section>
 
     <!-- NICE HOUSE. FRESH START. NEW YOU. SECTION -->
@@ -314,7 +313,7 @@
     <section class="contact-section" id="contact"><div class="section-container contact-grid">
       <div class="contact-info-col">
         <h2 class="section-title">Contact &amp; Enquiry</h2>
-        <p class="sample-note">Reach us directly via WhatsApp/Call or submit the enquiry form below.</p>
+        <p class="section-subtitle" style="color:var(--color-text-muted);margin-bottom:18px;">Connect directly with our luxury property advisors via WhatsApp, phone call or submit the enquiry form below.</p>
 
         <!-- Direct WhatsApp & Phone Contact Card -->
         <div class="direct-contact-card">
