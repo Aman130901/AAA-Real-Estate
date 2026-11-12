@@ -995,6 +995,116 @@ html.lenis, html.lenis body {
   margin-top: 20px;
 }
 
+/* Admin Device Image Upload Component */
+.adm-img-upload-group {
+  margin: 18px 0;
+  padding: 18px;
+  background: #FFFFFF;
+  border: 1.5px dashed #CBD5E1;
+  border-radius: var(--radius-md);
+  transition: all .2s ease;
+}
+.adm-img-upload-group:hover, .adm-img-upload-group.dragover {
+  border-color: var(--color-coral);
+  background: #FFFBFB;
+}
+.adm-upload-container {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 16px;
+  align-items: center;
+}
+@media (max-width: 680px) {
+  .adm-upload-container {
+    grid-template-columns: 1fr;
+  }
+}
+.adm-upload-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 22px 16px;
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.adm-upload-dropzone:hover {
+  background: #F1F5F9;
+  border-color: var(--color-navy-dark);
+}
+.adm-dropzone-icon {
+  font-size: 2.2rem;
+  margin-bottom: 6px;
+}
+.adm-dropzone-text strong {
+  display: block;
+  font-size: 0.92rem;
+  color: var(--color-navy-dark);
+  margin-bottom: 4px;
+}
+.adm-dropzone-text span {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin-bottom: 14px;
+}
+.adm-img-preview-box {
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: var(--radius-sm);
+  padding: 10px;
+}
+.adm-preview-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.adm-preview-wrap img {
+  width: 100%;
+  height: 135px;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+  background: #EDF2F7;
+  border: 1px solid var(--color-border);
+}
+.adm-preview-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.adm-preview-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #E2E8F0;
+  color: #475569;
+}
+.adm-preview-badge.uploaded {
+  background: #DCFCE7;
+  color: #166534;
+  border: 1px solid #86EFAC;
+}
+.adm-btn-remove-img {
+  background: transparent;
+  border: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-coral);
+  cursor: pointer;
+  padding: 2px 4px;
+}
+.adm-btn-remove-img:hover {
+  text-decoration: underline;
+}
+
 .adm-lead-link {
   color: var(--color-navy-dark);
   font-weight: 700;

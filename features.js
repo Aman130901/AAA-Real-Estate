@@ -986,16 +986,173 @@
     $('#admPossession').value = p.poss || '';
     $('#admRera').value = p.rera || '';
     $('#admFloors').value = p.floors || '';
-    $('#admImg').value = p.img || 'assets/rec-1.jpg';
+    const currentImg = p.img || 'assets/rec-1.jpg';
+    $('#admImg').value = currentImg;
+    const previewEl = $('#admImgPreview');
+    if (previewEl) previewEl.src = currentImg;
+    const badgeEl = $('#admImgBadge');
+    if (badgeEl) {
+      const isCustom = currentImg.startsWith('data:');
+      badgeEl.textContent = isCustom ? 'Device Photo ✓' : 'Current Photo';
+      badgeEl.className = isCustom ? 'adm-preview-badge uploaded' : 'adm-preview-badge';
+    }
+    const presetSelect = $('#admPresetImg');
+    if (presetSelect) {
+      const hasMatch = Array.from(presetSelect.options).some(o => o.value === currentImg);
+      presetSelect.value = hasMatch ? currentImg : '';
+    }
     $('#admNotes').value = p.notes || '';
     $('#admSaveBtn').textContent = 'Update Property';
     $('#admViewAddProp')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  /* ===== ADMIN DEVICE IMAGE UPLOAD & OPTIMIZATION ===== */
+  window.handleDeviceImageUpload = (event) => {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast('Please select a valid image file (JPG, PNG, WebP).');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const rawDataUrl = e.target.result;
+      // Auto-compress & scale image via canvas to guarantee fast load and zero storage limit issues
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 1200;
+        const MAX_HEIGHT = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width = Math.round((width * MAX_HEIGHT) / height);
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Quality 0.82 generates clean crisp photos at ~120KB
+        const compressedUrl = canvas.toDataURL('image/jpeg', 0.82);
+
+        $('#admImg').value = compressedUrl;
+        const preview = $('#admImgPreview');
+        if (preview) preview.src = compressedUrl;
+
+        const badge = $('#admImgBadge');
+        if (badge) {
+          badge.textContent = 'Device Photo ✓';
+          badge.className = 'adm-preview-badge uploaded';
+        }
+
+        const presetSelect = $('#admPresetImg');
+        if (presetSelect) presetSelect.value = '';
+
+        toast('Photo uploaded from device successfully!');
+      };
+      img.onerror = () => {
+        toast('Unable to process the selected image.');
+      };
+      img.src = rawDataUrl;
+    };
+    reader.onerror = () => {
+      toast('Failed to read file from your device.');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.handlePresetImgChange = (val) => {
+    if (!val) return;
+    $('#admImg').value = val;
+    const preview = $('#admImgPreview');
+    if (preview) preview.src = val;
+    const badge = $('#admImgBadge');
+    if (badge) {
+      badge.textContent = 'Library Photo';
+      badge.className = 'adm-preview-badge';
+    }
+    const fileInput = $('#admImgFile');
+    if (fileInput) fileInput.value = '';
+  };
+
+  window.resetPropertyImage = () => {
+    const defaultImg = 'assets/rec-1.jpg';
+    $('#admImg').value = defaultImg;
+    const preview = $('#admImgPreview');
+    if (preview) preview.src = defaultImg;
+    const presetSelect = $('#admPresetImg');
+    if (presetSelect) presetSelect.value = defaultImg;
+    const fileInput = $('#admImgFile');
+    if (fileInput) fileInput.value = '';
+    const badge = $('#admImgBadge');
+    if (badge) {
+      badge.textContent = 'Default Photo';
+      badge.className = 'adm-preview-badge';
+    }
+    toast('Image reset to default.');
+  };
+
+  // Drag & drop support for dropzone
+  setTimeout(() => {
+    const dropzone = $('#admDropzone');
+    if (dropzone) {
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.add('dragover');
+        }, false);
+      });
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.remove('dragover');
+        }, false);
+      });
+      dropzone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt && dt.files;
+        if (files && files.length) {
+          const fileInput = $('#admImgFile');
+          if (fileInput) {
+            fileInput.files = files;
+            window.handleDeviceImageUpload({ target: fileInput });
+          }
+        }
+      }, false);
+    }
+  }, 500);
+
   window.resetAdminForm = () => {
     $('#admFormTitle').textContent = '➕ Add New Luxury Property';
     $('#admEditId').value = '';
     $('#admPropForm')?.reset();
+    $('#admImg').value = 'assets/rec-1.jpg';
+    const preview = $('#admImgPreview');
+    if (preview) preview.src = 'assets/rec-1.jpg';
+    const presetSelect = $('#admPresetImg');
+    if (presetSelect) presetSelect.value = 'assets/rec-1.jpg';
+    const fileInput = $('#admImgFile');
+    if (fileInput) fileInput.value = '';
+    const badge = $('#admImgBadge');
+    if (badge) {
+      badge.textContent = 'Default Photo';
+      badge.className = 'adm-preview-badge';
+    }
     $('#admSaveBtn').textContent = 'Save Property';
   };
 
