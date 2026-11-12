@@ -1,0 +1,28 @@
+{
+  "name": "aaa-realestate",
+  "version": "1.0.0",
+  "description": "AAA Real Estate - Mumbai Luxury Property Portal with Backend API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node -e \"require('./api/health'); require('./api/properties/index'); require('./api/enquiries/index'); require('./api/admin/login'); console.log('All modules load OK!');\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aman130901/AAA-Real-Estate.git"
+  },
+  "keywords": ["real-estate", "mumbai", "worli", "luxury", "maharera"],
+  "author": "AAA Real Estate",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Aman130901/AAA-Real-Estate/issues"
+  },
+  "homepage": "https://github.com/Aman130901/AAA-Real-Estate#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "jsonwebtoken": "^9.0.3"
+  }
+}
